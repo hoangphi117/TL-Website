@@ -1,6 +1,6 @@
 const bcryptjs = require('bcryptjs')
 
-const User = require('../models/userModel')
+const User = require('../../models/userModel')
 
 const changePassword = async (req, res) => {
   try {
@@ -33,7 +33,7 @@ const changePassword = async (req, res) => {
 
 const getMyProfile = async (req, res) => {
   try {
-    
+    res.status(200).json(req.user)
   }
   catch (error) {
     res.status(500).json({
@@ -43,5 +43,25 @@ const getMyProfile = async (req, res) => {
   }
 }
 
+const updateMyProfile = async (req, res) => {
+  try {
+    const userData = req.body
+    userData.updatedAt = Date.now()
+    await req.user.updateOne(userData)
+    const saveUser = await req.user.save()
 
-module.exports = { changePassword }
+    res.status(200).json({
+      message: "Update profile susseccful!",
+      user: saveUser
+    })
+  }
+  catch (error) {
+    res.status(500).json({
+      message: "Can not update profile",
+      error: error
+    })
+  }
+}
+
+
+module.exports = { changePassword, getMyProfile, updateMyProfile }
