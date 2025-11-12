@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const User = require('../models/userModel')
 
 const protectCustomer = async (req, res, next) => {
   let token
@@ -6,6 +7,20 @@ const protectCustomer = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1]
       req.user = jwt.verify(token, process.env.JWT_SECRET)
+      const user = await User.findById(req.user.id)
+
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found"
+        })
+      }
+      if (!user.isActive) {
+        return res.status(401).json({
+          message: "User has been banned"
+        })
+      }
+
+      req.user = user
       next()
     }
     catch (error) {
