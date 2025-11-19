@@ -7,6 +7,6 @@ const { protectCustomer, protectAdmin } = require('../middlewares/user')
 
 router.use('/auth', authRoutes)
 router.use('/users', protectCustomer, userRoutes)
-router.use('/category',protectAdmin,categoryController);
+router.use('/admin/category',protectAdmin,categoryController);
 
 module.exports = router
