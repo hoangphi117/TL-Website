@@ -8,30 +8,36 @@ import type { Product } from "@/types/product";
 
 const HomePage = () => {
   return (
-    <div className="container bg-[#ececec] mx-auto px-4 space-y-3 py-8">
-      {/*  PC */}
-      <ProductListCarousel
-        title="PC Gaming Bán Chạy"
-        products={pcData as Product[]}
-        viewAllLink="/category/pc"
-        autoplay={false}
-      />
+    <div className=" mx-auto px-2 sm:px-4 lg:px-8 space-y-3 py-4 sm:py-8 bg-[#ececec]">
+      {/* PC Carousel */}
+      <section className="p-0">
+        <ProductListCarousel
+          title="PC Gaming Bán Chạy"
+          products={pcData as Product[]}
+          viewAllLink="/category/pc"
+          autoplay={false}
+        />
+      </section>
 
-      {/* Mouse */}
-      <ProductListCarousel
-        title="Chuột Gaming Giá Rẻ"
-        products={mouseData as Product[]}
-        viewAllLink="/category/mouse"
-        autoplay={true}
-        className="bg-gray-50 p-4"
-      />
+      {/* Mouse Carousel */}
+      <section className="p-0">
+        <ProductListCarousel
+          title="Chuột Gaming Giá Rẻ"
+          products={mouseData as Product[]}
+          viewAllLink="/category/mouse"
+          autoplay={true}
+          className="bg-gray-100 rounded-lg shadow-inner"
+        />
+      </section>
 
-      {/* KeyBoard */}
-      <ProductListCarousel
-        title="Bàn Phím Cơ Mới Về"
-        products={keyboardData as Product[]}
-        viewAllLink="/category/keyboard"
-      />
+      {/* KeyBoard Carousel */}
+      <section className="p-0">
+        <ProductListCarousel
+          title="Bàn Phím Cơ Mới Về"
+          products={keyboardData as Product[]}
+          viewAllLink="/category/keyboard"
+        />
+      </section>
     </div>
   );
 };

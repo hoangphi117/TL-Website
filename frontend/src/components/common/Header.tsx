@@ -120,7 +120,7 @@ const Header: React.FC = () => {
             <div className="flex-1 max-w-xl mx-6 relative">
               <Input
                 placeholder="Bạn cần tìm gì?"
-                className="bg-white text-black h-10 rounded-md pr-10 focus-visible:ring-red-500"
+                className="bg-white text-black h-10 rounded-md pr-10 focus-visible:ring-2 focus-visible:ring-red-500"
               />
               <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
             </div>
