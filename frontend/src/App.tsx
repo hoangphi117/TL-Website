@@ -2,11 +2,19 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "./components/layouts/MainLayout";
+import HomePage from "./pages/home/HomePage";
 
 const App: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout></MainLayout>} />
+      <Route
+        path="/"
+        element={
+          <MainLayout>
+            <HomePage />
+          </MainLayout>
+        }
+      />
       {/* <Route
           path="/product/:id"
           element={
