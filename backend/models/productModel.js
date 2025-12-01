@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { Schema } = mongoose;
 
 const productSchema = mongoose.Schema({
     name: {
@@ -94,6 +95,19 @@ const productSchema = mongoose.Schema({
     timestamps: true,
   }
 );
+
+productSchema.index({ category: 1, status: 1 });
+productSchema.index({ brand: 1, status: 1 });
+productSchema.index({ price: 1, status: 1 });
+productSchema.index({ soldCount: -1 });
+productSchema.index({ averageRating: -1 });
+
+productSchema.virtual('discountPercentage').get(function () {
+  if (this.originalPrice && this.originalPrice > this.price) {
+    return Math.round(((this.originalPrice - this.price) / this.originalPrice) * 100);
+  }
+  return 0;
+});
 
 const Product = mongoose.model('Product', productSchema)
 
