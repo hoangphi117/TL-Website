@@ -11,7 +11,6 @@ import {
   FileText,
   Image,
   Settings,
-  LogOut,
 } from "lucide-react"
 
 import { NavMain } from "@/components/admin/sidebar/nav-main"

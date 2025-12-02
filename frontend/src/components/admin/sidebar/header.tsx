@@ -1,6 +1,8 @@
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import AutoBreadcrumb from "./autoBreadCumb";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 export default function Header() {
     return (
@@ -11,7 +13,14 @@ export default function Header() {
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
             />
-            <AutoBreadcrumb/>
+            <AutoBreadcrumb/>   
+          </div>
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+                placeholder="Tìm kiếm..."
+                className="pl-8 h-9 max-w-80 w-full"
+            />
           </div>
         </header>
     )
