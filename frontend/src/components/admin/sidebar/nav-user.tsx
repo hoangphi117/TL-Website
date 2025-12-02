@@ -27,6 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Link } from "react-router-dom"
 
 export function NavUser({
   user,
@@ -41,7 +42,7 @@ export function NavUser({
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem>
+      <SidebarMenuItem className="bg-gray-200 rounded-md">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
@@ -49,7 +50,7 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                {/* <AvatarImage src={user.avatar} alt={user.name}/> */}
                 <AvatarFallback className="rounded-lg">LQ</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -100,10 +101,12 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+              <Link to={"/admin/login"} className="">
+                <DropdownMenuItem>
+                    <LogOut/>
+                    Log out
+                </DropdownMenuItem>
+              </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
