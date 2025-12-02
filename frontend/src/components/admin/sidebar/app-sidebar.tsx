@@ -11,7 +11,6 @@ import {
   FileText,
   Image,
   Settings,
-  LogOut,
 } from "lucide-react"
 
 import { NavMain } from "@/components/admin/sidebar/nav-main"
@@ -28,14 +27,14 @@ import {
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "LiquidShop",
+    email: "liquid@gmail.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
     {
       title: "Dashboard",
-      url: "/admin/dashboard",
+      url: "/admin",
       icon: Home,
       isActive: true,
     },

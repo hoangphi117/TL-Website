@@ -31,6 +31,10 @@ export function NavMain({
                 asChild
                 tooltip={item.title}
                 isActive={isActive}
+                className="data-[active=true]:bg-neutral-300
+                          data-[active=true]:border-l-4
+                          data-[active=true]:border-neutral-700
+                          data-[active=true]:text-neutral-900"
               >
                 <Link to={item.url} className="flex items-center gap-2">
                   {item.icon && <item.icon size={30} />}

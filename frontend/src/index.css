@@ -1,10 +1,9 @@
 @import "tailwindcss";
 @import "./styles/theme.css";
-@import "App.css"
 
 
-/* body {
+body {
   font-family: "Nunito", sans-serif;
   margin: 0;
   background: #ececec;
-} */
+} 
