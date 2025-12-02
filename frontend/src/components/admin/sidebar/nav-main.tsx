@@ -1,0 +1,46 @@
+import { Link, useLocation } from "react-router-dom"
+import { type LucideIcon } from "lucide-react"
+
+import {
+  SidebarGroup,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+} from "@/components/ui/sidebar"
+
+export function NavMain({
+  items,
+}: {
+  items: {
+    title: string
+    url: string
+    icon?: LucideIcon
+  }[]
+}) {
+  const { pathname } = useLocation()
+
+  return (
+    <SidebarGroup>
+      <SidebarMenu>
+        {items.map((item) => {
+          const isActive = pathname === item.url
+
+          return (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                asChild
+                tooltip={item.title}
+                isActive={isActive}
+              >
+                <Link to={item.url} className="flex items-center gap-2">
+                  {item.icon && <item.icon size={30} />}
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )
+        })}
+      </SidebarMenu>
+    </SidebarGroup>
+  )
+}

@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "./components/layouts/MainLayout";
 import HomePage from "./pages/home/HomePage";
+import AdminLayout from "./components/layouts/Adminayout";
 
 const App: React.FC = () => {
   return (
@@ -23,6 +24,10 @@ const App: React.FC = () => {
             </MainLayout>
           }
         /> */}
+      <Route
+        path="/admin"
+        element={<AdminLayout/>}
+      />
 
       {/* CÁC ROUTE KHÔNG SỬ DỤNG HEADER VÀ FOOTER (Login, 404, ...)*/}
       {/* <Route path="/auth/login/" element={<LoginPage />} /> */}
