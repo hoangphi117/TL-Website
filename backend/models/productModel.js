@@ -1,36 +1,117 @@
-const mongoose = require("mongoose")
+
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
 const productSchema = mongoose.Schema(
   {
-    name: { type: String, required: true, index: true }, // index để tìm kiếm  
-    sku: { type: String, unique: true, required: true }, // Mã sản phẩm  
-    description: { type: String }, // Mô tả ngắn  
-    detailedInfo: { type: String }, // Mô tả chi tiết, có thể là HTML  
-    price: { type: Number, required: true }, // Giá bán hiện tại  
-    originalPrice: { type: Number }, // Giá gốc (khi có khuyến mãi)  
-    stockQuantity: { type: Number, required: true, default: 0 }, // Số lượng tồn kho  
+    name: {
+      type: String,
+      required: true,
+      index: true,
+      trim: true,
+    },
+
+    sku: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+    },
+
+    description: {
+      type: String,
+    },
+
+    detailedInfo: {
+      type: String,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+    },
+
+    originalPrice: {
+      type: Number,
+      default: null,
+    },
+
+    stockQuantity: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
     images: [
-      { type: String } // Mảng các URL hình ảnh  
+      {
+        type: String,
+      },
     ],
+
     category: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Category",
-      required: true
+      required: true,
     },
+
     brand: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Brand"
+      type: Schema.Types.ObjectId,
+      ref: "Brand",
+      default: null,
     },
-    specifications: { type: Object }, // Đối tượng linh hoạt cho thông số kỹ thuật  
-    // Ví dụ: { cpu: Intel Core i5, ram: 16GB DDR4, storage: 512GB SSD }
-    status: { type: String, enum: ['active', 'inactive', 'out_of_stock'], default: 'active' },//Trạng thái của sản phầm
-    tags: [{ type: String, index: true }], // Hỗ trợ tìm kiếm  
-    averageRating: { type: Number, default: 0 }, // Điểm đánh giá trung bình  
-    reviewCount: { type: Number, default: 0 }, // Tổng số lượt đánh giá  
-    soldCount: { type: Number, default: 0 }, // Số lượng đã bán (hỗ trợ thống kê)  
-  }, { timestamps: true }
-)
 
-const Product = mongoose.model("Product", productSchema)
+    specifications: {
+      type: Object,
+      default: {},
+    },
+    status: {
+      type: String,
+      enum: ["active", "inactive", "out_of_stock"],
+      default: "active",
+    },
 
-module.exports = Product
+    tags: [
+      {
+        type: String,
+        index: true,
+      },
+    ],
+
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+
+    reviewCount: {
+      type: Number,
+      default: 0,
+    },
+
+    soldCount: {
+      type: Number,
+      default: 0,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+productSchema.index({ category: 1, status: 1 });
+productSchema.index({ brand: 1, status: 1 });
+productSchema.index({ price: 1, status: 1 });
+productSchema.index({ soldCount: -1 });
+productSchema.index({ averageRating: -1 });
+
+productSchema.virtual("discountPercentage").get(function () {
+  if (this.originalPrice && this.originalPrice > this.price) {
+    return Math.round(
+      ((this.originalPrice - this.price) / this.originalPrice) * 100
+    );
+  }
+  return 0;
+});
+
+const Product = mongoose.model("Product", productSchema);
+
+module.exports = Product;
