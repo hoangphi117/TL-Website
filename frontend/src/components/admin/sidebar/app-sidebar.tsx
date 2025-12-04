@@ -42,6 +42,12 @@ const data = {
       title: "Sản phẩm",
       url: "/admin/products",
       icon: Package,
+      items: [
+        {
+          title: "Thêm sản phẩm",
+          url: "/admin/products/add-new"
+        },
+      ]
     },
     {
       title: "Đơn hàng",
