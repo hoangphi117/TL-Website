@@ -138,13 +138,20 @@ const BottomCategory: React.FC = () => {
         <h2 className="text-xl md:text-2xl font-bold text-gray-800 uppercase border-l-4 border-red-600 pl-3 mb-10">
           Danh mục sản phẩm
         </h2>
-        <div className="grid grid-cols-10 gap-10">
+        <div
+          className="grid grid-rows-2 grid-flow-col gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide
+            md:grid-cols-5 lg:grid-cols-10 md:gap-8 md:overflow-visible md:max-h-none md:grid-flow-row"
+        >
           {productCategories.map((category) => (
-            <Link to={category.url} key={category.id}>
+            <Link
+              to={category.url}
+              key={category.id}
+              className="flex-shrink-0 w-20 flex flex-col items-center justify-start snap-start md:w-auto"
+            >
               <img
                 src={category.imageUrl}
                 alt={category.name}
-                className="w-16 h-12 mx-auto"
+                className="w-full h-full object-contain"
               />
               <p className="text-sm text-center">{category.name}</p>
             </Link>
