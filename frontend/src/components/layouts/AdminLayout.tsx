@@ -10,7 +10,7 @@ export default function AdminLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="bg-[#F7F9FC]">
         <Header/>
         <Outlet/>
       </SidebarInset>

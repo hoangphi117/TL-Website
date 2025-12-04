@@ -22,7 +22,7 @@ export default function AutoBreadcrumb() {
   const { pathname } = useLocation();
 
   const parts = pathname.split("/").filter(Boolean);
-  const segments = parts.slice(1); // bỏ admin
+  const segments = parts.slice(1); // bỏ admin 
 
   return (
     <Breadcrumb>
@@ -35,14 +35,14 @@ export default function AutoBreadcrumb() {
             <BreadcrumbItem key={idx}>
               {!isLast ? (
                 <>
-                  <BreadcrumbLink asChild>
-                    <Link to={link}>{format(seg)}</Link>
+                  <BreadcrumbLink asChild >
+                    <Link to={link} >{format(seg)}</Link>
                   </BreadcrumbLink>
 
                   <BreadcrumbSeparator />
                 </>
               ) : (
-                <BreadcrumbPage>{format(seg)}</BreadcrumbPage>
+                <BreadcrumbPage className="text-md sm:text-lg">{format(seg)}</BreadcrumbPage>
               )}
             </BreadcrumbItem>
           );

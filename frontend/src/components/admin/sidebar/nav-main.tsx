@@ -21,7 +21,7 @@ export function NavMain({
 
   return (
     <SidebarGroup>
-      <SidebarMenu>
+      <SidebarMenu className="gap-1">
         {items.map((item) => {
           const isActive = pathname === item.url
 
@@ -31,14 +31,16 @@ export function NavMain({
                 asChild
                 tooltip={item.title}
                 isActive={isActive}
-                className="data-[active=true]:bg-neutral-300
+                className="data-[active=true]:bg-blue-100
                           data-[active=true]:border-l-4
-                          data-[active=true]:border-neutral-700
-                          data-[active=true]:text-neutral-900"
+                          data-[active=true]:border-blue-600
+                          data-[active=true]:text-blue-500
+                          data-[active=true]:font-bold"
+
               >
                 <Link to={item.url} className="flex items-center gap-2">
-                  {item.icon && <item.icon size={30} />}
-                  <span>{item.title}</span>
+                  {item.icon && <item.icon className="!h-6 !w-6"/>}
+                  <span className="text-lg data-[active=true]:text-blue-400">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
