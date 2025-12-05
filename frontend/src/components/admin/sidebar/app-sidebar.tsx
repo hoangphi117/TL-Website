@@ -65,7 +65,7 @@ const data = {
         },
         {
           title: "Thêm loại sản phẩm",
-          url: "/admin/categoriess/add-new"
+          url: "/admin/categories/add-new"
         },
       ]
     },

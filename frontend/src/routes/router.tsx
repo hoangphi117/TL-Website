@@ -5,6 +5,8 @@ import MainLayout from "@/components/layouts/MainLayout";
 import HomePage from "@/pages/home/HomePage";
 
 import AdminLayout from "@/components/layouts/AdminLayout";
+import CategoriesPage from "@/pages/admin/CategoriesPage";
+import AddCategoriesPage from "@/pages/admin/AddCategoriesPage";
 
 // Lazy loaded pages
 const ProductDetailPage = React.lazy(
@@ -17,6 +19,8 @@ const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
 const ProductsPage = React.lazy(() => import("@/pages/admin/ProductsPage"));
 const AddProductPage = React.lazy(() => import("@/pages/admin/AddProductPage"));
+const CategoriesPage = React.lazy(() => import("@/pages/admin/CategoriesPage"));
+const AddCategoriesPage = React.lazy(() => import("@/pages/admin/AddCategoriesPage"));
 
 const router = createBrowserRouter([
   {
@@ -38,7 +42,10 @@ const router = createBrowserRouter([
       { index: true, element: <DashboardPage /> },
       { path: "customers", element: <UsersPage /> },
       { path: "products/list", element: <ProductsPage /> },
-      {path: "products/add-new", element: <AddProductPage/> }
+      {path: "products/add-new", element: <AddProductPage/> },
+      {path: "categories/list", element: <CategoriesPage/>},
+      {path: "categories/add-new", element: <AddCategoriesPage/>},
+
     ],
   },
 ]);
