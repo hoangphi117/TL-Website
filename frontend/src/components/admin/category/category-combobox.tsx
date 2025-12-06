@@ -5,9 +5,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
@@ -17,29 +15,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import type { ICategory } from "@/types/category"
-
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-]
 
 interface CategoryComboboxProps {
     categories: ICategory[];
@@ -66,7 +41,7 @@ export function CategoryCombobox({ categories, open, setOpen, setParentCategory}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="min-w-(--radix-popover-trigger-width) p-0">
         <Command>
           <CommandList>
             <CommandGroup>
@@ -79,7 +54,7 @@ export function CategoryCombobox({ categories, open, setOpen, setParentCategory}
                     setOpen(false)
                     setParentCategory(c)
                   }}
-                  className="text-md md:text-lg"
+                  className="text-md"
                 >
                   {c.name}
                   <Check

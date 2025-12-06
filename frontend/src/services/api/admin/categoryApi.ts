@@ -13,7 +13,12 @@ const categoryApi = {
 
     delete(id: string): Promise<{success: boolean; message: string }> {
         return axiosClient.delete(`/admin/category/${id}`);
+    }, 
+
+    create(data: Partial<ICategory>) : Promise<{success: boolean; message: string; data: ICategory}> {
+        return axiosClient.post("/admin/category/createCategory", data);
     }
+
 }
 
 export default categoryApi

@@ -4,9 +4,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import categoryApi from "@/services/api/admin/categoryApi"
-import { useNavigate } from "react-router-dom"
 import type { ICategory } from "@/types/category"
 import { CategoryCombobox } from "@/components/admin/category/category-combobox"
+import { CircleCheckBig, CircleX } from "lucide-react"
+import { AxiosError } from "axios"
 
 export default function AddCategoryPage() {
   const [name, setName] = useState("")
@@ -15,19 +16,22 @@ export default function AddCategoryPage() {
   const [categories, setCategories] = useState<ICategory[]>([])
   const [comboboxOpen, setComboboxOpen] = useState(false);
   const [parentCategory, setParentCategory] = useState<ICategory | null>(null);
-
-  const navigate = useNavigate()
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
 
   const handleSubmit = async () => {
     try {
-      const newCategory = { name, imageUrl, description }
-      const res = await categoryApi.create(newCategory)
+      const newCategory = { name, imageUrl, description, }
+      const res = await categoryApi.create(newCategory);
 
-      console.log("Created:", res.data)
+      console.log("Created: ", res.data)
+      if(res.success === true) setFormSuccess(res.message);
 
-      navigate("/admin/categories/list") // chuyển về danh sách sau khi tạo thành công
-    } catch (err) {
-      console.log("Error:", err)
+    } catch (err: unknown) {
+
+      const error = err as AxiosError<{ message: string }>;
+      const msg = error.message || "Có lỗi xảy ra!";
+      setFormError(msg);
     }
   }
 
@@ -37,7 +41,7 @@ export default function AddCategoryPage() {
         setCategories(res.data);
     }
     catch(err){
-        console.log(err);
+      console.log(err);
     }
   };
 
@@ -52,7 +56,7 @@ export default function AddCategoryPage() {
     <div className="flex flex-col gap-5 p-5">
       <span className="text-lg md:text-2xl text-gray-600 font-bold">Thêm loại sản phẩm</span>
       <div className="flex justify-center">
-        <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+        <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl rounded-md px-3">
           <CardHeader>
             <CardTitle className="text-xl md:text-2xl">Loại sản phẩm</CardTitle>
           </CardHeader>
@@ -60,17 +64,26 @@ export default function AddCategoryPage() {
           <CardContent className="space-y-4">
             <div>
               <Label className="text-md md:text-lg">Tên loại sản phẩm</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
+              <Input className="h-12 focus-visible:ring-2 
+                              focus-visible:ring-blue-500 
+                                focus-visible:ring-offset-0" 
+                value={name} onChange={(e) => setName(e.target.value)} />
             </div>
 
             <div>
               <Label className="text-md md:text-lg">Ảnh hiển thị</Label>
-              <Input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+              <Input className="h-12 focus-visible:ring-2 
+                              focus-visible:ring-blue-500 
+                                focus-visible:ring-offset-0"  
+                value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
             </div>
 
             <div>
               <Label className="text-md md:text-lg">Mô tả</Label>
-              <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+              <Input className="h-12 focus-visible:ring-2 
+                              focus-visible:ring-blue-500 
+                                focus-visible:ring-offset-0" 
+                value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
 
             <div className="space-y-1">
@@ -82,12 +95,24 @@ export default function AddCategoryPage() {
                 setParentCategory={setParentCategory}
               />
             </div>
+
+              {formSuccess && (
+                <div className="flex flex-row gap-2">
+                  <CircleCheckBig size={25} strokeWidth={2.5} color="#42bf40" />
+                  <span className="text-lg text-green-500">{formSuccess}</span>
+                </div>
+              )}
+              {formError && (
+                <div className="flex flex-row gap-2">
+                  <CircleX color="#f00a0a" strokeWidth={2.5} />
+                  <span className="text-lg text-red-500">{formError}</span>
+                </div>
+              )}
             
           </CardContent>
 
           <CardFooter className="justify-end gap-2">
-            <Button variant="outline" onClick={() => navigate(-1)}>Hủy</Button>
-            <Button onClick={handleSubmit}>Thêm</Button>
+            <Button className="text-lg font-bold bg-blue-500 hover:bg-blue-600" onClick={handleSubmit}>Thêm mới</Button>
           </CardFooter>
         </Card>
       </div>
