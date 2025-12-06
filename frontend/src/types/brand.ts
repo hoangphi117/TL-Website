@@ -2,6 +2,7 @@ export interface IBrand {
     _id: string;
     name: string;
     logoUrl: string;
+    description: string;
     _v?: number;
 }
 

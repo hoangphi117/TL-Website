@@ -63,7 +63,7 @@ export default function BrandCard({ brand, onEdit, onDelete }: BrandCardProps) {
             className="h-8 w-8 hover:bg-red-50 hover:text-red-600"
             onClick={() => onDelete(brand)}
           >
-            <Trash className="h-4 w-4" />
+            <Trash color="red" className="h-4 w-4" />
           </Button>
         </div>
       </div>
