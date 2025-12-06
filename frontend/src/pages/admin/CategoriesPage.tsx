@@ -28,16 +28,16 @@ export default function CategoriesPage() {
         fetchData();
     },[]);
   return (
-    <div className="p-3">
+    <div className="p-4">
         {isLoading && (
-            <p className="text-gray-500 text-center">Đang tải dữ liệu...</p>
+            <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
         )}
 
-        {isLoading && categories.length === 0 && (
-            <p className="text-gray-500 text-center">Chưa có dữ liệu</p>
+        {!isLoading && categories.length === 0 && (
+            <p className="text-gray-500 text-center text-md sm:text-lg">Chưa có dữ liệu</p>
         )}
 
-        {isLoading && categories.length > 0 && (
+        {!isLoading && categories.length > 0 && (
              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
                 {categories.map((c) =>(
                     <CategoryCard key={c._id} category={c}/>
