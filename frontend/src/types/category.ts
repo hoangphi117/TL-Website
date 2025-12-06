@@ -5,7 +5,7 @@ export interface IParentCayegory {
 
 
 export interface ICategory {
-    id: string;
+    _id: string;
     name: string;
     imageUrl: string;
     parentCategory: IParentCayegory | null;

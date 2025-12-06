@@ -24,12 +24,11 @@ export function NavMain({
     title: string
     url: string
     icon?: LucideIcon
-    items?: [
+    items?: 
       {
         title: string
         url: string
-      }
-    ]
+      }[];
   }[]
 }) {
   const { pathname } = useLocation()
@@ -65,7 +64,7 @@ export function NavMain({
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
-                    <SidebarMenuSub>
+                    <SidebarMenuSub className="flex flex-col gap-3">
                       {item.items?.map((subItem) => {
                         const isSubActive = pathname === subItem.url;
                         return (

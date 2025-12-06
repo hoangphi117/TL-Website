@@ -37,7 +37,7 @@ const data = {
       title: "Dashboard",
       url: "/admin",
       icon: Home,
-      isActive: true,
+      // isActive: true,
     },
     {
       title: "Sản phẩm",

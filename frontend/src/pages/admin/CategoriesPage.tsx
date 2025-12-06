@@ -9,7 +9,7 @@ export default function CategoriesPage() {
     const loadCategoris = async () => {
         try {
             const res = await categoryApi.getAll();
-
+            console.log("check imgurl: ", res.data[0].imageUrl);
             setCategories(res.data);
         }
         catch(err){
@@ -26,7 +26,7 @@ export default function CategoriesPage() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 p-3">
         {categories.map((c) =>(
-            <CategoryCard key={c.id} category={c}/>
+            <CategoryCard key={c._id} category={c}/>
         ))}
     </div>
   )
