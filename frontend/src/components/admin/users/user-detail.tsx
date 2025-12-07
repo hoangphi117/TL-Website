@@ -55,11 +55,10 @@ export function UserDetailDialog({ open, onOpenChange, user }: UserDetailDialogP
 
           <InfoItem
             icon={<MapPin />}
-            label="Địa chỉ mặc định"
+            label="Địa chỉ"
             value={
               user.addresses?.find((a) => a.isDefault)
                 ? `${user.addresses?.find((a) => a.isDefault)?.street}, 
-                   ${user.addresses?.find((a) => a.isDefault)?.district}, 
                    ${user.addresses?.find((a) => a.isDefault)?.city}`
                 : "Không có địa chỉ"
             }
