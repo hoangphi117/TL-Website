@@ -2,8 +2,6 @@ import * as React from "react"
 import {
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
@@ -12,7 +10,7 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ChevronDown, ChevronsRight, ChevronsLeft } from "lucide-react"
+import { ChevronDown, ChevronsRight, ChevronsLeft, SearchX } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -32,39 +30,6 @@ import {
 } from "@/components/ui/table"
 import type { IUser } from "@/types/user"
 import { columns } from "./columns"  
-
-// mock data
-
-
-// export type User = {
-//   _id: string
-//   email: string
-//   password: string
-//   fullName: string
-//   phoneNumber: string
-//   avatarUrl: string
-
-//   addresses: {
-//     street: string
-//     ward: string
-//     district: string
-//     city: string
-//     isDefault: boolean
-//   }[]
-
-//   role: "customer" | "admin"
-//   isActive: boolean
-
-//   wishlist: string[]   // danh sách productId
-
-//   passwordResetToken?: string | null
-//   passwordResetExpires?: Date | null
-
-//   createdAt: Date
-//   updatedAt: Date
-// }
-
-
 
 
 interface DataTableProps {
@@ -91,16 +56,11 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch} 
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
     },
   })
 
@@ -174,8 +134,8 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch} 
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
+         <TableBody>
+            {users.length > 0 ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -184,22 +144,24 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch} 
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
+                  <TableCell colSpan={columns.length}>
+                    <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
+                      <SearchX className="w-12 h-12 mb-3 opacity-70" />
+                      <span className="text-lg font-semibold">Không tìm thấy dữ liệu</span>
+                      <span className="text-sm mb-3">Thử dùng từ khóa khác hoặc reset tìm kiếm.</span>
+
+                      <Button variant="outline" onClick={() => setSearch("")}>
+                        Xoá bộ lọc
+                      </Button>
+                    </div>
+                  </TableCell>
               </TableRow>
             )}
           </TableBody>

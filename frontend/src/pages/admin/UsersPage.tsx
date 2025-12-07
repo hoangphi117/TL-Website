@@ -20,6 +20,7 @@ export default function UsersPage() {
                 search,
             }
             const res = await userApi.getAll(query);
+            console.log("SEARCH RECEIVED:", query.search);
             console.log("check get all: ", res.data.data);
             setUsers(res.data.data);
             setTotalPages(res.data.totalPages);
@@ -45,21 +46,16 @@ export default function UsersPage() {
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}
         
-            {!isLoading && users.length === 0 && (
-                <p className="text-gray-500 text-center text-md sm:text-lg">Chưa có dữ liệu</p>
-            )}
-            {!isLoading && users.length > 0 && (
-                <div>
-                    <DataTable
-                        users={users}
-                        setPage={setPage}
-                        totalPages={totalPages}
-                        page={page}
-                        search={search}
-                        setSearch={setSearch}
-                    />
-                </div>
-            )}
+            <div>
+                <DataTable
+                    users={users}
+                    setPage={setPage}
+                    totalPages={totalPages}
+                    page={page}
+                    search={search}
+                    setSearch={setSearch}
+                />
+            </div>
         </div>
     )
 }
