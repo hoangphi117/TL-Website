@@ -18,7 +18,8 @@ import type { IBrand } from "@/types/brand"
 import type { ICategory } from "@/types/category"
 import categoryApi from "@/services/api/admin/categoryApi"
 import { Input } from "@/components/ui/input"
-import { Plus, SearchX, X } from "lucide-react"
+import { Crown, LayoutGrid, LucidePackage, Plus, SearchX, X } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 
 export default function ProductsPage() {
@@ -35,6 +36,11 @@ export default function ProductsPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
   const [totalPages, setTotalPages] = useState<number>(1);
+
+  const [totalProducts, setTotalProducts] = useState(0);
+
+  const navigate = useNavigate();
+
 
   const isFiltered =
   selectedBrand !== "all" ||
@@ -56,6 +62,7 @@ export default function ProductsPage() {
       const res = await productApi.getAll(params);
       setProducts(res.data.data);
       setTotalPages(res.data.totalPages);
+      setTotalProducts(res.data.count);
     }
     catch(error){
       console.log(error);
@@ -84,7 +91,7 @@ export default function ProductsPage() {
   }
 
   const onEdit = (id: string) => {
-    
+    navigate(`/admin/product/edit/${id}`);
   }
 
   const onDelete = (id: string) => {
@@ -105,15 +112,56 @@ export default function ProductsPage() {
     }
   }, [selectedBrand, selectedCategory, selectedStatus, page, search])
 
+  // useEffect(() => {
+  //   const loadAllProducts = async () => {
+  //     try {
+  //       const res = await productApi.getAll();
+  //       setTotalProducts(res.data.data);
+  //       setNum(res.data.count);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+
+  //   loadAllProducts();
+  // }, []);
+
   return (
     <div className="space-y-6 p-5">
       {isLoading && (
         <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
       )}
+      <div className="bg-white">
+        <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
+          <p className="text-2xl lg:text-3xl font-bold mt-3">Quản lí sản phẩm</p>
+          <p className="text-md md:text-lg text-gray-600">Quản lí thông tin sản phẩm, kho hàng và danh mục</p>
+        </div>
 
-      <div className="flex flex-col bg-white mt-4 px-8 gap-3 border-b border-gray-300 pb-3 pt-3">
-        <p className="text-2xl lg:text-3xl font-bold">Quản lí sản phẩm</p>
-        <p className="text-md md:text-lg text-gray-600">Quản lí thông tin sản phẩm, kho hàng và danh mục</p>
+        <div className="flex flex-col bg-white md:flex-row gap-4 items-center justify-center mt-4 px-6 py-3">
+          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+              <p className="text-lg font-semibold">Sản phẩm</p>
+              <div className="flex flex-row items-center gap-2">
+                <p className="text-xl lg:text-2xl font-bold">{totalProducts}</p>
+                <LayoutGrid size={32} color="#146bdb" />
+              </div>
+          </div>
+
+          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+              <p className="text-lg font-semibold">Thương hiệu</p>
+              <div className="flex flex-row items-center gap-2">
+                <p className="text-xl lg:text-2xl font-bold">{brands.length}</p>
+                <Crown size={32} color="#e1c614" />
+              </div>
+          </div>
+
+          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+              <p className="text-lg font-semibold">Danh mục</p>
+              <div className="flex flex-row items-center gap-2">
+                <p className="text-xl lg:text-2xl font-bold">{categories.length}</p>
+                <LucidePackage size={32} color="#10b238" />
+              </div>
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col bg-white h-40 sm:h-30 lg:h-15 lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between p-2">

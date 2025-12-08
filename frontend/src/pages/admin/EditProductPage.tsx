@@ -13,6 +13,7 @@ import categoryApi from "@/services/api/admin/categoryApi";
 import type { IProduct } from "@/services/api/admin/product";
 import type { IBrand } from "@/types/brand";
 import type { ICategory } from "@/types/category";
+import { ChevronLeft } from "lucide-react";
 
 export default function EditProductPage() {
   const { id } = useParams();
@@ -91,7 +92,8 @@ export default function EditProductPage() {
       };
 
       await productApi.update(id!, payload);
-      navigate("/admin/products");
+
+      navigate("/admin/products/list");
     } catch (err) {
       console.log(err);
     } finally {
@@ -104,16 +106,28 @@ export default function EditProductPage() {
     loadProduct();
   }, []);
 
+  const handleComeBack = () => {
+    navigate("/admin/products/list");
+  }
+
   if (loading) return <p className="text-center text-gray-500">Đang tải dữ liệu...</p>;
 
   return (
     <div className="p-6 space-y-6 bg-white border rounded-lg">
-
-      <h1 className="text-2xl font-bold">Chỉnh sửa sản phẩm</h1>
-      <p className="text-gray-600">Cập nhật thông tin chi tiết sản phẩm</p>
+        <div className="flex flex-col bg-white mt-0 px-1 gap-3 border-b border-gray-300 pb-3 pt-3">
+            <Button 
+                className="bg-white border border-gray-300 w-25 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"
+                onClick={() => handleComeBack()}
+            >
+                <ChevronLeft size={28} color="black" strokeWidth={2.25}/>
+                quay về
+            </Button>
+            <p className="text-2xl lg:text-3xl font-bold">Cập nhật sản phẩm</p>
+            <p className="text-md md:text-lg text-gray-600">Cập nhật thông tin sản phẩm</p>
+        </div>
 
       {/* FORM GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border border-gray-300 p-3 rounded-md">
 
         {/* Product Name */}
         <div className="flex flex-col gap-1">

@@ -13,11 +13,16 @@ export interface UserQuery {
   search?: string;
 }
 
-// export interface ProductQuery {
-//   page?: number;
-//   limit?:number;
-//   Search?: string | null;
-//   category?: string | null;
-//   brand?: string | null;
-//   status?: "active" | "inactive" | "out_of_stock";
-// }
+export interface IProductUpdate {
+  name: string;
+  sku: string;
+  description?: string;
+  price: number;
+  originalPrice?: number;
+  stockQuantity: number;
+  category: string;   
+  brand: string;     
+  status: string;
+  images: string[];
+  specifications: Record<string, string>;
+}
