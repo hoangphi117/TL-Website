@@ -1,87 +1,225 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+
 import productApi from "@/services/api/admin/productApi";
-import type { IProduct } from "@/services/api/admin/product";
+import brandApi from "@/services/api/admin/brandApi";
+import categoryApi from "@/services/api/admin/categoryApi";
 
-export default function ProductsPage() {
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+import type { IBrand } from "@/types/brand";
+import type { ICategory } from "@/types/category";
+import { ChevronLeft } from "lucide-react";
 
-  const loadProducts = async () => {
+export default function EditProductPage() {
+  const navigate = useNavigate();
+
+  const [brands, setBrands] = useState<IBrand[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+
+  const [saving, setSaving] = useState(false);
+
+  // Local fields
+  const [name, setName] = useState("");
+  const [sku, setSku] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState<number>(0);
+  const [originalPrice, setOriginalPrice] = useState<number>(0);
+  const [stockQuantity, setStockQuantity] = useState<number>(0);
+  const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState("");
+  const [status, setStatus] = useState("active");
+  const [images, setImages] = useState<string[]>([]);
+  const [specifications, setSpecifications] = useState<Record<string, string>>({});
+  const [detailedInfo, setDetailedInfo] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+
+  // Load brands + categories
+  const loadMeta = async () => {
+    const resBrand = await brandApi.getAll();
+    const resCat = await categoryApi.getAll();
+    setBrands(resBrand.data.data);
+    setCategories(resCat.data.data);
+  };
+
+  // Save product
+  const handleSave = async () => {
+    setSaving(true);
     try {
-      const res = await productApi.getAll({
-        page,
-        limit: 5,
-        search: "",
-        category: "6932acee38bedaef2b18a817",
-        brand: "6932acee38bedaef2b18a81d",
-      });
+      const payload = {
+        name,
+        sku,
+        description,
+        detailedInfo,
+        price,
+        originalPrice,
+        stockQuantity,
+        images,
+        category,
+        brand,
+        specifications,
+        status,
+        tags,
+      };
 
-      setProducts(res.data.data);
-      setTotalPages(res.data.totalPages);
+      await productApi.update(id!, payload);
+
+      navigate("/admin/products/list");
     } catch (err) {
-      console.error(err);
+      console.log(err);
+    } finally {
+      setSaving(false);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-        await loadProducts();
-    };
+    loadMeta();
+  }, []);
 
-    fetchData();
-    }, [page]);
+  const handleComeBack = () => {
+    navigate("/admin/products/list");
+  }
+
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Products</h1>
+    <div className="p-6 space-y-6 bg-white border rounded-lg">
+        <div className="flex flex-col bg-white mt-0 px-1 gap-3 border-b border-gray-300 pb-3 pt-3">
+            <Button 
+                className="bg-white border border-gray-300 w-25 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"
+                onClick={() => handleComeBack()}
+            >
+                <ChevronLeft size={28} color="black" strokeWidth={2.25}/>
+                quay về
+            </Button>
+            <p className="text-2xl lg:text-3xl font-bold">Thêm sản phẩm</p>
+            <p className="text-md md:text-lg text-gray-600">Thêm thông tin sản phẩm mới</p>
+        </div>
 
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-100">
-            <th>Name</th>
-            <th>SKU</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Category</th>
-            <th>Brand</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((p) => (
-            <tr key={p._id} className="border-t">
-              <td>{p.name}</td>
-              <td>{p.sku}</td>
-              <td>{p.price}</td>
-              <td>{p.status}</td>
-              <td>{p.category?.name}</td>
-              <td>{p.brand?.name || "-"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* FORM GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border border-gray-300 p-3 rounded-md">
 
-      <div className="flex gap-4 mt-4">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage((p) => p - 1)}
-          className="px-3 py-1 border rounded"
-        >
-          Prev
-        </button>
+        {/* Product Name */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Tên sản phẩm</label>
+          <Input value={name} onChange={(e) => setName(e.target.value)} />
+        </div>
 
-        <span>
-          Page {page} / {totalPages}
-        </span>
+        {/* SKU */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">SKU</label>
+          <Input value={sku} onChange={(e) => setSku(e.target.value)} />
+        </div>
 
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage((p) => p + 1)}
-          className="px-3 py-1 border rounded"
-        >
-          Next
-        </button>
+        {/* Price */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Giá bán</label>
+          <Input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
+        </div>
+
+        {/* Original Price */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Giá gốc</label>
+          <Input type="number" value={originalPrice} onChange={(e) => setOriginalPrice(Number(e.target.value))} />
+        </div>
+
+        {/* Stock */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Tồn kho</label>
+          <Input type="number" value={stockQuantity} onChange={(e) => setStockQuantity(Number(e.target.value))} />
+        </div>
+
+        {/* Status */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Trạng thái</label>
+          <Select value={status} onValueChange={setStatus}>
+            <SelectTrigger>
+              <SelectValue placeholder="Chọn trạng thái" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="active">Đang bán</SelectItem>
+              <SelectItem value="inactive">Ngừng bán</SelectItem>
+              <SelectItem value="out_of_stock">Hết hàng</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Category */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Danh mục</label>
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger>
+              <SelectValue placeholder="Danh mục" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((c) => (
+                <SelectItem key={c._id} value={c._id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Brand */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Thương hiệu</label>
+          <Select value={brand} onValueChange={setBrand}>
+            <SelectTrigger>
+              <SelectValue placeholder="Thương hiệu" />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value=" ">Không</SelectItem>
+              {brands.map((b) => (
+                <SelectItem key={b._id} value={b._id}>
+                  {b.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Thông tin chi tiết</label>
+          <Textarea rows={5} value={detailedInfo} onChange={(e) => setDetailedInfo(e.target.value)} />
+        </div>
+
       </div>
+
+      {/* Description */}
+      <div className="flex flex-col gap-1">
+        <label className="font-semibold">Mô tả</label>
+        <Textarea rows={5} value={description} onChange={(e) => setDescription(e.target.value)} />
+      </div>
+
+      {/* Images */}
+      <div>
+        <h3 className="font-semibold mb-2">Hình ảnh</h3>
+        <div className="flex gap-3 flex-wrap">
+          {images.map((img, idx) => (
+            <img
+              key={idx}
+              src={img}
+              className="w-28 h-28 object-cover rounded-lg border"
+              alt="Product"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Action buttons */}
+      <div className="flex justify-end gap-3 pt-5">
+        <Button variant="outline" onClick={() => navigate(-1)}>
+          Hủy
+        </Button>
+
+        <Button disabled={saving} onClick={handleSave}>
+          {saving ? "Đang lưu..." : "Thêm"}
+        </Button>
+      </div>
+
     </div>
   );
 }

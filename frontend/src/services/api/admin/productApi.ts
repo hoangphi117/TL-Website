@@ -1,6 +1,6 @@
 import axiosClient from "../anxiosCient";
 import type { IProductListResponse, IProduct } from "@/services/api/admin/product";
-import type { IProductUpdate, ProductQuery } from "./query";
+import type { IProductCreate, IProductUpdate, ProductQuery } from "./query";
 
 const productApi = {
   getAll(params?: ProductQuery) {
@@ -13,6 +13,10 @@ const productApi = {
 
   update(id: string, data: IProductUpdate) {
     return axiosClient.put<{success: boolean; message: string; data: IProductUpdate}>(`admin/product/${id}`, data);
+  },
+
+  create(data: IProductCreate) {
+    return axiosClient.post<{success: boolean; message: string; data: IProductCreate}>("admin/product/createProduct", data);
   }
 };
 

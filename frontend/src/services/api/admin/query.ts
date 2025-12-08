@@ -26,3 +26,19 @@ export interface IProductUpdate {
   images: string[];
   specifications: Record<string, string>;
 }
+
+export interface IProductCreate {
+  name: string;
+  sku: string;
+  description?: string;
+  detailedInfo: string[]
+  price: number
+  originalPrice?: number;
+  stockQuantity: number;
+  images: string;
+  category: string;
+  brand: string;
+  specifications: Record<string, string>;
+  status: string;
+  tags: string[];
+}
