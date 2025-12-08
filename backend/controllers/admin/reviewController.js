@@ -68,7 +68,7 @@ const  approveReview = async (req, res) => {
         });
       }
       
-      await updateProductRating(review.productId._id);
+      await updateProductRating(review.productId?._id || review.productId);
       
       res.status(200).json({
         success: true,
