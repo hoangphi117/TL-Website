@@ -61,12 +61,10 @@ const getAllPromotions = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit),
       data: promotions,
-      pagination: {
-        total,
-        page: parseInt(page),
-        pages: Math.ceil(total / limit),
-      },
     });
   } catch (error) {
     res.status(500).json({
