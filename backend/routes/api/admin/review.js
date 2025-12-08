@@ -7,10 +7,8 @@ const {
     replyToReview,
     deleteReviewByAdmin
 } = require("../../../controllers/admin/reviewController");
-// Get all reviews
 
 router.get("/", getAllReviews);
-// Approve a review
 router.put("/:id/approve", approveReview);
 router.put("/:id/reject", rejectReview);
 router.put("/:id/reply", replyToReview);

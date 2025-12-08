@@ -2,7 +2,7 @@ const Feedback = require("../../models/FeedbackModel");
 
 const getAllFeedbacks = async (req, res) => {
   try {
-    const { status, page, limit, search } = req.query;
+    const { status, page = 1, limit = 10, search } = req.query;
     const query = {};
 
     if (status) {
@@ -28,10 +28,10 @@ const getAllFeedbacks = async (req, res) => {
     const total = await Feedback.countDocuments(query);
 
     res.status(200).json({
-      feedbacks,
       total,
       page: parseInt(page),
-      limit: parseInt(limit),
+      totalPages: Math.ceil(total/ limit),
+      feedbacks,
     });
   } catch (error) {
     res.status(500).json({
