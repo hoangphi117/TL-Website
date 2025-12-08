@@ -7,7 +7,7 @@ const {
   replyToFeedback,
   updateFeedbackStatus,
   deleteFeedback,
-} = require("../../controllers/admin/feedbackController");
+} = require("../../../controllers/admin/feedbackController");
 
 router.get("/getAllFeedbacks", getAllFeedbacks);
 router.get("/:id", getFeedbackById);
