@@ -12,30 +12,6 @@ import { Button } from "@/components/ui/button"
 import { ArrowUpDown, MoreHorizontal, ArrowDownUp } from "lucide-react"
 
 export const columns: ColumnDef<IUser>[] = [
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && "indeterminate")
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //       className="border-gray-400"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //       className="border-gray-400"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
   {
     accessorKey: "avatarUrl",
     header: "Avatar",
@@ -80,7 +56,7 @@ export const columns: ColumnDef<IUser>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div className="lowercase text-blue-600">{row.getValue("email")}</div>,
   },
   {
     accessorKey: "phoneNumber",
@@ -102,23 +78,4 @@ export const columns: ColumnDef<IUser>[] = [
       );
     }
   },
-  // {
-  //   id: "actions",
-  //   enableHiding: false,
-  //   cell: () => {
-  //     return (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button variant="ghost" className="h-8 w-8 p-0">
-  //             <span className="sr-only">Open menu</span>
-  //             <MoreHorizontal />
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end">
-  //           <DropdownMenuItem > <ArrowDownUp size={28} strokeWidth={2.25} />Update to Admin</DropdownMenuItem>
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     )
-  //   },
-  // },
 ]

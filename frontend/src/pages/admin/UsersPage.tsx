@@ -24,7 +24,6 @@ export default function UsersPage() {
             const res = await userApi.getAll(query);
             setUsers(res.data.data);
             setTotalPages(res.data.totalPages);
-            setPage(res.data.page);
             setTotalUsers(res.data.count);
         }
         catch(error){
