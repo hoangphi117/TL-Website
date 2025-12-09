@@ -42,3 +42,15 @@ export interface IProductCreate {
   status: string;
   tags: string[];
 }
+
+export interface OrderQuery {
+  page?: number; 
+  limit?: number;
+  orderStatus?: string;
+  paymentStatus?: "pending" | "paid" | "failed";
+  paymentMethod?: "COD" | "BankTransfer" | "OnlineGateway";
+  userId?: string;
+  search?: string;
+  sortBy?: "createdAt" | "totalAmount" | "orderCode";
+  sortOrder?: "asc" | "desc";
+}

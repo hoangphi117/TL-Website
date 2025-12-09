@@ -28,14 +28,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type { IUser } from "@/types/user"
 import { columns } from "./columns"  
 import { useNavigate } from "react-router-dom"
+import type { IOrder } from "@/types/order"
 
 
 
 interface DataTableProps {
-  users: IUser[];
+  orders: IOrder[];
   setPage: (page: number) => void;
   totalPages: number;
   page: number; 
@@ -43,7 +43,7 @@ interface DataTableProps {
   setSearch: (search: string) => void;
 }
 
-export function DataTable({users, setPage, totalPages, page, search, setSearch} : DataTableProps) {
+export function OrdersTable({orders, setPage, totalPages, page, search, setSearch} : DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -55,7 +55,7 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch} 
   const navigate = useNavigate();
 
   const table = useReactTable({
-    data: users,
+    data: orders,
     columns,
     meta: {
       onUserClick: (id: string) => navigate(`/admin/users/${id}`)
@@ -140,7 +140,7 @@ export function DataTable({users, setPage, totalPages, page, search, setSearch} 
             ))}
           </TableHeader>
          <TableBody>
-            {users.length > 0 ? (
+            {orders.length > 0 ? (
               table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
