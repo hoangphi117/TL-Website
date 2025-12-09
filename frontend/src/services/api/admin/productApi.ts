@@ -1,4 +1,4 @@
-import axiosClient from "../anxiosCient";
+import axiosClient from "./anxiosCient";
 import type { IProductListResponse, IProduct } from "@/services/api/admin/product";
 import type { IProductCreate, IProductUpdate, ProductQuery } from "./query";
 

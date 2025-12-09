@@ -1,3 +1,4 @@
+import OrderDetailDialog from "@/components/admin/orders/OrderDetailDialog";
 import { OrdersTable } from "@/components/admin/orders/orders-table";
 import orderApi from "@/services/api/admin/orderApi";
 import type { OrderQuery } from "@/services/api/admin/query";
@@ -15,19 +16,30 @@ export default function OrdersPage() {
   const [totalOrders, setTotalOrders] = useState(0);
   const [detailedOrder, setDetailedOrder] = useState<IOrder | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [orderStatusSelected, setOrderStatusSelected] = useState("all");
+  const [paymentStatusSelected, setPaymentStatusSelected] = useState("all");
 
-  const handleDetailOpen = (id: string) => {
+  const handleDetailOpen = (order: IOrder) => {
     try {
-
+        setDetailedOrder(order);
+        console.log("check detail order ", detailedOrder);
+        setDetailOpen(true);
+      }catch(error){
+        console.log(error);
+      }
     }
-  }
 
   const loadOrders = async () => {
     try {
       const params: OrderQuery = {
         limit: perPage,
         page,
+        search,
       }
+
+      if(orderStatusSelected !== "all") params.orderStatus = orderStatusSelected;
+      if(paymentStatusSelected !== "all") params.paymentStatus = paymentStatusSelected;
+
       const res = await orderApi.getAll(params);
       setOrders(res.data.data);
       setTotalOrders(res.data.count);
@@ -48,7 +60,7 @@ export default function OrdersPage() {
     }catch(error){
       console.log(error);
     }
-  },[page, search,])
+  },[page, search, paymentStatusSelected, orderStatusSelected])
   return (
      <div className="p-5">
       {isLoading && (
@@ -65,12 +77,22 @@ export default function OrdersPage() {
                   Tổng đơn hàng: {totalOrders}
               </p>
               <OrdersTable
-                  orders={orders}
-                  setPage={setPage}
-                  totalPages={totalPages}
-                  page={page}
-                  search={search}
-                  setSearch={setSearch}
+                orders={orders}
+                setPage={setPage}
+                totalPages={totalPages}
+                page={page}
+                search={search}
+                setSearch={setSearch}
+                handleDetailOpen={handleDetailOpen}
+                orderStatusSelected={orderStatusSelected}
+                setOrderStatusSelected={setOrderStatusSelected}
+                paymentSatusSelected={paymentStatusSelected}
+                setPaymentStatusSelected={setPaymentStatusSelected}
+              />
+              <OrderDetailDialog
+                open={detailOpen}
+                setOpen={setDetailOpen}
+                order={detailedOrder}
               />
           </div>
       </div>

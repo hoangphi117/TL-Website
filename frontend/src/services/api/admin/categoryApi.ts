@@ -1,4 +1,4 @@
-import axiosClient from "../anxiosCient";
+import axiosClient from "./anxiosCient";
 import type { ICategory, ICategoryCreate, ICategoryListRespose } from "@/types/category";
 
 const categoryApi = {

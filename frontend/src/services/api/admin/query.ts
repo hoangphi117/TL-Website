@@ -47,7 +47,7 @@ export interface OrderQuery {
   page?: number; 
   limit?: number;
   orderStatus?: string;
-  paymentStatus?: "pending" | "paid" | "failed";
+  paymentStatus?:string;
   paymentMethod?: "COD" | "BankTransfer" | "OnlineGateway";
   userId?: string;
   search?: string;

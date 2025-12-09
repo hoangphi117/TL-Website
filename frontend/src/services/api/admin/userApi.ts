@@ -1,4 +1,4 @@
-import axiosClient from "../anxiosCient";
+import axiosClient from "./anxiosCient";
 import type { IUserListResponse, IUser } from "@/types/user";
 import type { UserQuery } from "./query";
 
@@ -14,7 +14,7 @@ const userApi = {
   updateRole(id: string, role: string) {
     return axiosClient.put<{ success: boolean; message: string; data: IUser }>(
       `admin/user/${id}`,
-      role
+      {role}
     );
   },
 };

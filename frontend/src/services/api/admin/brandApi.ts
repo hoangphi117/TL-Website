@@ -1,5 +1,5 @@
 import type { IBrand, IBrandListResponse } from '@/types/brand';
-import axiosClient from '../anxiosCient';
+import axiosClient from './anxiosCient';
 
 const brandApi = {
     getAll() {

@@ -1,5 +1,5 @@
 import type { IOrder, IOrderListResponse } from "@/types/order"
-import axiosClient from "../anxiosCient"
+import axiosClient from "./anxiosCient"
 import type { OrderQuery } from "./query";
 
 const orderApi = {

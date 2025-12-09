@@ -39,7 +39,7 @@ export default function AdminLoginPage() {
       // Lưu token vào localStorage
       localStorage.setItem("adminToken", data.token);
 
-      navigate("/admin/dashboard"); 
+      navigate("/admin"); 
     } catch (err: unknown) {
         const error = err as AxiosError<{messaage: string}>
         const errorMessage = error.message;

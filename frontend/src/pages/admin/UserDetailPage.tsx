@@ -7,14 +7,38 @@ import userApi from "@/services/api/admin/userApi";
 import type { IUser } from "@/types/user";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import UpdateRoleAlert from "@/components/admin/users/update-role-alert";
+import type { IOrder } from "@/types/order";
+import orderApi from "@/services/api/admin/orderApi";
+import OrderDetailDialog from "@/components/admin/orders/OrderDetailDialog";
+import { formatDate } from "@/utils/formatDate";
+import { formatOrderStatus } from "@/utils/admin/orderStatusUtils";
+import { formatVND } from "@/utils/admin/formatMoney";
 
 export default function UserDetailPage() {
   const { id } = useParams();
   const [user, setUser] = useState<IUser | null>(null);
+  const [openUpdateRole, setOpenUpdateRole] = useState(false);
+  const [role, setRole] = useState(user?.role);
+  const [orders, setOrders] = useState<IOrder[]>([]);
+  const [openOrderDialog, setOpenOrderDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
   const navigate = useNavigate();
 
   const handleComeBack = () => {
     navigate("/admin/users");
+  }
+
+  const confirmUpdateRole = async () => {
+    try {
+      const updateRole = role === "admin" ? "customer" : "admin";
+      const res = await userApi.updateRole(id ?? "", updateRole); 
+      console.log("check update: ", res.data.message)
+      setOpenUpdateRole(false);
+      setRole(updateRole);
+    }catch(error){
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -25,8 +49,19 @@ export default function UserDetailPage() {
       setUser(res.data.data);
     };
 
+    const loadOrders = async () => {
+      const res = await orderApi.getAll({userId: id})
+      setOrders(res.data.data);
+    }
+
+    loadOrders();
     loadUser();
   }, [id]);
+
+  useEffect(() => {
+    if (user) setRole(user.role);
+  }, [user]);
+
 
   if (!user) return <div className="p-10 text-lg">Đang tải...</div>;
 
@@ -58,7 +93,7 @@ export default function UserDetailPage() {
           <p className="text-gray-600">{user.email}</p>
 
           <div className="flex gap-2 mt-2">
-            <Badge variant="outline">Role: {user.role}</Badge>
+            <Badge variant="outline">Role: {role}</Badge>
             <Badge className={user.isActive ? "bg-green-600" : "bg-red-600"}>
               {user.isActive ? "Active" : "Inactive"}
             </Badge>
@@ -127,8 +162,34 @@ export default function UserDetailPage() {
               <CardTitle>Lịch sử đơn hàng</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">Chưa có dữ liệu đơn hàng.</p>
-            </CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {orders.map((o) => (
+                <div
+                  key={o._id}
+                  className="border border-gray-300 rounded-xl p-4 shadow-sm hover:shadow-md transition cursor-pointer bg-white"
+                  onClick={() => {
+                    setOpenOrderDialog(true);
+                    setSelectedOrder(o);
+                  }}
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold text-blue-600">
+                      #{o.orderCode}
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      {formatDate(o.createdAt)}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-sm">{formatOrderStatus(o.orderStatus)}</p>
+                    <p className="text-red-500 font-bold">{formatVND(o.totalAmount)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+
           </Card>
         </TabsContent>
 
@@ -139,13 +200,29 @@ export default function UserDetailPage() {
               <CardTitle>Phân quyền người dùng</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>Role hiện tại: <strong>{user.role}</strong></p>
-              <button className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md">
+              <p>Role hiện tại: <strong>{role}</strong></p>
+              <button 
+                className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md"
+                onClick={() =>setOpenUpdateRole(true)}
+              >
                 Cập nhật role
               </button>
             </CardContent>
           </Card>
         </TabsContent>
+
+        <UpdateRoleAlert
+          role={role}
+          setOpen={setOpenUpdateRole}
+          open={openUpdateRole}
+          onConfirm={confirmUpdateRole}
+        />
+
+        <OrderDetailDialog
+          open={openOrderDialog}
+          setOpen={setOpenOrderDialog}
+          order={selectedOrder}
+        />
 
       </Tabs>
     </div>

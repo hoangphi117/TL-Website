@@ -10,15 +10,10 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table"
-import { ChevronDown, ChevronsRight, ChevronsLeft, SearchX } from "lucide-react"
+import { ChevronsRight, ChevronsLeft, SearchX } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+
 import { Input } from "@/components/ui/input"
 import {
   Table,
@@ -29,9 +24,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { columns } from "./columns"  
-import { useNavigate } from "react-router-dom"
 import type { IOrder } from "@/types/order"
-
+import { PaymentStatusSelect } from "./PaymentStatusSelect"
+import { OrderStatusSelect } from "./OrderStatusSelect"
 
 
 interface DataTableProps {
@@ -41,9 +36,14 @@ interface DataTableProps {
   page: number; 
   search: string;
   setSearch: (search: string) => void;
+  handleDetailOpen: (order: IOrder) => void;
+  orderStatusSelected: string;
+  paymentSatusSelected: string;
+  setOrderStatusSelected: (orderStatusSelected: string) => void;
+  setPaymentStatusSelected: (paymentSatusSelected: string) => void;
 }
 
-export function OrdersTable({orders, setPage, totalPages, page, search, setSearch} : DataTableProps) {
+export function OrdersTable({orders, setPage, totalPages, page, search, setSearch, handleDetailOpen, orderStatusSelected, paymentSatusSelected, setOrderStatusSelected, setPaymentStatusSelected} : DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -52,14 +52,9 @@ export function OrdersTable({orders, setPage, totalPages, page, search, setSearc
     React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
-  const navigate = useNavigate();
-
   const table = useReactTable({
     data: orders,
-    columns,
-    meta: {
-      onUserClick: (id: string) => navigate(`/admin/users/${id}`)
-    },
+    columns: columns(handleDetailOpen),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -83,42 +78,27 @@ export function OrdersTable({orders, setPage, totalPages, page, search, setSearc
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input 
-          placeholder="Tìm kiếm theo email và tên khách hàng"
-          value={search }
-          onChange={(event) =>
-            setSearch(event.target.value)
-          }
-          className="max-w-sm bg-white text-md"
-        />  
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-4">
+            <Input 
+                placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, sdt"
+                value={search }
+                onChange={(event) =>
+                    setSearch(event.target.value)
+                }
+                className="max-w-sm bg-white text-md"
+            />  
+            <div className="flex flex-row gap-1">
+                <PaymentStatusSelect
+                    value={paymentSatusSelected}
+                    onChange={setPaymentStatusSelected}
+                />
+                <OrderStatusSelect
+                    value={orderStatusSelected}
+                    onChange={setOrderStatusSelected}
+                />
+            </div>
+        </div>
+        
       <div className="overflow-hidden rounded-md border bg-white">
         <Table>
           <TableHeader className="bg-blue-100">
@@ -167,7 +147,12 @@ export function OrdersTable({orders, setPage, totalPages, page, search, setSearc
                       <span className="text-lg font-semibold">Không tìm thấy dữ liệu</span>
                       <span className="text-sm mb-3">Thử dùng từ khóa khác hoặc reset tìm kiếm.</span>
 
-                      <Button variant="outline" onClick={() => setSearch("")}>
+                      <Button variant="outline" 
+                        onClick={() => {
+                            setSearch("");
+                            setPaymentStatusSelected("all");
+                            setOrderStatusSelected("all");
+                        }}>
                         Xoá bộ lọc
                       </Button>
                     </div>

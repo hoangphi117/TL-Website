@@ -1,15 +1,8 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import type { IUser } from "@/types/user"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal, ArrowDownUp } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 
 export const columns: ColumnDef<IUser>[] = [
   {

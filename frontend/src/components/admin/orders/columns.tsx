@@ -3,40 +3,39 @@ import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
 import type { IOrder } from "@/types/order"
 
-function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return date.toLocaleString("vi-VN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
-}
-
-export function formatVND(amount: number) {
-  return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
-}
+import { formatVND } from "@/utils/admin/formatMoney";
+import { formatDate } from "@/utils/formatDate";
+import { formatOrderStatus } from "@/utils/admin/orderStatusUtils";
 
 
-export const columns: ColumnDef<IOrder>[] = [
+export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder>[] => [
   {
     accessorKey: "orderCode",
     header: "Mã đơn hàng",
-    cell: ({row}) => (<div className="font-bold">{row.getValue("orderCode")}</div>)
+    cell: ({ row }) => {
+        const order = row.original;
+        return (
+            <button
+                className="text-black hover:underline font-bold"
+                onClick={() => onOpenDetail(order)}
+            >
+                {row.getValue("orderCode")}
+            </button>
+        )
+    }
   },
   {
     accessorKey: "customerInfo",
     header: "Khách hàng",
-    cell: ({ row, table }) => (
-        <button
-            className="text-black hover:underline"
-            onClick={() => table.options.meta?.onUserClick?.(row.original._id)}
-        >
-            {row.getValue("orderCode")}
-        </button>
-    ),
+    cell: ({ row }) => {
+       const customer = row.original.customerInfo;
+       return (
+            <div className="flex flex-col">
+                <span className="font-medium">{customer.fullName}</span>
+                <span className="text-sm text-gray-600">{customer.email}</span>
+            </div>
+       )
+    }
   },
   {
     accessorKey: "totalAmount",
@@ -62,7 +61,12 @@ export const columns: ColumnDef<IOrder>[] = [
   {
     accessorKey: "orderStatus",
     header: ("Trạng thái đơn hàng"),
-    cell: ({ row }) => ( <div> {row.getValue("orderStatus")}</div> )
+    cell: ({ row }) => {
+        const formatedStatus = formatOrderStatus(row.getValue("orderStatus"));
+        return (
+            <div> {formatedStatus}</div> 
+        )
+    }
   },
   {
     accessorKey: "paymentStatus",

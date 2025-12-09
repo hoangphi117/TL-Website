@@ -33,7 +33,7 @@ export default function OrderDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="w-full max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-3xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
             Chi tiết đơn hàng #{order.orderCode}
@@ -60,12 +60,12 @@ export default function OrderDetailDialog({
             <p><span className="font-medium">Số điện thoại:</span> {order.customerInfo.phoneNumber}</p>
 
             <p className="mt-2 font-medium">Địa chỉ giao hàng:</p>
-            <p className="text-sm">
+            {/* <p className="text-sm">
               {order.customerInfo.shippingAddress.street},{" "}
               {order.customerInfo.shippingAddress.ward},{" "}
               {order.customerInfo.shippingAddress.district},{" "}
               {order.customerInfo.shippingAddress.city}
-            </p>
+            </p> */}
           </div>
 
           {/* --- Items List --- */}
