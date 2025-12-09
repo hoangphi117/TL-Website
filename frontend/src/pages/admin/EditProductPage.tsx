@@ -13,9 +13,11 @@ import categoryApi from "@/services/api/admin/categoryApi";
 import type { IProduct } from "@/services/api/admin/product";
 import type { IBrand } from "@/types/brand";
 import type { ICategory } from "@/types/category";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, CircleCheckBig, CircleX } from "lucide-react";
 import { ImagesInput, TagsInput } from "@/components/admin/products/string-array-input";
 import { SpecificationsInput } from "@/components/admin/products/product-specs";
+import type { AxiosError } from "axios";
+import { PRODUCT_ERROR_MESSAGES } from "@/utils/admin/errorMessages";
 
 export default function EditProductPage() {
   const { id } = useParams();
@@ -42,8 +44,9 @@ export default function EditProductPage() {
   const [detailedInfo, setDetailedInfo] = useState<string | undefined>(undefined);
   const [tags, setTags] = useState<string[]>([]);
 
-  // error response from server
-  const [error, setError] = useState("");
+  // message response from server
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
 
   // Load brands + categories
   const loadMeta = async () => {
@@ -74,13 +77,12 @@ export default function EditProductPage() {
       setTags(p.tags);
     } catch (err) {
       console.log(err);
-      setError(error.d)
     } finally {
       setLoading(false);
     }
   };
 
-  // Save product
+  // update product
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -98,11 +100,25 @@ export default function EditProductPage() {
         specifications,
       };
 
-      await productApi.update(id!, payload);
+      const res = await productApi.update(id!, payload);
+
+      if(res.data.success === true) {
+        setFormSuccess(res.data.message);
+        setFormError("");
+      }
+
+      console.log("check form success: ", formSuccess)
 
       navigate("/admin/products/list");
-    } catch (err) {
+    } catch (err: unknown) {
       console.log(err);
+
+      const error = err as AxiosError<{message: string}>
+      const backendMsg = error.message ?? "";
+      const vietnameseMsg = PRODUCT_ERROR_MESSAGES[backendMsg] ?? "Có lỗi xảy ra! Vui lòng thử lại.";
+      setFormError(vietnameseMsg);
+      setFormSuccess("");
+
     } finally {
       setSaving(false);
     }
@@ -250,6 +266,20 @@ export default function EditProductPage() {
         </div>
         <ImagesInput images={images} setImages={setImages}/>
       </div>
+
+      {/* {response message} */}
+      {formSuccess && (
+        <div className="flex flex-row gap-2">
+        <CircleCheckBig size={25} strokeWidth={2.5} color="#42bf40" />
+        <span className="text-lg text-green-500">Thêm danh mục mới thành công</span>
+        </div>
+      )}
+      {formError && (
+        <div className="flex flex-row gap-2">
+        <CircleX color="#f00a0a" strokeWidth={2.5} />
+        <span className="text-lg text-red-500">{formError}</span>
+        </div>
+      )}
 
       {/* Action buttons */}
       <div className="flex justify-end gap-3 pt-5">

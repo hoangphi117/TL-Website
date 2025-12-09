@@ -12,9 +12,11 @@ import categoryApi from "@/services/api/admin/categoryApi";
 
 import type { IBrand } from "@/types/brand";
 import type { ICategory } from "@/types/category";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, CircleCheckBig, CircleX } from "lucide-react";
 import { SpecificationsInput } from "@/components/admin/products/product-specs";
 import { ImagesInput, TagsInput } from "@/components/admin/products/string-array-input";
+import { PRODUCT_ERROR_MESSAGES } from "@/utils/admin/errorMessages";
+import type { AxiosError } from "axios";
 
 export default function EditProductPage() {
 
@@ -48,6 +50,10 @@ export default function EditProductPage() {
     setCategories(resCat.data.data);
   };
 
+  // response message from server
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState("");
+
   // create product
   const handleSave = async () => {
     setSaving(true);
@@ -73,8 +79,14 @@ export default function EditProductPage() {
       await productApi.create(payload);
 
       navigate("/admin/products/list");
-    } catch (err) {
-      console.log(err);
+    } catch (err: unknown) {
+        console.log(err);
+
+        const error = err as AxiosError<{message: string}>
+        const backendMsg = error.message ?? "";
+        const vietnameseMsg = PRODUCT_ERROR_MESSAGES[backendMsg] ?? "Có lỗi xảy ra! Vui lòng thử lại.";
+        setFormError(vietnameseMsg);
+        setFormSuccess("");
     } finally {
       setSaving(false);
     }
@@ -212,6 +224,20 @@ export default function EditProductPage() {
         <h3 className="font-semibold mb-2">Hình ảnh</h3>
         <ImagesInput images={images} setImages={setImages}/>
       </div>
+
+      {/* {response message} */}
+      {formSuccess && (
+        <div className="flex flex-row gap-2">
+        <CircleCheckBig size={25} strokeWidth={2.5} color="#42bf40" />
+        <span className="text-lg text-green-500">Thêm danh mục mới thành công</span>
+        </div>
+      )}
+      {formError && (
+        <div className="flex flex-row gap-2">
+        <CircleX color="#f00a0a" strokeWidth={2.5} />
+        <span className="text-lg text-red-500">{formError}</span>
+        </div>
+      )}
 
       {/* Action buttons */}
       <div className="flex justify-end gap-3 pt-5">

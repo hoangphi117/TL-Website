@@ -3,14 +3,16 @@ import userApi from "@/services/api/admin/userApi";
 import type { IUser } from "@/types/user";
 import type { UserQuery } from "@/services/api/admin/query";
 import { useCallback, useEffect, useState } from "react";
+import { Grid2X2 } from "lucide-react";
 
 export default function UsersPage() {
     const [users, setUsers] = useState<IUser[]>([])
     const [isLoading, setIsLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const [perPage, setPerPage] = useState(5);  
     const [search, setSearch] = useState("");
+    const [totalUsers, setTotalUsers] = useState(0);
+    const perPage = 5;
 
     const loadUsers = useCallback (async () => {
         try {
@@ -23,6 +25,7 @@ export default function UsersPage() {
             setUsers(res.data.data);
             setTotalPages(res.data.totalPages);
             setPage(res.data.page);
+            setTotalUsers(res.data.count);
         }
         catch(error){
             console.log(error)
@@ -47,6 +50,10 @@ export default function UsersPage() {
                     <p className="text-md md:text-lg text-gray-600">Quản lí thông tin khách hàng và lịch sử mua hàng</p>
                 </div>
                 <div className="border border-gray-200 p-3 shadow-lg rounded-lg">
+                    <p className="flex flex-row gap-2 items-center font-bold text-lg">
+                        <Grid2X2 size={24} color="#3f6cf3"/>
+                        Tổng tài khoản: {totalUsers}
+                    </p>
                     <DataTable
                         users={users}
                         setPage={setPage}

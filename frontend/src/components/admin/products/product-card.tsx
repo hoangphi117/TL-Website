@@ -5,7 +5,7 @@ import type { IProduct } from "@/services/api/admin/product";
 interface ProductCardProps {
   product: IProduct;
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onDelete: (product: IProduct) => void;
 }
 
 export default function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
@@ -78,7 +78,7 @@ export default function ProductCard({ product, onEdit, onDelete }: ProductCardPr
         <Button 
           variant="destructive" 
           className="w-1/2 flex items-center gap-2"
-          onClick={() => onDelete(product._id)}
+          onClick={() => onDelete(product)}
         >
           <Trash2 size={18} />
           Xóa

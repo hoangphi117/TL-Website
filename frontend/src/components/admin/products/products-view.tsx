@@ -4,7 +4,7 @@ import ProductCard from "@/components/admin/products/product-card"
 interface ProductsDisplayProps {
   products: IProduct[] | null;
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onDelete: (product: IProduct) => void;
 }
 
 export default function ProductsDisplay({ products, onEdit, onDelete }: ProductsDisplayProps) {

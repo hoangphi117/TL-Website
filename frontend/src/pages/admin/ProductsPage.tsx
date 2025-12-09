@@ -18,7 +18,8 @@ import type { IBrand } from "@/types/brand"
 import type { ICategory } from "@/types/category"
 import categoryApi from "@/services/api/admin/categoryApi"
 import { Input } from "@/components/ui/input"
-import { Crown, LayoutGrid, LucidePackage, Plus, SearchX, X } from "lucide-react"
+import { Crown, LayoutGrid, LucidePackage, SearchX, X } from "lucide-react"
+import { DeleteCategoryAlert } from "@/components/admin/category/delete-category-alert"
 import { useNavigate } from "react-router-dom"
 
 
@@ -34,10 +35,13 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(12);
+  const limit = 12;
   const [totalPages, setTotalPages] = useState<number>(1);
 
   const [totalProducts, setTotalProducts] = useState(0);
+
+  const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<IProduct | null>(null);
 
   const navigate = useNavigate();
 
@@ -94,9 +98,29 @@ export default function ProductsPage() {
     navigate(`/admin/product/edit/${id}`);
   }
 
-  const onDelete = (id: string) => {
-
+  const onDelete = (product: IProduct) => {
+    setDeleteTarget(product);
+    setOpenDeleteAlert(true);
+    confirmDelete();
   }
+
+  const confirmDelete = async () => {
+    try {
+      if(!deleteTarget) return;
+
+      await productApi.delete(deleteTarget._id);
+      loadProducts();
+    }catch(err){
+        console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    const deleteData = async () => {
+      confirmDelete();
+    }
+    deleteData();
+  }, [])
 
   useEffect(() => {
     try{
@@ -111,20 +135,6 @@ export default function ProductsPage() {
       console.log(error)
     }
   }, [selectedBrand, selectedCategory, selectedStatus, page, search])
-
-  // useEffect(() => {
-  //   const loadAllProducts = async () => {
-  //     try {
-  //       const res = await productApi.getAll();
-  //       setTotalProducts(res.data.data);
-  //       setNum(res.data.count);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   loadAllProducts();
-  // }, []);
 
   return (
     <div className="space-y-6 p-5">
@@ -253,6 +263,13 @@ export default function ProductsPage() {
           onDelete={onDelete}
         />
       )}
+
+      <DeleteCategoryAlert
+        open={openDeleteAlert}
+        setOpen={setOpenDeleteAlert}
+        categoryName={deleteTarget?.name}
+        onConfirm={confirmDelete}
+      />
 
       {/* Pagination */}
       <div className="flex justify-center gap-2 mt-8">

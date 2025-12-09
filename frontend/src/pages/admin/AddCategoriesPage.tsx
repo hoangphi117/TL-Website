@@ -10,12 +10,7 @@ import { CircleCheckBig, CircleX } from "lucide-react"
 import { AxiosError } from "axios"
 
 //maping message from backend server
-const ERROR_MESSAGES: Record<string, string> = {
-  "Category name is required": "Tên danh mục không được để trống",
-  "Parent category does not exist": "Danh mục cha không tồn tại",
-  "Category name already exists": "Tên danh mục đã tồn tại",
-  "Error server": "lỗi hệ thống",
-};
+import { CATEGORY_ERROR_MESSAGES } from "@/utils/admin/errorMessages"
 
 export default function AddCategoryPage() {
   const [name, setName] = useState("")
@@ -49,7 +44,7 @@ export default function AddCategoryPage() {
       const error = err as AxiosError<{ message: string }>;
       const backendMsg = error.message ?? "";
       const vietnameseMsg =
-        ERROR_MESSAGES[backendMsg] ?? "Có lỗi xảy ra! Vui lòng thử lại.";
+        CATEGORY_ERROR_MESSAGES[backendMsg] ?? "Có lỗi xảy ra! Vui lòng thử lại.";
 
       setFormError(vietnameseMsg);
       setFormSuccess("");

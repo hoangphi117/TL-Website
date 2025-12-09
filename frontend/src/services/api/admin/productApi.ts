@@ -17,6 +17,10 @@ const productApi = {
 
   create(data: IProductCreate) {
     return axiosClient.post<{success: boolean; message: string; data: IProductCreate}>("admin/product/createProduct", data);
+  },
+  
+  delete(id: string) {
+    return axiosClient.delete<{success: boolean; message: string}>(`admin/product/${id}`)
   }
 };
 
