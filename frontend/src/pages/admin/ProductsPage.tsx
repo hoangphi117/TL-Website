@@ -165,20 +165,14 @@ export default function ProductsPage() {
       </div>
 
       <div className="flex flex-col bg-white h-40 sm:h-30 lg:h-15 lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between p-2">
-        <div className="flex flex-row gap-2">
-          <Button className="text-md text-white bg-blue-600 hover:bg-blue-700">
-            <Plus size={34} strokeWidth={3}/>
-            Thêm sản phẩm
-          </Button>
-          <Input 
-            placeholder="Tìm kiếm theo tên sản phẩm"
-            value={search}
-            onChange={(event) =>
-              setSearch(event.target.value)
-            }
-            className="max-w-lg w-full bg-white text-md border-2 border-gray-400"
-          />  
-        </div>
+        <Input 
+          placeholder="Tìm kiếm theo tên sản phẩm"
+          value={search}
+          onChange={(event) =>
+            setSearch(event.target.value)
+          }
+          className="max-w-lg w-full bg-white text-md border-2 border-gray-400"
+        />  
         
         <div className="flex flex-col sm:flex-row items-center justify-start gap-1 sm:gap-2">
 

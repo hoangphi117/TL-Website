@@ -31,11 +31,11 @@ export interface IProductCreate {
   name: string;
   sku: string;
   description?: string;
-  detailedInfo: string[]
+  detailedInfo: string;
   price: number
   originalPrice?: number;
   stockQuantity: number;
-  images: string;
+  images: string[];
   category: string;
   brand: string;
   specifications: Record<string, string>;

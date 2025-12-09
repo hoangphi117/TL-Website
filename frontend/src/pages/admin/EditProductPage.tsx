@@ -14,12 +14,12 @@ import type { IProduct } from "@/services/api/admin/product";
 import type { IBrand } from "@/types/brand";
 import type { ICategory } from "@/types/category";
 import { ChevronLeft } from "lucide-react";
+import { ImagesInput, TagsInput } from "@/components/admin/products/string-array-input";
+import { SpecificationsInput } from "@/components/admin/products/product-specs";
 
 export default function EditProductPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const [product, setProduct] = useState<IProduct | null>(null);
 
   const [brands, setBrands] = useState<IBrand[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -39,6 +39,11 @@ export default function EditProductPage() {
   const [status, setStatus] = useState("active");
   const [images, setImages] = useState<string[]>([]);
   const [specifications, setSpecifications] = useState<Record<string, string>>({});
+  const [detailedInfo, setDetailedInfo] = useState<string | undefined>(undefined);
+  const [tags, setTags] = useState<string[]>([]);
+
+  // error response from server
+  const [error, setError] = useState("");
 
   // Load brands + categories
   const loadMeta = async () => {
@@ -53,7 +58,6 @@ export default function EditProductPage() {
     try {
       const res = await productApi.getById(id!);
       const p: IProduct = res.data.data;
-      setProduct(p);
 
       setName(p.name);
       setSku(p.sku);
@@ -66,8 +70,11 @@ export default function EditProductPage() {
       setStatus(p.status);
       setImages(p.images);
       setSpecifications(p.specifications);
+      setDetailedInfo(p.detailedInfo);
+      setTags(p.tags);
     } catch (err) {
       console.log(err);
+      setError(error.d)
     } finally {
       setLoading(false);
     }
@@ -159,6 +166,15 @@ export default function EditProductPage() {
           <Input type="number" value={stockQuantity} onChange={(e) => setStockQuantity(Number(e.target.value))} />
         </div>
 
+        {/* {detail infor} */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Thông tin chi tiết</label>
+          <Input type="text" value={detailedInfo} onChange={(e) => setDetailedInfo(e.target.value)} />
+        </div>
+        
+        {/* {specs infor} */}
+        <SpecificationsInput specs={specifications} setSpecs={setSpecifications}/>
+
         {/* Status */}
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Trạng thái</label>
@@ -208,16 +224,19 @@ export default function EditProductPage() {
           </Select>
         </div>
 
+        {/* {Tag} */}
+        <TagsInput values={tags} setValues={setTags}/>
+
       </div>
 
       {/* Description */}
       <div className="flex flex-col gap-1">
         <label className="font-semibold">Mô tả</label>
         <Textarea rows={5} value={description} onChange={(e) => setDescription(e.target.value)} />
-      </div>
+      </div>    
 
       {/* Images */}
-      <div>
+      <div className="space-y-3">
         <h3 className="font-semibold mb-2">Hình ảnh</h3>
         <div className="flex gap-3 flex-wrap">
           {images.map((img, idx) => (
@@ -229,6 +248,7 @@ export default function EditProductPage() {
             />
           ))}
         </div>
+        <ImagesInput images={images} setImages={setImages}/>
       </div>
 
       {/* Action buttons */}
@@ -237,7 +257,11 @@ export default function EditProductPage() {
           Hủy
         </Button>
 
-        <Button disabled={saving} onClick={handleSave}>
+        <Button 
+            disabled={saving} 
+            onClick={handleSave}
+            className="bg-blue-500 font-bold text-base text-white hover:bg-blue-600"
+        >
           {saving ? "Đang lưu..." : "Lưu sản phẩm"}
         </Button>
       </div>

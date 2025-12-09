@@ -46,7 +46,7 @@ const data = {
       url: "/admin/products",
       items: [
         {
-          title: "danh sách sản phẩm",
+          title: "danh sách",
           url: "/admin/products/list"
         },
         {

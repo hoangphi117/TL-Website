@@ -13,8 +13,11 @@ import categoryApi from "@/services/api/admin/categoryApi";
 import type { IBrand } from "@/types/brand";
 import type { ICategory } from "@/types/category";
 import { ChevronLeft } from "lucide-react";
+import { SpecificationsInput } from "@/components/admin/products/product-specs";
+import { ImagesInput, TagsInput } from "@/components/admin/products/string-array-input";
 
 export default function EditProductPage() {
+
   const navigate = useNavigate();
 
   const [brands, setBrands] = useState<IBrand[]>([]);
@@ -45,7 +48,7 @@ export default function EditProductPage() {
     setCategories(resCat.data.data);
   };
 
-  // Save product
+  // create product
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -65,7 +68,9 @@ export default function EditProductPage() {
         tags,
       };
 
-      await productApi.update(id!, payload);
+      console.log("check payload: ", payload)
+
+      await productApi.create(payload);
 
       navigate("/admin/products/list");
     } catch (err) {
@@ -131,7 +136,17 @@ export default function EditProductPage() {
           <Input type="number" value={stockQuantity} onChange={(e) => setStockQuantity(Number(e.target.value))} />
         </div>
 
+        {/* {detail infor} */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold">Thông tin chi tiết</label>
+          <Input type="text" value={detailedInfo} onChange={(e) => setDetailedInfo(e.target.value)} />
+        </div>
+
+        {/* {specifications infor} */}
+       <SpecificationsInput specs={specifications} setSpecs={setSpecifications}/>
+
         {/* Status */}
+        
         <div className="flex flex-col gap-1">
           <label className="font-semibold">Trạng thái</label>
           <Select value={status} onValueChange={setStatus}>
@@ -181,10 +196,8 @@ export default function EditProductPage() {
           </Select>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label className="font-semibold">Thông tin chi tiết</label>
-          <Textarea rows={5} value={detailedInfo} onChange={(e) => setDetailedInfo(e.target.value)} />
-        </div>
+        {/* {tag inPut} */}
+        <TagsInput values={tags} setValues={setTags}/>
 
       </div>
 
@@ -197,16 +210,7 @@ export default function EditProductPage() {
       {/* Images */}
       <div>
         <h3 className="font-semibold mb-2">Hình ảnh</h3>
-        <div className="flex gap-3 flex-wrap">
-          {images.map((img, idx) => (
-            <img
-              key={idx}
-              src={img}
-              className="w-28 h-28 object-cover rounded-lg border"
-              alt="Product"
-            />
-          ))}
-        </div>
+        <ImagesInput images={images} setImages={setImages}/>
       </div>
 
       {/* Action buttons */}
@@ -215,7 +219,11 @@ export default function EditProductPage() {
           Hủy
         </Button>
 
-        <Button disabled={saving} onClick={handleSave}>
+        <Button 
+          disabled={saving} 
+          onClick={handleSave}
+          className="bg-blue-500 font-bold text-base text-white hover:bg-blue-600"
+        >
           {saving ? "Đang lưu..." : "Thêm"}
         </Button>
       </div>
