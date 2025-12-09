@@ -20,77 +20,74 @@ interface EditbrandDialogProps {
 }
 
 
-export function EditBrandDialog({open, setOpen, brand, onSave} : EditbrandDialogProps){
-    const [name, setName] = useState(brand?.name || "");
-    const [logoUrl, setImageUrl] = useState(brand?.logoUrl || "");
-    const [description, setDescription] = useState(brand?.description || "");
+export function EditBrandDialog({ open, setOpen, brand, onSave }: EditbrandDialogProps) {
+  const [name, setName] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
+  const [description, setDescription] = useState("");
 
-    const handleSave = () => {
-        if (!brand) return
+  const isEdit = !!brand; 
 
-        onSave({
-            ...brand,
-            name,
-            logoUrl,
-            description,
-        })
-        setOpen(false)
+  const handleSave = () => {
+    const updated: IBrand = {
+      name,
+      logoUrl,
+      description,
+    };
+
+    onSave(updated);
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (brand && open) {
+      setName(brand.name);
+      setLogoUrl(brand.logoUrl || "");
+      setDescription(brand.description || "");
+    } else if (open) {
+      setName("");
+      setLogoUrl("");
+      setDescription("");
     }
+  }, [brand, open]);
 
-    useEffect(() => {
-        if (brand && open) {
-            setName(brand.name);
-            setImageUrl(brand.logoUrl || "");
-        }
-    }, [brand, open]);
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="w-full max-w-100 sm:max-w-130 md:max-w-150">
+        <DialogHeader>
+          <DialogTitle>
+            {isEdit ? `Sửa thương hiệu: ${brand?.name}` : "Thêm thương hiệu mới"}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Brand form
+          </DialogDescription>
+        </DialogHeader>
 
-    return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="w-full max-w-100 sm:max-w-130 md:max-w-150">
-                <DialogHeader>
-                    <DialogDescription className="sr-only">
-                        edit brand
-                    </DialogDescription>
-                    <DialogTitle>{name}</DialogTitle>
-                </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Tên thương hiệu</Label>
+            <Input value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
 
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        <Label className="text-md md:text-lg">Tên loại</Label>
-                        <Input 
-                            className="text-md md:text-lg" 
-                            value={name} 
-                            onChange={(e) => setName(e.target.value)} 
-                        />
-                    </div>
+          <div className="space-y-2">
+            <Label>Logo URL</Label>
+            <Input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} />
+          </div>
 
-                    <div className="space-y-2">
-                        <Label className="text-md md:text-lg">Ảnh hiển thị</Label>
-                        <Input 
-                            className="text-md md:text-lg"
-                            value={logoUrl}
-                            onChange={(e) => setImageUrl(e.target.value)} 
-                        />
-                    </div>
+          <div className="space-y-2">
+            <Label>Mô tả</Label>
+            <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+          </div>
+        </div>
 
-                    <div className="space-y-2">
-                        <Label className="text-md md:text-lg">Mô tả</Label>
-                        <Input 
-                            className="text-md md:text-lg"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)} 
-                        />
-                    </div>
-
-                </div>
-
-                <DialogFooter>
-                <Button variant="outline" onClick={() => setOpen(false)}>
-                    Hủy
-                </Button>
-                <Button onClick={() => handleSave()} className="">Lưu thay đổi</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    )
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Hủy
+          </Button>
+          <Button onClick={handleSave}>
+            {isEdit ? "Lưu thay đổi" : "Thêm mới"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }

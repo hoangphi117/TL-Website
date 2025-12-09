@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import React from "react";
+import ProtectedRouteAdmin from "./ProtectedRouteAdmin";
 
 import MainLayout from "@/components/layouts/MainLayout";
 import HomePage from "@/pages/home/HomePage";
@@ -8,6 +9,7 @@ import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
 import UserDetailPage from "@/pages/admin/UserDetailPage"
 import EditProductPage from "@/pages/admin/EditProductPage";
+import AdminLoginPage from "@/pages/admin/LoginPage";
 
 // Lazy loaded pages
 const ProductDetailPage = React.lazy(
@@ -38,7 +40,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: /*<ProtectedRouteAdmin><AdminLayout /></ProtectedRouteAdmin>*/ <AdminLayout/>,
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <DashboardPage /> },
@@ -51,6 +53,11 @@ const router = createBrowserRouter([
       {path: "users/:id", element: <UserDetailPage/>},
       {path: "product/edit/:id", element: <EditProductPage/>},
     ],
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLoginPage/>,
+    errorElement: <ErrorPage/>
   },
 ]);
 

@@ -15,6 +15,7 @@ export default function BrandsPage() {
 
     const [deleteTarget, setDeleteTarget] = useState<IBrand | null>(null);
     const [openDelete, setOpenDelete] = useState(false);
+    const [openAdd, setOpenAdd] = useState(false);
 
      const handleEdit = (brand: IBrand) => {
         console.log("Edit brand:", brand)
@@ -25,8 +26,13 @@ export default function BrandsPage() {
 
     const handleOnSave = (update: IBrand) => {
         const updatedBrand = update;
-        console.log("check updated brand: ", updatedBrand);
         updateBrand(updatedBrand._id, updatedBrand);
+    }
+
+    const handleAdd = (update: IBrand) => {
+        const newBrand = update;
+        console.log("check new brand: ", update);
+        // setOpenAdd(false)
     }
 
     const loadbrands = async () => {
@@ -115,7 +121,10 @@ export default function BrandsPage() {
                                <Grid2X2 size={22} color="#146bdb"/> 
                                <p className="font-bold text-base">Danh sách thương hiệu</p>
                             </div>
-                            <Button className="w-full max-w-25 bg-blue-500 font-bold text-md md:text-lg hover:bg-blue-600">
+                            <Button 
+                                className="w-full max-w-25 bg-blue-500 font-bold text-md md:text-lg hover:bg-blue-600"
+                                onClick={() => setOpenAdd(true)}
+                                >
                                 <Plus size={32} color="#fcf7f7" strokeWidth={3} />
                                 Thêm
                             </Button>
@@ -136,8 +145,14 @@ export default function BrandsPage() {
                         <EditBrandDialog
                             open={openEdit}
                             setOpen={setOpenEdit}
-                            brand={selectedBrand}
+                            brand={selectedBrand}   
                             onSave={handleOnSave}
+                        />
+                        <EditBrandDialog
+                            open={openAdd}
+                            setOpen={setOpenAdd}
+                            brand={null}   
+                            onSave={handleAdd}
                         />
                         <DeleteBrandAlert
                             open={openDelete}
