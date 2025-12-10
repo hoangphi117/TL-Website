@@ -59,7 +59,8 @@ export default function UserDetailPage() {
   }, [id]);
 
   useEffect(() => {
-    if (user) setRole(user.role);
+    if (user) 
+      setRole(user.role);
   }, [user]);
 
 
