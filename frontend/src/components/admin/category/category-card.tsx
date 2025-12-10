@@ -14,7 +14,7 @@ export default function CategoryCard({ category, handleEdit, onAskDelete}: Categ
       className="bg-white rounded-xl shadow-sm border hover:shadow-md transition cursor-pointer"
     >
       <img
-        src={category.imageUrl}
+        src={category.imageUrl || "https://placehold.co/200x200?text=No+Image"}
         alt={category.name}
         className="w-full h-36 object-cover rounded-t-xl"
       />

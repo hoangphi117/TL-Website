@@ -42,7 +42,7 @@ export function AdminAuthProvider({children} : {children: React.ReactNode}) {
     }
 
     const logout = () => {
-        localStorage.removeItem("token");
+        localStorage.removeItem("tokenAdmin");
         localStorage.removeItem("user");
         setUser(null);
         navigate("/admin/login");

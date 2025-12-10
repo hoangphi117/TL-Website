@@ -61,7 +61,7 @@ export function NavUser({
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg border-2 border-red-500 bg-white"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
@@ -80,31 +80,20 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem className="text-md">
                 <BadgeCheck />
-                Account
+                Tài khoản
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem className="text-md">
                 <Bell />
-                Notifications
+                Thông báo
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
               <Link to={"/admin/login"} className="">
-                <DropdownMenuItem>
-                    <LogOut/>
-                    Log out
+                <DropdownMenuItem className="text-red-500 font-bold text-md  hover:text-red-600">
+                    <LogOut color="red"/>
+                    Đăng xuất
                 </DropdownMenuItem>
               </Link>
           </DropdownMenuContent>

@@ -5,12 +5,16 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, Loader2, ShieldCheck } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import authApi from "@/services/api/admin/authApi";
 import type { AxiosError } from "axios";
+import logoShop from "@/assets/icons/TL-Logo.png"
+import bg from "@/assets/images/BG-red.png"
+// import { useAuth } from "@/context/AdminAuthContext";
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
+  // const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,6 +42,7 @@ export default function AdminLoginPage() {
 
       // Lưu token vào localStorage
       localStorage.setItem("adminToken", data.token);
+      // login(res.data.token, res.data.data)
 
       navigate("/admin"); 
     } catch (err: unknown) {
@@ -50,14 +55,24 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-200 p-4">
+    <div 
+      className="w-full min-h-screen bg-center bg-cover flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-200 p-4"
+      style={{backgroundImage: `url(${bg})`}}
+      >
+      <form 
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleLogin();
+        }}
+        className="w-full min-h-screen flex items-center justify-center"
+      >
       <Card className="w-full max-w-md shadow-md border border-gray-200">
         <CardHeader className="space-y-3 text-center">
           <div className="flex justify-center">
-            <ShieldCheck size={48} className="text-blue-600" />
+            <img src={logoShop} alt="logoshop" className="w-30 h-28"/>
           </div>
-          <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
-          <CardDescription>Đăng nhập để quản lý hệ thống</CardDescription>
+          <CardTitle className="text-2xl md:text-3xl font-bold">Welcome back</CardTitle>
+          <CardDescription className="text-md md:text-base">Đăng nhập để quản lý hệ thống</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-4">
@@ -93,8 +108,8 @@ export default function AdminLoginPage() {
 
           {/* LOGIN BUTTON */}
           <Button
+            type="submit"
             className="w-full h-11 text-md font-semibold"
-            onClick={handleLogin}
             disabled={loading}
           >
             {loading ? (
@@ -105,6 +120,7 @@ export default function AdminLoginPage() {
           </Button>
         </CardContent>
       </Card>
+      </form>
     </div>
   );
 }

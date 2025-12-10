@@ -4,6 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -38,6 +39,9 @@ export default function OrderDetailDialog({
           <DialogTitle className="text-xl font-bold">
             Chi tiết đơn hàng #{order.orderCode}
           </DialogTitle>
+          <DialogDescription>
+            Thông tin chi tiết về đơn hàng
+          </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[70vh] pr-4">

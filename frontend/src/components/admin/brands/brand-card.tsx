@@ -29,7 +29,7 @@ export default function BrandCard({ brand, onEdit, onDelete }: BrandCardProps) {
       {/* Ảnh thương hiệu */}
       <div className="relative w-full h-32 bg-slate-100">
         <img
-          src={brand.logoUrl}
+          src={brand.logoUrl || "https://placehold.co/200x200?text=No+Image"}
           alt={brand.name}
           className="
             w-full h-full object-contain
