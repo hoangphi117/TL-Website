@@ -6,7 +6,7 @@ const axiosClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-}); 
+});
 
 // Request Interceptor (Attach token)
 axiosClient.interceptors.request.use(
@@ -16,14 +16,14 @@ axiosClient.interceptors.request.use(
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
     }
-    return config; 
+    return config;
   },
   (error) => Promise.reject(error)
 );
 
 // Response Interceptor (Handle response & errors)
 axiosClient.interceptors.response.use(
-  (response: AxiosResponse) => response,  
+  (response: AxiosResponse) => response,
   (error) => {
     console.error("API Error:", error.response?.data || error.message);
     return Promise.reject(error.response?.data || error);
