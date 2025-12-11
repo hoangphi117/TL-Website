@@ -94,7 +94,7 @@ const Header: React.FC = () => {
 
             {/* Logic Mobile User: */}
             <Link
-              to="/auth/login/customer"
+              to="/customer/login"
               className="flex flex-col items-center gap-1 flex-1"
             >
               <User className="h-6 w-6" />
@@ -163,7 +163,7 @@ const Header: React.FC = () => {
               </CartBadge>
 
               {/* PHẦN LOGIN */}
-              <Link to="/auth/login/customer">
+              <Link to="/customer/login">
                 <Button
                   variant="outline"
                   className="h-auto py-2 px-3 bg-transparent border-2 border-white text-white hover:border-red-500 hover:text-red-500 hover:bg-transparent flex items-center gap-2 cursor-pointer"

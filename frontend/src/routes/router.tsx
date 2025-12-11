@@ -5,9 +5,12 @@ import ProtectedRouteAdmin from "./ProtectedRouteAdmin";
 import MainLayout from "@/components/layouts/MainLayout";
 import HomePage from "@/pages/home/HomePage";
 
+import CustomerLoginPage from "@/pages/customer/LoginPage";
+import CustomerRegisterPage from "@/pages/customer/RegisterPage";
+
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
-import UserDetailPage from "@/pages/admin/UserDetailPage"
+import UserDetailPage from "@/pages/admin/UserDetailPage";
 import EditProductPage from "@/pages/admin/EditProductPage";
 import AdminLoginPage from "@/pages/admin/LoginPage";
 import OrdersPage from "@/pages/admin/OrdersPage";
@@ -16,16 +19,19 @@ import OrdersPage from "@/pages/admin/OrdersPage";
 const ProductDetailPage = React.lazy(
   () => import("@/pages/product/ProductDetail")
 );
-const ShowroomPage = React.lazy(() => import("@/pages/showRoom"));
+const ShowroomPage = React.lazy(() => import("@/pages/customer/showRoom"));
 const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
-const OrderLookupPage = React.lazy(() => import("@/pages/orderLookupPage"));
+const OrderLookupPage = React.lazy(
+  () => import("@/pages/order/orderLookupPage")
+);
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
 const ProductsPage = React.lazy(() => import("@/pages/admin/ProductsPage"));
 const AddProductPage = React.lazy(() => import("@/pages/admin/AddProductPage"));
 const CategoriesPage = React.lazy(() => import("@/pages/admin/CategoriesPage"));
-const AddCategoriesPage = React.lazy(() => import("@/pages/admin/AddCategoriesPage"));
-
+const AddCategoriesPage = React.lazy(
+  () => import("@/pages/admin/AddCategoriesPage")
+);
 
 const router = createBrowserRouter([
   {
@@ -40,26 +46,40 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/customer/login",
+    element: <CustomerLoginPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customer/register",
+    element: <CustomerRegisterPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/admin",
-    element: <ProtectedRouteAdmin><AdminLayout /></ProtectedRouteAdmin>,
+    element: (
+      <ProtectedRouteAdmin>
+        <AdminLayout />
+      </ProtectedRouteAdmin>
+    ),
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <DashboardPage /> },
       { path: "users", element: <UsersPage /> },
       { path: "products/list", element: <ProductsPage /> },
-      {path: "products/add-new", element: <AddProductPage/> },
-      {path: "categories/list", element: <CategoriesPage/>},
-      {path: "categories/add-new", element: <AddCategoriesPage/>},
-      {path: "brands", element: <BrandsPage/>},
-      {path: "users/:id", element: <UserDetailPage/>},
-      {path: "product/edit/:id", element: <EditProductPage/>},
-      {path: "orders", element:<OrdersPage/>}
+      { path: "products/add-new", element: <AddProductPage /> },
+      { path: "categories/list", element: <CategoriesPage /> },
+      { path: "categories/add-new", element: <AddCategoriesPage /> },
+      { path: "brands", element: <BrandsPage /> },
+      { path: "users/:id", element: <UserDetailPage /> },
+      { path: "product/edit/:id", element: <EditProductPage /> },
+      { path: "orders", element: <OrdersPage /> },
     ],
   },
   {
     path: "/admin/login",
-    element: <AdminLoginPage/>,
-    errorElement: <ErrorPage/>
+    element: <AdminLoginPage />,
+    errorElement: <ErrorPage />,
   },
 ]);
 
