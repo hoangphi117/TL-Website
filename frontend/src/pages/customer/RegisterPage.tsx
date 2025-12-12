@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useAuth } from "@/context/CustomerAuthContext";
 import logo from "@/assets/icons/TL-Logo.png";
 import Footer from "@/components/common/Footer";
-Footer;
 
 const autofillFixStyle = `
   input:-webkit-autofill,
@@ -16,17 +19,81 @@ const autofillFixStyle = `
   }
 `;
 
+// SỬA: Đổi username thành fullName để khớp User Model backend
+const schema = z
+  .object({
+    fullName: z
+      .string()
+      .min(2, "Họ và tên phải tối thiểu 2 ký tự")
+      .nonempty("Vui lòng nhập họ và tên"),
+    email: z.email("Địa chỉ Email không hợp lệ"),
+    password: z
+      .string()
+      .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+      .regex(/[A-Z]/, "Phải chứa ít nhất 1 chữ hoa")
+      .regex(/[a-z]/, "Phải chứa ít nhất 1 chữ thường")
+      .regex(/[0-9]/, "Phải chứa ít nhất 1 số"),
+    confirmPassword: z.string().nonempty("Vui lòng xác nhận mật khẩu"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Mật khẩu xác nhận không trùng khớp",
+    path: ["confirmPassword"],
+  });
+
+type RegisterFormValues = z.infer<typeof schema>;
+
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const { registerAuth } = useAuth(); // TypeScript sẽ tự infer từ Context
+  const navigate = useNavigate();
+
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(schema),
+    mode: "onBlur",
+    defaultValues: {
+      fullName: "", // SỬA
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = form;
+
+  const onSubmit = async (values: RegisterFormValues) => {
+    setLoading(true);
+    // SỬA: Truyền đúng fullName
+    const result = await registerAuth({
+      fullName: values.fullName,
+      email: values.email,
+      password: values.password,
+    });
+
+    if (result.success) {
+      navigate("auth/login/customer"); // Sửa: Điều hướng về trang login sau khi đăng ký thành công
+    } else {
+      setError("root", {
+        type: "manual",
+        message: result.message || "Đăng ký thất bại",
+      });
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-700 ">
       <style>{autofillFixStyle}</style>
-
       <main className="flex-grow flex items-center justify-center p-10">
         <div className="w-full max-w-5xl bg-[#151517] bg-opacity-90 p-8 rounded-2xl shadow-2xl backdrop-blur-md flex flex-col lg:flex-row gap-10 border border-gray-800">
-          {/* --- FORM SECTION --- */}
           <div className="w-full lg:w-1/2">
+            {/* Logo Section */}
             <div className="flex justify-center mb-4">
               {logo ? (
                 <img
@@ -38,32 +105,43 @@ export default function RegisterPage() {
                 <h1 className="text-3xl font-bold text-white">LOGO</h1>
               )}
             </div>
-
             <h2 className="text-2xl font-bold text-center text-red-500 mb-2">
               Đăng ký tài khoản
             </h2>
-            <p className="text-center text-gray-400 text-sm mb-6">
-              Đăng ký để sử dụng tất cả tính năng
-            </p>
 
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
-              {/* Username */}
+            {errors.root && (
+              <div className="p-3 mb-4 rounded-lg bg-red-500/10 border border-red-500/50 text-red-500 text-sm text-center">
+                {errors.root.message}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              {/* SỬA: Input Full Name */}
               <div className="relative">
                 <input
                   type="text"
-                  id="username"
+                  id="fullName"
                   placeholder=" "
-                  className="peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border border-gray-600 outline-none  transition-all"
+                  disabled={loading}
+                  {...register("fullName")}
+                  className={`peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border 
+                    ${errors.fullName ? "border-red-500" : "border-gray-600"} 
+                     outline-none transition-all`}
                 />
                 <label
-                  htmlFor="username"
+                  htmlFor="fullName"
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base transition-all duration-200 cursor-text
                     peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-base
                     peer-focus:top-2 peer-focus:text-xs peer-focus:text-gray-200
                     peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-200"
                 >
-                  Tên tài khoản
+                  Họ và tên
                 </label>
+                {errors.fullName && (
+                  <p className="text-red-500 text-xs ml-1 mt-1">
+                    {errors.fullName.message}
+                  </p>
+                )}
               </div>
 
               {/* Email */}
@@ -72,7 +150,11 @@ export default function RegisterPage() {
                   type="text"
                   id="email"
                   placeholder=" "
-                  className="peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border border-gray-600 outline-none  transition-all"
+                  disabled={loading}
+                  {...register("email")}
+                  className={`peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border 
+                    ${errors.email ? "border-red-500" : "border-gray-600"} 
+                     outline-none transition-all`}
                 />
                 <label
                   htmlFor="email"
@@ -83,6 +165,11 @@ export default function RegisterPage() {
                 >
                   Email
                 </label>
+                {errors.email && (
+                  <p className="text-red-500 text-xs ml-1 mt-1">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
               {/* Password */}
@@ -91,7 +178,11 @@ export default function RegisterPage() {
                   type={showPassword ? "text" : "password"}
                   id="password"
                   placeholder=" "
-                  className="peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border border-gray-600 outline-none  transition-all"
+                  disabled={loading}
+                  {...register("password")}
+                  className={`peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border 
+                    ${errors.password ? "border-red-500" : "border-gray-600"} 
+                     outline-none transition-all`}
                 />
                 <label
                   htmlFor="password"
@@ -109,6 +200,11 @@ export default function RegisterPage() {
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
+                {errors.password && (
+                  <p className="text-red-500 text-xs ml-1 mt-1">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
               {/* Confirm Password */}
@@ -117,7 +213,15 @@ export default function RegisterPage() {
                   type="password"
                   id="confirmPassword"
                   placeholder=" "
-                  className="peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border border-gray-600 outline-none  transition-all"
+                  disabled={loading}
+                  {...register("confirmPassword")}
+                  className={`peer w-full px-4 pt-5 pb-2 text-white bg-[#151517] rounded-lg border 
+                    ${
+                      errors.confirmPassword
+                        ? "border-red-500"
+                        : "border-gray-600"
+                    } 
+                     outline-none transition-all`}
                 />
                 <label
                   htmlFor="confirmPassword"
@@ -128,21 +232,25 @@ export default function RegisterPage() {
                 >
                   Nhập lại mật khẩu
                 </label>
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-xs ml-1 mt-1">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition-all duration-200 shadow-lg shadow-red-900/20 mt-4 cursor-pointer"
+                disabled={loading}
+                className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-900 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg transition-all duration-200 shadow-lg shadow-red-900/20 mt-4 cursor-pointer"
               >
-                Đăng ký
+                {loading ? "Đang đăng ký..." : "Đăng ký"}
               </button>
             </form>
-
             <p className="text-gray-400 text-sm text-center mt-6">
               Đã có tài khoản?{" "}
               <Link
-                to="/customer/login"
+                to="/auth/login/customer"
                 className="text-md font-bold text-red-500 hover:underline"
               >
                 Đăng nhập
@@ -150,31 +258,23 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* --- INFO SECTION (UI Only) --- */}
+          {/* Info Section - Cập nhật nội dung */}
           <div className="w-full lg:w-1/2 text-gray-300 border-t lg:border-t-0 lg:border-l border-gray-700 pt-6 lg:pt-0 lg:pl-10 flex flex-col ">
             <h2 className="text-xl font-bold mb-6 text-red-500 border-b border-gray-700 pb-2 inline-block">
               Yêu cầu tài khoản
             </h2>
             <ul className="space-y-4 text-sm list-disc list-inside text-gray-400">
               <li className="marker:text-red-500">
-                <span className="text-gray-300">Tên người dùng:</span> Tối thiểu
-                4 ký tự, không để trống.
+                <span className="text-gray-300">Họ và tên:</span> Sử dụng tên
+                thật, tối thiểu 2 ký tự.
               </li>
               <li className="marker:text-red-500">
                 <span className="text-gray-300">Email:</span> Phải đúng định
-                dạng (ví dụ: ten@domain.com).
+                dạng.
               </li>
               <li className="marker:text-red-500">
-                <span className="text-gray-300">Mật khẩu:</span> Ít nhất 8 ký
-                tự.
-              </li>
-              <li className="marker:text-red-500">
-                <span className="text-gray-300">Độ mạnh mật khẩu:</span> Phải
-                chứa chữ hoa (A-Z), chữ thường (a-z) và số (0-9).
-              </li>
-              <li className="marker:text-red-500">
-                <span className="text-gray-300">Xác nhận:</span> Mật khẩu nhập
-                lại phải trùng khớp hoàn toàn.
+                <span className="text-gray-300">Mật khẩu:</span> 8 ký tự, có
+                hoa, thường và số.
               </li>
             </ul>
           </div>

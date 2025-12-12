@@ -45,7 +45,7 @@ export default function NotFoundPage() {
               Có vẻ như đường dẫn bạn truy cập bị hỏng hoặc trang đã bị xóa.
               <br />
               {error && (
-                <span className="block mt-4 font-mono text-lg bg-slate-200 p-2 rounded text-red-500 overflow-hidden text-ellipsis whitespace-nowrap max-w-full border border-slate-200">
+                <span className="block mt-4 font-mono text-lg bg-slate-200 p-2 rounded text-red-500 overflow-hidden text-ellipsis max-w-full border border-slate-200">
                   {error.statusText || error.message}
                 </span>
               )}

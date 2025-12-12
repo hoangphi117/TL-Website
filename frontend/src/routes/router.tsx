@@ -1,12 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 import React from "react";
 import ProtectedRouteAdmin from "./ProtectedRouteAdmin";
+import ProtectedRouteCustomer from "./ProtectedRouteCustomer";
 
 import MainLayout from "@/components/layouts/MainLayout";
 import HomePage from "@/pages/home/HomePage";
 
 import CustomerLoginPage from "@/pages/customer/LoginPage";
 import CustomerRegisterPage from "@/pages/customer/RegisterPage";
+import CustomerForgotPasswordPage from "@/pages/customer/ForgotPasswordPage";
+import CustomerResetPasswordPage from "@/pages/customer/ResetPasswordPage";
 
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
@@ -19,7 +22,6 @@ import OrdersPage from "@/pages/admin/OrdersPage";
 const ProductDetailPage = React.lazy(
   () => import("@/pages/product/ProductDetail")
 );
-const ShowroomPage = React.lazy(() => import("@/pages/customer/showRoom"));
 const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
 const OrderLookupPage = React.lazy(
   () => import("@/pages/order/orderLookupPage")
@@ -41,20 +43,32 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "product/:category/:id", element: <ProductDetailPage /> },
-      { path: "order/lookup", element: <OrderLookupPage /> },
-      { path: "showroom", element: <ShowroomPage /> },
+      {
+        path: "order/lookup",
+        element: (
+          <ProtectedRouteCustomer>
+            <OrderLookupPage />
+          </ProtectedRouteCustomer>
+        ),
+      },
     ],
   },
   {
-    path: "/customer/login",
+    path: "/auth/login/customer",
     element: <CustomerLoginPage />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/customer/register",
+    path: "/auth/register/customer",
     element: <CustomerRegisterPage />,
     errorElement: <ErrorPage />,
   },
+  {
+    path: "/auth/reset-password",
+    element: <CustomerForgotPasswordPage />,
+    errorElement: <ErrorPage />,
+  },
+  { path: "/reset-password/:token", element: <CustomerResetPasswordPage /> },
   {
     path: "/admin",
     element: (
