@@ -6,7 +6,6 @@ import {
   Package,
   ShoppingCart,
   Users,
-  Warehouse,
   Gift,
   FileText,
   Image,
@@ -86,19 +85,14 @@ const data = {
       icon: Users,
     },
     {
-      title: "Kho hàng",
-      url: "/admin/inventory",
-      icon: Warehouse,
+      title: "Bình luận & đánh giá",
+      url: "/admin/reviews",
+      icon: FileText,
     },
     {
       title: "Khuyến mãi",
       url: "/admin/promotions",
       icon: Gift,
-    },
-    {
-      title: "Bài viết",
-      url: "/admin/posts",
-      icon: FileText,
     },
     {
       title: "Banner & Media",

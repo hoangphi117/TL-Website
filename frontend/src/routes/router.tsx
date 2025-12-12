@@ -25,6 +25,7 @@ const ProductsPage = React.lazy(() => import("@/pages/admin/ProductsPage"));
 const AddProductPage = React.lazy(() => import("@/pages/admin/AddProductPage"));
 const CategoriesPage = React.lazy(() => import("@/pages/admin/CategoriesPage"));
 const AddCategoriesPage = React.lazy(() => import("@/pages/admin/AddCategoriesPage"));
+const ReviewsPage = React.lazy(() => import("@/pages/admin/ReviewsPage"));
 
 
 const router = createBrowserRouter([
@@ -53,7 +54,8 @@ const router = createBrowserRouter([
       {path: "brands", element: <BrandsPage/>},
       {path: "users/:id", element: <UserDetailPage/>},
       {path: "product/edit/:id", element: <EditProductPage/>},
-      {path: "orders", element:<OrdersPage/>}
+      {path: "orders", element:<OrdersPage/>},
+      {path: "reviews", element: <ReviewsPage/>},
     ],
   },
   {

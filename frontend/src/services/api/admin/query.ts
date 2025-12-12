@@ -54,3 +54,11 @@ export interface OrderQuery {
   sortBy?: "createdAt" | "totalAmount" | "orderCode";
   sortOrder?: "asc" | "desc";
 }
+
+export interface IReviewQuery {
+  page?: number;
+  rating?: number | null;
+  status?: string;
+  limit?: number;
+  search?: string;
+}

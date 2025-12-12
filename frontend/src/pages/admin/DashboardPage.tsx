@@ -54,31 +54,6 @@ export default function DashboardPage() {
 
                     {/* Các KPI khác tương tự */}
             </div>
-            {/* <div className="flex flex-col bg-white md:flex-row gap-4 items-center justify-center mt-4 px-6 py-3">
-                <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
-                    <p className="text-base font-semibold">Tổng doanh thu</p>
-                    <div className="flex flex-row items-center gap-2">
-                        <p className="text-xl lg:text-2xl font-bold">{}</p>
-                        <CircleDollarSign size={32} color="#0055ff" />
-                    </div>
-                </div>
-
-                <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
-                    <p className="text-base font-semibold">Đơn hàng</p>
-                    <div className="flex flex-row items-center gap-2">
-                        <p className="text-xl lg:text-2xl font-bold">{}</p>
-                        <ShoppingCart size={32} color="#0be035" />
-                    </div>
-                </div>
-
-                <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
-                    <p className="text-base font-semibold">Khách hàng</p>
-                    <div className="flex flex-row items-center gap-2">
-                        <p className="text-xl lg:text-2xl font-bold">{}</p>
-                        <UserRound size={32} color="#800be0" />
-                    </div>
-                </div>
-            </div> */}
         </div>
     )
 }
