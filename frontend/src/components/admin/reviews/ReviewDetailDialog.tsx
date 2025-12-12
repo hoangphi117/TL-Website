@@ -149,14 +149,14 @@ export default function ReviewDetailDialog({
                 onClick={handleReject}
                 disabled={!replyReview || !replyReview.trim()}
             >
-                Reject
+                Từ chối
             </Button>
 
             {/* Approve */}
             <Button
             onClick={handleApprove}
             >
-                Approve
+                Duyệt
             </Button>
         </div>
         <Button

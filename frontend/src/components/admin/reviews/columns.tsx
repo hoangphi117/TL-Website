@@ -1,8 +1,21 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import type { IReview } from "@/types/review";
-import { Star } from "lucide-react";
+import { Star, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export const columns = (onOpenDetail: (review: IReview) => void): ColumnDef<IReview>[] => [
+const REVIEW_STATUS_LABEL: Record<
+  "pending" | "approved" | "rejected",
+  string
+> = {
+  pending: "Chờ duyệt",
+  approved: "Đã duyệt",
+  rejected: "Từ chối",
+};
+
+export const columns = (
+    onOpenDetail: (review: IReview) => void,
+    onDelete: (id: string) => void
+): ColumnDef<IReview>[] => [
     {
         accessorKey: "productId",
         header: "Sản phẩm",
@@ -63,7 +76,10 @@ export const columns = (onOpenDetail: (review: IReview) => void): ColumnDef<IRev
         accessorKey: "status",
         header: "Trạng thái",
         cell: ({ row }) => { 
-            const status = row.getValue("status") as string;
+            const status = row.getValue("status") as 
+                | "pending"
+                | "approved"
+                | "rejected";
             return (
                <span
                     className={`px-2 py-1 rounded text-white font-semibold
@@ -76,9 +92,26 @@ export const columns = (onOpenDetail: (review: IReview) => void): ColumnDef<IRev
                         }
                     `}
                     >
-                    {status}
+                    {REVIEW_STATUS_LABEL[status]}
                 </span>
             )
         }
     },
+    {
+        id: "actions",
+        header: "xóa",
+        cell: ({ row }) => {
+            const review_id = row.original._id;
+            return (
+            <Button
+                className="bg-white text-red-500 p-0 rounded-lg border border-gray-300 hover:bg-gray-200"
+                // variant="destructive"
+                size="icon"
+                onClick={() => onDelete(review_id)}
+            >
+                <Trash strokeWidth={2.5} className="h-4 w-4 border-gray-200" />
+            </Button>
+            );
+        },
+    }
 ]

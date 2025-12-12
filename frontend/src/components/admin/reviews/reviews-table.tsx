@@ -32,6 +32,7 @@ interface DataTableProps {
   rating: number | null;
   setStatus: (value: string) => void;
   setRating: (value: number | null) => void;
+  onDelete: (id: string) => void;
 }
 
 
@@ -40,11 +41,12 @@ export function ReviewsTable({
   search, setSearch,
   handleDetailOpen,
   status, rating, setStatus, setRating,
+  onDelete,
 }: DataTableProps) {
 
   const table = useReactTable({
     data: reviews,
-    columns: columns(handleDetailOpen),
+    columns: columns(handleDetailOpen, onDelete),
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -129,7 +131,7 @@ export function ReviewsTable({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns(handleDetailOpen).length}>
+                <TableCell colSpan={columns(handleDetailOpen, onDelete).length}>
                   <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
                     <SearchX className="w-12 h-12 mb-3 opacity-70" />
                     <span className="text-lg font-semibold">Không tìm thấy dữ liệu</span>

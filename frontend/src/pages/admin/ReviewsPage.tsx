@@ -1,3 +1,4 @@
+import { DeleteBrandAlert } from "@/components/admin/brands/delete-brand-alert";
 import ReviewDetailDialog from "@/components/admin/reviews/ReviewDetailDialog";
 import { ReviewsTable } from "@/components/admin/reviews/reviews-table";
 import type { IReviewQuery } from "@/services/api/admin/query";
@@ -19,7 +20,9 @@ export default function ReviewsPage() {
     const [detailedReview, setDetailedReview] = useState<IReview | null>(null);
     const [detailOpen, setDetailOpen] = useState(false);
     const [replyReview, setReplyReview] = useState<string>("");
-    const [selectedReview, setSelectedReview] = useState<IReview | null>(null);
+    const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
+    const [deleteId, setDeleteId] = useState<string | null>(null);
+
     const limit = 5;
 
     const handleDetailOpen = (review: IReview) => {
@@ -47,7 +50,10 @@ export default function ReviewsPage() {
     const handleApprove = async () => {
         if (!detailedReview) return;
 
-        if (detailedReview.status === "approved") return;
+        if (detailedReview.status === "approved"){
+            toast.success("Bình luận này đã được duyệt");
+            return;
+        } 
 
         try {
             const res = await reviewApi.approveReview(detailedReview._id);
@@ -59,20 +65,17 @@ export default function ReviewsPage() {
             )
             );
 
-            toast.success("Review đã được duyệt");
+            toast.success("Duyệt bình luận thành công");
             setDetailOpen(false);
-        } catch (err: any) {
-            toast.error(err?.response?.data?.message || "Approve thất bại");
+        } catch (error) {
+            console.log(error);
         }
     };
 
     const handleReject = async () => {
         if (!detailedReview) return;
 
-        if (!replyReview.trim()) {
-            toast.error("Vui lòng nhập lý do từ chối");
-            return;
-        }
+        if (!replyReview.trim()) return;
 
         try {
             const res = await reviewApi.rejectReview(
@@ -86,12 +89,28 @@ export default function ReviewsPage() {
             )
             );
 
-            toast.success("Review đã bị từ chối");
+            toast.success("Từ chối bình luận thành công");
             setDetailOpen(false);
-        } catch (err: any) {
-            toast.error(err?.response?.data?.message || "Reject thất bại");
+        } catch (error) {
+           console.log(error); 
         } 
     };
+
+    const handleDelete = async (id: string) => {
+        if(!id) return;
+        setDeleteId(id);
+        setOpenDeleteAlert(true);
+    }
+
+    const onConfirmDelete = async () => {
+        if(!deleteId) return;
+        try {
+            await reviewApi.delete(deleteId);
+            loadReviews();
+        }catch(error){
+            console.log(error);
+        }
+    }
     
     const loadReviews = async () => {
         try {
@@ -152,6 +171,7 @@ export default function ReviewsPage() {
                         setStatus={setStatus}
                         rating={rating}
                         setRating={setRating}
+                        onDelete={handleDelete}
                     />
                 </div>
                     <ReviewDetailDialog
@@ -163,6 +183,12 @@ export default function ReviewsPage() {
                         handleSaveReply={handleSaveReply}
                         handleApprove={handleApprove}
                         handleReject={handleReject}
+                    />
+                    <DeleteBrandAlert
+                        open={openDeleteAlert}
+                        setOpen={setOpenDeleteAlert}
+                        brandName=" "
+                        onConfirm={onConfirmDelete}
                     />
             </div>
         </div>
