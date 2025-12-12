@@ -6,9 +6,12 @@ import HomePage from "./pages/home/HomePage";
 import AdminLayout from "./components/layouts/AdminLayout";
 import DashboardPage from "./pages/admin/DashboardPage";
 import UsersPage from "./pages/admin/UsersPage";
+import { Toaster } from "sonner";
 
 const App: React.FC = () => {
   return (
+    <>
+    <Toaster richColors position="top-right" />
     <Routes>
       <Route
         path="/"
@@ -41,6 +44,7 @@ const App: React.FC = () => {
 
       {/* Other route... */}
     </Routes>
+    </>
   );
 
 };
