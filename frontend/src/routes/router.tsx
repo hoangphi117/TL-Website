@@ -10,6 +10,7 @@ import CustomerLoginPage from "@/pages/customer/LoginPage";
 import CustomerRegisterPage from "@/pages/customer/RegisterPage";
 import CustomerForgotPasswordPage from "@/pages/customer/ForgotPasswordPage";
 import CustomerResetPasswordPage from "@/pages/customer/ResetPasswordPage";
+import CustomerProfilePage from "@/pages/customer/Profile/Profile";
 
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
             <OrderLookupPage />
           </ProtectedRouteCustomer>
         ),
+      },
+      {
+        path: "/users/me",
+        element: <CustomerProfilePage />,
       },
     ],
   },

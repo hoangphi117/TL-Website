@@ -19,7 +19,6 @@ const autofillFixStyle = `
   }
 `;
 
-// SỬA: Đổi username thành fullName để khớp User Model backend
 const schema = z
   .object({
     fullName: z
@@ -46,14 +45,14 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { registerAuth } = useAuth(); // TypeScript sẽ tự infer từ Context
+  const { registerAuth } = useAuth();
   const navigate = useNavigate();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(schema),
     mode: "onBlur",
     defaultValues: {
-      fullName: "", // SỬA
+      fullName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -77,7 +76,7 @@ export default function RegisterPage() {
     });
 
     if (result.success) {
-      navigate("auth/login/customer"); // Sửa: Điều hướng về trang login sau khi đăng ký thành công
+      navigate("/auth/login/customer"); // Sửa: Điều hướng về trang login sau khi đăng ký thành công
     } else {
       setError("root", {
         type: "manual",

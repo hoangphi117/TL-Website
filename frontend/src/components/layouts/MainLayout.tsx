@@ -4,6 +4,7 @@ import Footer from "../common/Footer";
 import { Outlet } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
+import { Toaster } from "sonner";
 
 interface MainLayoutProps {
   children?: React.ReactNode;
@@ -33,6 +34,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       </main>
 
       <Footer />
+      <Toaster theme="dark" position="top-center" richColors />
     </div>
   );
 };
