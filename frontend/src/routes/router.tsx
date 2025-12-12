@@ -1,13 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import React from "react";
 import ProtectedRouteAdmin from "./ProtectedRouteAdmin";
+import ProtectedRouteCustomer from "./ProtectedRouteCustomer";
 
 import MainLayout from "@/components/layouts/MainLayout";
 import HomePage from "@/pages/home/HomePage";
 
+import CustomerLoginPage from "@/pages/customer/LoginPage";
+import CustomerRegisterPage from "@/pages/customer/RegisterPage";
+import CustomerForgotPasswordPage from "@/pages/customer/ForgotPasswordPage";
+import CustomerResetPasswordPage from "@/pages/customer/ResetPasswordPage";
+import CustomerProfilePage from "@/pages/customer/Profile/Profile";
+
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
-import UserDetailPage from "@/pages/admin/UserDetailPage"
+import UserDetailPage from "@/pages/admin/UserDetailPage";
 import EditProductPage from "@/pages/admin/EditProductPage";
 import AdminLoginPage from "@/pages/admin/LoginPage";
 import OrdersPage from "@/pages/admin/OrdersPage";
@@ -16,9 +23,10 @@ import OrdersPage from "@/pages/admin/OrdersPage";
 const ProductDetailPage = React.lazy(
   () => import("@/pages/product/ProductDetail")
 );
-const ShowroomPage = React.lazy(() => import("@/pages/showRoom"));
 const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
-const OrderLookupPage = React.lazy(() => import("@/pages/orderLookupPage"));
+const OrderLookupPage = React.lazy(
+  () => import("@/pages/order/orderLookupPage")
+);
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
 const ProductsPage = React.lazy(() => import("@/pages/admin/ProductsPage"));
@@ -36,13 +44,43 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "product/:category/:id", element: <ProductDetailPage /> },
-      { path: "order/lookup", element: <OrderLookupPage /> },
-      { path: "showroom", element: <ShowroomPage /> },
+      {
+        path: "order/lookup",
+        element: (
+          <ProtectedRouteCustomer>
+            <OrderLookupPage />
+          </ProtectedRouteCustomer>
+        ),
+      },
+      {
+        path: "/users/me",
+        element: <CustomerProfilePage />,
+      },
     ],
   },
   {
+    path: "/auth/login/customer",
+    element: <CustomerLoginPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/auth/register/customer",
+    element: <CustomerRegisterPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/auth/reset-password",
+    element: <CustomerForgotPasswordPage />,
+    errorElement: <ErrorPage />,
+  },
+  { path: "/reset-password/:token", element: <CustomerResetPasswordPage /> },
+  {
     path: "/admin",
-    element: <ProtectedRouteAdmin><AdminLayout /></ProtectedRouteAdmin>,
+    element: (
+      <ProtectedRouteAdmin>
+        <AdminLayout />
+      </ProtectedRouteAdmin>
+    ),
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <DashboardPage /> },
@@ -60,8 +98,8 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/login",
-    element: <AdminLoginPage/>,
-    errorElement: <ErrorPage/>
+    element: <AdminLoginPage />,
+    errorElement: <ErrorPage />,
   },
 ]);
 

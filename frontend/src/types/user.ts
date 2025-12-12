@@ -7,9 +7,9 @@ export interface IAddress {
 }
 
 export interface IUser {
-  _id: string;               
+  _id: string;
   email: string;
-  password?: string;            
+  password?: string;
   fullName: string;
   phoneNumber?: string;
   avatarUrl?: string;
@@ -21,15 +21,14 @@ export interface IUser {
   passwordResetToken?: string;
   passwordResetExpires?: string;
 
-  createdAt: string;            
+  createdAt: string;
   updatedAt: string;
 }
 
 export interface IUserListResponse {
-    success: boolean;
-    count: number;
-    page:number;
-    totalPages: number;
-    data: IUser[];
+  success: boolean;
+  count: number;
+  page: number;
+  totalPages: number;
+  data: IUser[];
 }
-

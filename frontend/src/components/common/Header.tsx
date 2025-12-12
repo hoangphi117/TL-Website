@@ -1,20 +1,31 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   User,
   ShoppingCart,
   Home,
   MessageSquare,
   Search,
-  MapPin,
   Phone,
   FileText,
+  LogOut,
 } from "lucide-react";
-
-import logo from "../../assets/icons/TL-Logo.png";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import logo from "../../assets/icons/TL-Logo.png";
+
+import { useAuth } from "@/context/CustomerAuthContext";
 
 // --- TYPES ---
 interface CartBadgeProps {
@@ -23,9 +34,71 @@ interface CartBadgeProps {
 }
 
 const Header: React.FC = () => {
-  // Logo Component nội bộ
+  const { user, logout } = useAuth();
+  const naviagate = useNavigate();
+
+  const getFirstLetter = (name?: string) => {
+    return name ? name.charAt(0).toUpperCase() : "@";
+  };
+
+  const handleLogout = () => {
+    logout();
+    naviagate("/");
+  };
+
+  const UserDropdown = () => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Avatar className="h-10 w-10 border-2 border-white cursor-pointer hover:scale-105 transition-transform shadow-sm">
+            <AvatarImage
+              src={user?.avatarUrl}
+              alt={user?.fullName}
+              className="object-cover"
+            />
+            <AvatarFallback className="bg-red-600 text-white font-bold">
+              {getFirstLetter(user?.fullName)}
+            </AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent
+          className="w-56 bg-[#151517] border border-gray-700 text-white shadow-xl"
+          align="end"
+        >
+          <DropdownMenuLabel className="p-2">
+            <p className="text-sm text-white font-bold truncate">
+              {user?.fullName}
+            </p>
+            <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+          </DropdownMenuLabel>
+
+          <DropdownMenuSeparator className="bg-gray-700" />
+
+          <DropdownMenuItem
+            className="p-2 cursor-pointer hover:bg-gray-800 focus:bg-gray-800"
+            asChild
+          >
+            <Link to="/users/me" className="flex items-center gap-3 ">
+              <User className="w-4 h-4 text-gray-300" />
+              <span className="text-white">Tài khoản của tôi</span>
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            className="p-2 cursor-pointer text-red-500 hover:bg-gray-800 focus:bg-gray-800 focus:text-red-400"
+            onClick={handleLogout}
+          >
+            <LogOut className="w-4 h-4" />
+            Đăng xuất
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
+
   const Logo = () => (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 select-none">
       <div className="w-10 h-10 overflow-hidden flex-shrink-0">
         <img src={logo} alt="logo" className="w-full h-full object-contain" />
       </div>
@@ -94,12 +167,21 @@ const Header: React.FC = () => {
 
             {/* Logic Mobile User: */}
             <Link
-              to="/auth/login/customer"
+              to={user ? "/users/me" : "/auth/login/customer"}
               className="flex flex-col items-center gap-1 flex-1"
             >
-              <User className="h-6 w-6" />
+              {user ? (
+                <Avatar className="h-6 w-6 border border-white">
+                  <AvatarImage src={user.avatarUrl} alt={user.fullName} />
+                  <AvatarFallback className="bg-red-600 text-white text-[10px] font-bold flex items-center justify-center">
+                    {getFirstLetter(user.fullName)}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <User className="h-6 w-6" />
+              )}
               <span className="text-[10px] truncate max-w-[60px]">
-                Tài khoản
+                {user ? "Tôi" : "Tài khoản"}
               </span>
             </Link>
           </div>
@@ -134,18 +216,6 @@ const Header: React.FC = () => {
                 </a>
 
                 <Link
-                  to="/showroom"
-                  className="flex items-center group transition-colors duration-200 text-white"
-                >
-                  <MapPin className="h-5 w-5 mb-1 mr-2 group-hover:text-red-500 transition-colors" />
-                  <span className="group-hover:text-red-500 transition-colors text-xs font-semibold leading-tight">
-                    Hệ thống
-                    <br />
-                    Showroom
-                  </span>
-                </Link>
-
-                <Link
                   to="/order/lookup"
                   className="flex items-center group transition-colors duration-200 text-white"
                 >
@@ -163,17 +233,21 @@ const Header: React.FC = () => {
               </CartBadge>
 
               {/* PHẦN LOGIN */}
-              <Link to="/auth/login/customer">
-                <Button
-                  variant="outline"
-                  className="h-auto py-2 px-3 bg-transparent border-2 border-white text-white hover:border-red-500 hover:text-red-500 hover:bg-transparent flex items-center gap-2 cursor-pointer"
-                >
-                  <User className="h-5 w-5" />
-                  <span className="text-xs font-semibold text-left leading-tight">
-                    Đăng <br /> nhập
-                  </span>
-                </Button>
-              </Link>
+              {user ? (
+                <UserDropdown />
+              ) : (
+                <Link to="auth/login/customer">
+                  <Button
+                    variant="outline"
+                    className="h-auto py-2 px-3 bg-transparent border-2 border-white text-white hover:border-red-500 hover:text-red-500 hover:bg-transparent flex items-center gap-2 cursor-pointer"
+                  >
+                    <User className="h-5 w-5" />
+                    <span className="text-xs font-semibold text-left leading-tight">
+                      Đăng <br /> nhập
+                    </span>
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
