@@ -30,11 +30,12 @@ const addToCart = async (req, res) => {
     const name = product.name
     const price = product.price
     const image = product.images[0]
+    const sku = product.sku
 
     if (!cart) {
       cart = new Cart({
         userId,
-        items: [{ productId, name, price, image, quantity }]
+        items: [{ productId, name, sku, price, image, quantity }]
       });
     }
     else {
@@ -43,7 +44,7 @@ const addToCart = async (req, res) => {
       if (itemIndex > -1) {
         cart.items[itemIndex].quantity += quantity;
       } else {
-        cart.items.push({ productId, name, price, image, quantity });
+        cart.items.push({ productId, name, sku, price, image, quantity });
       }
     }
 
@@ -127,7 +128,7 @@ const updateCartItem = async (req, res) => {
 };
 
 const removeCartItem = async (req, res) => {
-  const productId = req.body;
+  const { productId } = req.body;
   const userId = req.user.id
 
   try {

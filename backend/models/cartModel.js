@@ -19,6 +19,7 @@ const cartSchema = new Schema({
       min: 1
     },
     name: String,
+    sku: String,
     price: Number,
     image: String
   }],
@@ -34,4 +35,4 @@ const cartSchema = new Schema({
 
 const Cart = mongoose.model('Cart', cartSchema);
 
-module.exports =  Cart;
+module.exports = Cart;
