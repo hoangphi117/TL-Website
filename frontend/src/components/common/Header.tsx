@@ -124,7 +124,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 shadow-md bg-[#151517] text-white md:mb-5">
+      <header className="sticky top-0 z-50 shadow-md bg-[#151517] text-white">
         {/* --- MOBILE LAYOUT --- */}
         <div className="md:hidden px-4 py-3">
           <div className="flex items-center gap-3">

@@ -1,5 +1,7 @@
 import CarouselTemplate from "@/components/common/carousel/carousel";
 
+import { useAuth } from "@/context/CustomerAuthContext";
+
 const subBanners = [
   { id: 2, name: "Banner 2", height: "h-[160px]", className: "bg-blue-100" },
   { id: 3, name: "Banner 3", height: "h-[160px]", className: "bg-green-100" },
@@ -10,6 +12,8 @@ const subBanners = [
 ];
 
 function Banner() {
+  const { user } = useAuth();
+
   return (
     <section className="flex flex-col gap-2 ">
       <div
@@ -17,9 +21,15 @@ function Banner() {
         from-black to-red-700 rounded-sm"
       >
         <div className="flex flex-col">
-          <p className="text-3xl md:text-5xl text-white font-bold">
-            Chào mừng bạn đến với LiquidShop!
-          </p>
+          {user ? (
+            <p className="text-3xl md:text-5xl text-white font-bold">
+              Xin chào {user.fullName}!
+            </p>
+          ) : (
+            <p className="text-3xl md:text-5xl text-white font-bold">
+              Chào mừng bạn đến với LiquidShop!
+            </p>
+          )}
           <p className="text-sm text-white mt-3">
             Hãy đăng nhập hoặc đăng ký để trải nghiệm mua sắm tuyệt vời
           </p>
