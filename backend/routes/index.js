@@ -13,6 +13,7 @@ const promotionRoutes = require('./api/customer/promotion')
 const reviewRoutes = require('./api/review')
 const reviewRoutesCustomer = require('./api/customer/review')
 const wishlistRoutes = require('./api/customer/wishlist')
+const feedbackRoutes = require('./api/customer/feedback')
 const { protectCustomer, protectAdmin } = require('../middlewares/user')
 const brandRoutesAdmin = require('./api/admin/brand')
 const productRoutesAdmin = require('./api/admin/product')
@@ -23,11 +24,11 @@ const feedbackRoutesAdmin = require('./api/admin/feedback')
 const reviewRoutesAdmin = require('./api/admin/review')
 const paymentRoutesAdmin = require('./api/admin/payment')
 
-router.use('/admin/product', protectAdmin, productRoutesAdmin);
 router.use('/auth', authRoutes);
 router.use('/users', protectCustomer, userRoutes)
 router.use('/category', categoryRoutes)
 router.use('/brand', brandRoutes)
+router.use('/products', productRoutes)
 router.use('/cart', protectCustomer, cartRoutes)
 router.use('/order', protectCustomer, orderRoutes)
 router.use('/payment', paymentRoutes)
@@ -35,11 +36,11 @@ router.use('/promotion', protectCustomer, promotionRoutes)
 router.use('/review', reviewRoutes)
 router.use('/review', protectCustomer, reviewRoutesCustomer)
 router.use('/wishlist', protectCustomer, wishlistRoutes)
+router.use('/feedback', protectCustomer, feedbackRoutes)
 
-
+router.use('/admin/product', protectAdmin, productRoutesAdmin);
 router.use('/admin/category', protectAdmin, categoryRoutesAdmin);
 router.use('/admin/brand', protectAdmin, brandRoutesAdmin);
-router.use('/products', productRoutes)
 router.use('/admin/user', protectAdmin, adminRoutes);
 router.use('/admin/order', protectAdmin, orderRoutesAdmin);
 router.use('/admin/promotion', protectAdmin, promotionRoutesAdmin);
