@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { momo_return, vnpay_return } = require('../../controllers/customer/paymentController')
+const { momo_return, vnpay_return } = require('../../controllers/paymentController')
 
 router.get('/vnpay_return', vnpay_return)
 
