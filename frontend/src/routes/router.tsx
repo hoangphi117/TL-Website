@@ -6,12 +6,41 @@ import ProtectedRouteCustomer from "./ProtectedRouteCustomer";
 import MainLayout from "@/components/layouts/MainLayout";
 import HomePage from "@/pages/home/HomePage";
 
-import CustomerLoginPage from "@/pages/customer/LoginPage";
-import CustomerRegisterPage from "@/pages/customer/RegisterPage";
-import CustomerForgotPasswordPage from "@/pages/customer/ForgotPasswordPage";
-import CustomerResetPasswordPage from "@/pages/customer/ResetPasswordPage";
-import CustomerProfilePage from "@/pages/customer/Profile/Profile";
-import CategoryDetailPage from "@/pages/product/CategoryDetailPage";
+//CUSTOMER
+
+const CustomerLoginPage = React.lazy(
+  () => import("@/pages/customer/LoginPage")
+);
+
+const CustomerRegisterPage = React.lazy(
+  () => import("@/pages/customer/RegisterPage")
+);
+
+const CustomerForgotPasswordPage = React.lazy(
+  () => import("@/pages/customer/ForgotPasswordPage")
+);
+
+const CustomerResetPasswordPage = React.lazy(
+  () => import("@/pages/customer/ResetPasswordPage")
+);
+
+const CustomerProfilePage = React.lazy(
+  () => import("@/pages/customer/Profile/Profile")
+);
+
+//PRODUCT
+
+const CategoryDetailPage = React.lazy(
+  () => import("@/pages/product/CategoryDetailPage")
+);
+
+const ProductDetailPage = React.lazy(
+  () => import("@/pages/product/ProductDetail")
+);
+
+const OrderLookupPage = React.lazy(
+  () => import("@/pages/order/orderLookupPage")
+);
 
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
@@ -20,14 +49,6 @@ import EditProductPage from "@/pages/admin/EditProductPage";
 import AdminLoginPage from "@/pages/admin/LoginPage";
 import OrdersPage from "@/pages/admin/OrdersPage";
 
-// Lazy loaded pages
-const ProductDetailPage = React.lazy(
-  () => import("@/pages/product/ProductDetail")
-);
-const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
-const OrderLookupPage = React.lazy(
-  () => import("@/pages/order/orderLookupPage")
-);
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
 const ProductsPage = React.lazy(() => import("@/pages/admin/ProductsPage"));
@@ -37,6 +58,8 @@ const AddCategoriesPage = React.lazy(
   () => import("@/pages/admin/AddCategoriesPage")
 );
 const ReviewsPage = React.lazy(() => import("@/pages/admin/ReviewsPage"));
+
+const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
 
 const router = createBrowserRouter([
   {
