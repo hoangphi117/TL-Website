@@ -28,6 +28,8 @@ const CustomerProfilePage = React.lazy(
   () => import("@/pages/customer/Profile/Profile")
 );
 
+const CustomerCartPage = React.lazy(() => import("@/pages/cart/CartPage"));
+
 //PRODUCT
 
 const CategoryDetailPage = React.lazy(
@@ -74,6 +76,7 @@ const router = createBrowserRouter([
         children: [
           { path: "users/me", element: <CustomerProfilePage /> },
           { path: "order/lookup", element: <OrderLookupPage /> },
+          { path: "cart", element: <CustomerCartPage /> },
         ],
       },
       {
