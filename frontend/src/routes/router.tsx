@@ -9,19 +9,19 @@ import HomePage from "@/pages/home/HomePage";
 //CUSTOMER
 
 const CustomerLoginPage = React.lazy(
-  () => import("@/pages/customer/LoginPage")
+  () => import("@/pages/customer/auth/LoginPage")
 );
 
 const CustomerRegisterPage = React.lazy(
-  () => import("@/pages/customer/RegisterPage")
+  () => import("@/pages/customer/auth/RegisterPage")
 );
 
 const CustomerForgotPasswordPage = React.lazy(
-  () => import("@/pages/customer/ForgotPasswordPage")
+  () => import("@/pages/customer/auth/ForgotPasswordPage")
 );
 
 const CustomerResetPasswordPage = React.lazy(
-  () => import("@/pages/customer/ResetPasswordPage")
+  () => import("@/pages/customer/auth/ResetPasswordPage")
 );
 
 const CustomerProfilePage = React.lazy(
