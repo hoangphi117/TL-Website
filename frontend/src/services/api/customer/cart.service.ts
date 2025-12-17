@@ -7,14 +7,14 @@ export const cartService = {
   },
 
   addToCart: async (productId: string, quantity: number) => {
-    return axiosClient.post("/cart/add", { productId, quantity });
+    return axiosClient.post("/cart", { productId, quantity });
   },
 
   updateCartItem: async (productId: string, quantity: number) => {
-    return axiosClient.put("/cart/update", { productId, quantity });
+    return axiosClient.put("/cart", { productId, quantity });
   },
 
   removeCartItem: async (productId: string) => {
-    return axiosClient.post("/cart/remove", { productId });
+    return axiosClient.post("/cart", { productId });
   },
 };

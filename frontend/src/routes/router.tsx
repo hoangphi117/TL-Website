@@ -37,7 +37,7 @@ const CategoryDetailPage = React.lazy(
 );
 
 const ProductDetailPage = React.lazy(
-  () => import("@/pages/product/ProductDetail")
+  () => import("@/pages/product/ProductDetailPage")
 );
 
 const OrderLookupPage = React.lazy(

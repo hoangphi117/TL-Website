@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { productService } from "@/services/api/customer/product.service";
-// import { cartService } from "@/services/cart.service";
+import { cartService } from "@/services/api/customer/cart.service";
 import type { IProduct } from "@/types/product";
 
 import ProductSpecsTable from "@/components/product/ProductSpecTable";
@@ -36,7 +36,9 @@ const ProductDetailPage: React.FC = () => {
   const [relatedProducts, setRelatedProducts] = useState<IProduct[]>([]);
 
   const [activeImage, setActiveImage] = useState<string>("");
+
   const [loading, setLoading] = useState<boolean>(true);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   useDocumentTitle(product?.name || "Chi tiết sản phẩm");
 
@@ -85,7 +87,38 @@ const ProductDetailPage: React.FC = () => {
     }
   };
 
-  // --- 3. Review ---
+  const handleAddToCart = async () => {
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
+    if (!token) {
+      toast.error("Vui lòng đăng nhập để mua hàng!");
+      navigate("/auth/login/customer");
+      return;
+    }
+
+    if (!product) return;
+
+    setIsAddingToCart(true);
+
+    try {
+      await cartService.addToCart(product._id, 1);
+
+      toast.success("Đã thêm sản phẩm vào giỏ hàng!", {
+        action: {
+          label: "Xem giở hàng",
+          onClick: () => navigate("/cart"),
+        },
+      });
+    } catch (error: any) {
+      console.error("Add to cart error", error);
+      toast.error(
+        error.response?.data?.message || "Không thể thêm vào giỏ hàng"
+      );
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -217,7 +250,11 @@ const ProductDetailPage: React.FC = () => {
 
                 {/* ---------- ACTIONS ---------- */}
                 <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                  <Button className="flex-1 h-14 bg-red-600 hover:bg-red-700 text-white shadow-lg cursor-pointer">
+                  <Button
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart}
+                    className="flex-1 h-14 bg-red-600 hover:bg-red-700 text-white shadow-lg cursor-pointer"
+                  >
                     <span className="flex items-center gap-2 text-lg font-bold uppercase">
                       {product.stockQuantity > 0 ? "MUA NGAY" : "HẾT HÀNG"}
                       <ShoppingCart className="w-5 h-5" />
