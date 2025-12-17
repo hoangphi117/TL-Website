@@ -17,7 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { productService } from "@/services/api/customer/product.service";
-// import { reviewService } from "@/services/review.service";
+import { reviewService } from "@/services/api/customer/review.service";
 // import { cartService } from "@/services/cart.service";
 import type { IProduct } from "@/types/product";
 
@@ -33,6 +33,7 @@ const ProductDetailPage: React.FC = () => {
 
   const [product, setProduct] = useState<IProduct | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<IProduct[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
 
   const [activeImage, setActiveImage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -48,10 +49,13 @@ const ProductDetailPage: React.FC = () => {
         const data = await productService.getProductDetail(id);
 
         if (data) {
+          console.log(data);
           setProduct(data);
           setActiveImage(data.images?.[0] || "");
 
           fetchRelatedProducts(data.category?._id || "", data._id);
+
+          fetchReviews(data._id);
         } else {
           setProduct(null);
         }
@@ -81,6 +85,19 @@ const ProductDetailPage: React.FC = () => {
       setRelatedProducts(related);
     } catch (error) {
       console.log("Failed to fetch related", error);
+    }
+  };
+
+  // --- 3. Review ---
+  const fetchReviews = async (productId: string) => {
+    try {
+      const res: any = await reviewService.getReviewsByProduct(productId);
+      if (res && res.data) {
+        setReviews(res.data);
+      }
+    } catch (error) {
+      console.log("Failed to fetch reviews", error);
+      setReviews([]);
     }
   };
 
@@ -146,7 +163,7 @@ const ProductDetailPage: React.FC = () => {
                     <button
                       key={index}
                       onClick={() => setActiveImage(img)}
-                      className={`relative w-16 h-16 rounded-md overflow-hidden border-2 transition-all flex-shrink-0 ${
+                      className={`relative w-16 h-16 rounded-md overflow-hidden border-2 transition-all flex-shrink-0 cursor-pointer ${
                         activeImage === img
                           ? "border-red-600 ring-1 ring-red-600"
                           : "border-transparent bg-gray-100"
@@ -214,7 +231,7 @@ const ProductDetailPage: React.FC = () => {
 
                 {/* ---------- ACTIONS ---------- */}
                 <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                  <Button className="flex-1 h-14 bg-red-600 hover:bg-red-700 text-white shadow-lg">
+                  <Button className="flex-1 h-14 bg-red-600 hover:bg-red-700 text-white shadow-lg cursor-pointer">
                     <span className="flex items-center gap-2 text-lg font-bold uppercase">
                       {product.stockQuantity > 0 ? "MUA NGAY" : "HẾT HÀNG"}
                       <ShoppingCart className="w-5 h-5" />
@@ -223,7 +240,7 @@ const ProductDetailPage: React.FC = () => {
 
                   <Button
                     variant="outline"
-                    className="flex-1 h-14 border-blue-600 text-blue-700"
+                    className="flex-1 h-14 border-blue-600 text-blue-700 cursor-pointer"
                   >
                     <span className="flex items-center gap-2 text-lg font-bold uppercase">
                       TRẢ GÓP 0% <CreditCard className="w-5 h-5" />
@@ -260,6 +277,45 @@ const ProductDetailPage: React.FC = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* ---------- REVIEWS ---------- */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="uppercase border-l-4 border-red-600 pl-3">
+              Đánh giá ({reviews.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {reviews.length === 0 ? (
+              <Badge variant="secondary" className="italic">
+                Chưa có đánh giá nào
+              </Badge>
+            ) : (
+              <div className="space-y-4">
+                {reviews.map((rv) => (
+                  <div key={rv._id} className="border-b pb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold">
+                        {rv.userId?.fullName || "Ẩn danh"}
+                      </span>
+                      <div className="flex text-yellow-400">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-3 h-3 ${
+                              i < rv.rating ? "fill-current" : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-gray-600 mt-1">{rv.comment}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* ---------- RELATED ---------- */}
         {relatedProducts.length > 0 && (
