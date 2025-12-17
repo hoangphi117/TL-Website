@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
+import ScrollToTop from "../common/ScrollToTop";
 
 const PageLoader = () => (
   <div className="p-4 space-y-4">
@@ -19,6 +20,7 @@ const PageLoader = () => (
 const MainLayout: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen pb-16 md:pb-0">
+      <ScrollToTop />
       <Header />
 
       <main className="grow bg-[#ececec] w-full">
