@@ -1,38 +1,80 @@
 const Groq = require('groq-sdk');
 const Product = require('../../models/productModel');
 const Order = require('../../models/orderModel');
-const Category = require('../../models/categoryModel')
-const Brand = require('../../models/brandModel')
 const ChatSession = require('../../models/chatSessionModel');
+const Fuse = require('fuse.js');
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const ROUTER_PROMPT = `
-Bạn là bộ não phân tích ý định (Intent Classifier).
-Nhiệm vụ: Đọc hội thoại và trả về JSON duy nhất.
+let searchEngine = null;
+let cachedProducts = [];
+let lastUpdated = 0;
 
-Intent:
-1. "search_product": Tìm mua, hỏi giá, tư vấn sp.
-2. "check_order": Hỏi đơn hàng.
-3. "chat": Chào hỏi, tán gẫu.
+// Cập nhật dữ liệu tìm kiếm mỗi 5p
+async function updateSearchIndex() {
+  const now = Date.now();
+  if (now - lastUpdated > 300000 || !searchEngine) {
+    try {
+      const products = await Product.find({ status: 'active' })
+        .populate('brand', 'name')
+        .populate('category', 'name')
+        .select('name price slug description brand category image sku');
+
+      // Chuẩn hóa dữ liệu để search ngon hơn
+      cachedProducts = products.map(p => ({
+        _id: p._id,
+        name: p.name,
+        price: p.price,
+        // Tạo một trường text tổng hợp để search cho chuẩn
+        searchText: `${p.name} ${p.brand?.name || ''} ${p.category?.name || ''} ${p.description || ''}`,
+        raw: p
+      }));
+
+      // Cấu hình Fuse.js
+      const options = {
+        includeScore: true,
+        keys: ['searchText'], // Tìm trong trường text tổng hợp
+        threshold: 0.4, // Độ chấp nhận sai số
+        ignoreLocation: true
+      };
+
+      searchEngine = new Fuse(cachedProducts, options);
+      lastUpdated = now;
+      console.log(`Search Engine Updated! Loaded ${cachedProducts.length} products.`);
+    } catch (e) {
+      console.error("Update Search Index Error:", e);
+    }
+  }
+}
+
+updateSearchIndex();
+
+
+const ROUTER_PROMPT = `
+Role: Intent Classifier.
+Task: Analyze user query and output JSON.
+
+Intents:
+1. "search_product": Find product, ask price.
+2. "check_order": Check order status.
 
 JSON Output:
 {
-  "intent": "search_product" | "check_order" | "chat",
-  "query": { "name": string, "category": string, "brand": string, "price_max": number } 
-  //name, category, brand luôn viết hoa chữ đầu và chữ còn lại viết thường ví dụ:"xiaomi ultrabook -> Xiaomi Ultrabook"
+  "intent": "search_product" | "check_order",
+  "query": {
+    "keyword": string, // Quan trọng: Trích xuất từ khóa cốt lõi (VD: "máy dell", "tai nghe ko dây")
+    "price_max": number
+  },
 }
 `;
 
 const RESPONDER_SYSTEM_PROMPT = `
-Bạn là trợ lý ảo bán hàng chuyên nghiệp, thân thiện của shop bán đồ công nghệ.
-Nhiệm vụ: Trả lời khách hàng dựa trên DỮ LIỆU CUNG CẤP (Context).
-
-Quy tắc quan trọng:
-1. Giọng điệu: Vui vẻ, dùng emoji 💻🔥, xưng hô "mình" - "bạn".
-2. Nếu có dữ liệu sản phẩm/đơn hàng: Hãy giới thiệu sơ qua 1-2 câu thật hấp dẫn.
-3. TUYỆT ĐỐI KHÔNG bịa đặt thông tin không có trong Context.
-4. KHÔNG hiển thị lại danh sách sản phẩm dạng text dài dòng. Chỉ cần nói dẫn dắt, vì hệ thống sẽ tự hiển thị thẻ sản phẩm sau câu nói của bạn.
+Role: Sales Assistant. Tone: Friendly, Vietnamese.
+Task: Answer based on CONTEXT.
+Rules:
+- Don't list product details (name, price) repeatedly because user can see the cards.
+- Just give a short, catchy introduction about the products found.
+- If no products, suggest broadly.
 `;
 
 const chatWithAI = async (req, res) => {
@@ -44,6 +86,8 @@ const chatWithAI = async (req, res) => {
   res.setHeader('Connection', 'keep-alive');
 
   try {
+    await updateSearchIndex();
+
     let session;
     session = await ChatSession.findOne({ userId });
 
@@ -72,34 +116,30 @@ const chatWithAI = async (req, res) => {
 
     const { intent, query } = JSON.parse(routerCompletion.choices[0].message.content);
 
+    console.log(JSON.stringify(query))
+
     // Query db dựa trên res đã lọc từ AI cùi
     let dbContext = "Không có dữ liệu database.";
     let foundDataPayload = null;
 
     if (intent === "search_product") {
-      const dbQuery = { status: 'active' };
-      if (query.name) {
-        dbQuery.$or = [
-          { name: { $regex: query.name, $options: 'i' } },
-          { description: { $regex: query.name, $options: 'i' } }
-        ];
-      }
-      if (query.category) {
-        const categoryId = await Category.findOne({ name: query.category })
-        if (categoryId) dbQuery.category = categoryId;
-      }
-      if (query.brand) {
-        const brandId = await Brand.findOne({ name: query.brand })
-        if (brandId) dbQuery.brand = brandId;
-      }
-      if (query.price_max) dbQuery.price = { $lte: query.price_max };
+      let results = [];
 
-      // Lấy name và price để AI 2 đọc hiểu và chém gió =))
-      // Lấy _id để gửi cho Frontend render
-      const products = await Product.find(dbQuery).limit(5).select('name price sku _id');
+      if (query?.keyword) {
+        const fuseResults = searchEngine.search(query.keyword);
+        results = fuseResults.map(r => r.item);
+      } else {
+        results = cachedProducts;
+      }
+
+      if (query?.price_max) {
+        results = results.filter(p => p.price <= query.price_max);
+      }
+
+      const products = results.slice(0, 5);
 
       if (products.length > 0) {
-        // Context cho AI xịn đọc
+
         dbContext = `Tìm thấy ${products.length} sản phẩm:\n` +
           products.map(p => `- ${p.name} (Giá: ${p.price})`).join("\n");
 
