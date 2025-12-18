@@ -13,6 +13,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { categoryService } from "@/services/api/customer/category.service";
 import { type ICategory } from "@/types/category";
 
+import getCategoryIcon from "@/utils/mapIcon";
+
 interface ICategoryWithChildren extends ICategory {
   children: ICategory[];
 }
@@ -104,16 +106,8 @@ const CategoryMobile: React.FC = () => {
                       onClick={() => toggleExpand(cat._id)}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-6 h-6 bg-white rounded-sm p-0.5 flex items-center justify-center">
-                          {cat.imageUrl ? (
-                            <img
-                              src={cat.imageUrl}
-                              alt={cat.name}
-                              className="w-full h-full object-contain"
-                            />
-                          ) : (
-                            <Menu className="w-3 h-3 text-black" />
-                          )}
+                        <div className="text-red-400">
+                          {getCategoryIcon(cat.name)}
                         </div>
                         <span className="font-semibold text-sm uppercase text-gray-200">
                           {cat.name}

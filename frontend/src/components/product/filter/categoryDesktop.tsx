@@ -7,6 +7,8 @@ import { categoryService } from "@/services/api/customer/category.service";
 import { type ICategory } from "@/types/category";
 import { Link } from "react-router-dom";
 
+import getCategoryIcon from "@/utils/mapIcon";
+
 interface ICategoryWithChildren extends ICategory {
   children: ICategory[];
 }
@@ -71,7 +73,7 @@ const CategoryDropdownContent: React.FC = () => {
 
   return (
     <div className="bg-white text-black shadow-xl w-[850px] border border-gray-200 flex rounded-md overflow-hidden animate-in fade-in zoom-in-95 duration-200 h-[450px]">
-      {/* CỘT TRÁI: DANH SÁCH CHA */}
+      {/* DANH SÁCH CHA */}
       <div className="w-72 bg-gray-50 border-r border-gray-200 py-2 overflow-y-auto">
         {categories.map((cat, i) => (
           <div
@@ -84,17 +86,15 @@ const CategoryDropdownContent: React.FC = () => {
             )}
             onMouseEnter={() => setActiveCategoryIndex(i)}
           >
-            {/* Hiển thị Icon từ URL hoặc Icon mặc định */}
-            <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded-sm p-0.5">
-              {cat.imageUrl ? (
-                <img
-                  src={cat.imageUrl}
-                  alt={cat.name}
-                  className="w-full h-full object-contain mix-blend-multiply"
-                />
-              ) : (
-                <Menu className="w-4 h-4 text-gray-400" />
+            <div
+              className={cn(
+                "w-6 h-6 flex items-center justify-center transition-colors",
+                activeCategoryIndex === i
+                  ? "text-red-600"
+                  : "text-gray-400 group-hover:text-black"
               )}
+            >
+              {getCategoryIcon(cat.name)}
             </div>
 
             <span className="flex-1 truncate">{cat.name}</span>
@@ -105,7 +105,7 @@ const CategoryDropdownContent: React.FC = () => {
         ))}
       </div>
 
-      {/* CỘT PHẢI: DANH SÁCH CON */}
+      {/* DANH SÁCH CON */}
       <div className="flex-1 p-6 bg-white overflow-y-auto">
         {activeCategory ? (
           <div>
@@ -161,7 +161,7 @@ const CategoryDesktop: React.FC = () => {
 
   return (
     <div
-      className="relative group z-50" // Thêm z-50
+      className="relative group z-50"
       onMouseEnter={() => setIsDropdownOpen(true)}
       onMouseLeave={() => setIsDropdownOpen(false)}
     >
