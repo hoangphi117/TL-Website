@@ -44,6 +44,8 @@ const OrderLookupPage = React.lazy(
   () => import("@/pages/order/orderLookupPage")
 );
 
+const SearchPage = React.lazy(() => import("@/pages/product/SearchPage"));
+
 import AdminLayout from "@/components/layouts/AdminLayout";
 import BrandsPage from "@/pages/admin/BrandsPage";
 import UserDetailPage from "@/pages/admin/UserDetailPage";
@@ -82,6 +84,10 @@ const router = createBrowserRouter([
       {
         path: "/category/:id",
         element: <CategoryDetailPage />,
+      },
+      {
+        path: "products",
+        element: <SearchPage />,
       },
     ],
   },
