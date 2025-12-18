@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-import { FILTER_CONFIG } from "@/types/filter";
+import { FILTER_CONFIG, detectCategoryFromKeyword } from "@/types/filter";
 import { formatVND } from "@/utils/admin/formatMoney";
 
 // --- 1. COMPONENT LỌC GIÁ (SLIDER) ---
@@ -266,11 +266,25 @@ export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const dynamicFilters = Object.keys(FILTER_CONFIG).find((key) =>
-    categoryName.toLowerCase().includes(key.toLowerCase())
-  )
-    ? FILTER_CONFIG["Laptop"]
-    : FILTER_CONFIG["default"];
+  const currentKeyword = searchParams.get("keyword") || "";
+
+  const dynamicFilters = useMemo(() => {
+    if (categoryName) {
+      const key = Object.keys(FILTER_CONFIG).find((k) =>
+        categoryName.toLowerCase().includes(k.toLowerCase())
+      );
+      return key ? FILTER_CONFIG[key] : FILTER_CONFIG.default;
+    }
+
+    if (currentKeyword) {
+      const detectedCat = detectCategoryFromKeyword(currentKeyword);
+      if (detectedCat) {
+        return FILTER_CONFIG[detectedCat] || FILTER_CONFIG.default;
+      }
+    }
+
+    return FILTER_CONFIG.default;
+  }, [categoryName, currentKeyword]);
 
   const handleResetAll = () => {
     setSearchParams((prev) => {
