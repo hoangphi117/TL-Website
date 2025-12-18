@@ -12,6 +12,8 @@ import ProductCard from "@/components/product/ProductCard";
 import { productService } from "@/services/api/customer/product.service";
 import { type IProductListResponse } from "@/types/product";
 
+import { detectCategoryFromKeyword } from "@/types/filter";
+
 const DEFAULT_LIMIT = 20;
 
 const SearchPage: React.FC = () => {
@@ -31,13 +33,23 @@ const SearchPage: React.FC = () => {
       setLoading(true);
       try {
         const params: any = {
-          keyword: keyword,
           page: pageFromUrl,
           limit: DEFAULT_LIMIT,
           sort: sortOption,
           fields:
             "name,price,originalPrice,discountPercentage,images,averageRating,soldCount,category,specifications,status,slug",
         };
+
+        const detectedCategory = detectCategoryFromKeyword(keyword);
+
+        if (detectedCategory) {
+          // A. Nếu đoán trúng: Tìm theo category (Bỏ qua tìm theo tên)
+          params.category = detectedCategory;
+        } else {
+          // B. Nếu không đoán được: Tìm theo keyword như cũ
+          params.keyword = keyword;
+        }
+
         searchParams.forEach((value, key) => {
           if (["page", "limit", "sort", "keyword"].includes(key)) return;
           params[key] = value;

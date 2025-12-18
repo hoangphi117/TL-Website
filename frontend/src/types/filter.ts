@@ -240,7 +240,8 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "redmi",
   ],
   Chuột: ["chuột", "mouse", "logitech", "razer"],
-  "Bàn phím": ["bàn phím", "keyboard", "akko", "keychron"],
+  "Bàn phím": ["bàn phím", "phím", "keyboard", "akko", "keychron"],
+  "Tai nghe": ["tai nghe", "headphone", "HyperX", "Razer"],
   // Thêm các danh mục khác tùy ý...
 };
 
