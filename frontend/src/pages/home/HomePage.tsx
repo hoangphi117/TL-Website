@@ -3,7 +3,7 @@ import useDocumentTitle from "@/hooks/useDocumentTitle";
 
 import Banner from "@/components/common/Banner";
 import BottomCategory from "@/features/BottomCategory";
-import ProductListCarousel from "@/components/common/carousel/ProductListCarousel";
+import ProductListCarousel from "@/components/product/carousel/ProductListCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { productService } from "@/services/api/customer/product.service";

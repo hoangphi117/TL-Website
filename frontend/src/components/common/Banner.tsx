@@ -1,4 +1,4 @@
-import CarouselTemplate from "@/components/common/carousel/carousel";
+import CarouselTemplate from "@/components/product/carousel/carousel";
 
 import { useAuth } from "@/context/CustomerAuthContext";
 

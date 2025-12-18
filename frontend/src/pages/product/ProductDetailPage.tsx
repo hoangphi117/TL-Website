@@ -22,7 +22,7 @@ import { useCart } from "@/context/CartContext";
 
 import type { IProduct } from "@/types/product";
 import ProductSpecsTable from "@/components/product/ProductSpecTable";
-import ProductListCarousel from "@/components/common/carousel/ProductListCarousel";
+import ProductListCarousel from "@/components/product/carousel/ProductListCarousel";
 import ProductReviews from "@/components/customer/ProductReview";
 
 import useDocumentTitle from "@/hooks/useDocumentTitle";
