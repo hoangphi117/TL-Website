@@ -7,11 +7,6 @@ import {
   ArrowUpNarrowWide,
 } from "lucide-react";
 
-import { categoryService } from "@/services/api/customer/category.service";
-import { productService } from "@/services/api/customer/product.service";
-import { type ICategory } from "@/types/category";
-import { type IProductListResponse } from "@/types/product";
-
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Card,
@@ -26,6 +21,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import { categoryService } from "@/services/api/customer/category.service";
+import { productService } from "@/services/api/customer/product.service";
+import { type ICategory } from "@/types/category";
+import { type IProductListResponse } from "@/types/product";
+
+import { ProductFilterBar } from "@/components/product/ProductFilter";
 
 import ProductCard from "@/components/product/ProductCard";
 
@@ -80,14 +82,22 @@ const CategoryDetailPage: React.FC = () => {
 
       setLoadingProducts(true);
       try {
-        const res = await productService.getProducts({
+        const params: any = {
           category: categoryDetail.name,
           page: pageFromUrl,
           limit: DEFAULT_LIMIT,
           sort: sortOption,
           fields:
-            "name,price,originalPrice,images,averageRating,soldCount,specifications,slug",
+            "name,price,originalPrice,discountPercentage,images,averageRating,soldCount,category,specifications,status,slug",
+        };
+
+        searchParams.forEach((value, key) => {
+          if (["page", "limit", "sort", "category"].includes(key)) return;
+
+          params[key] = value;
         });
+
+        const res = await productService.getProducts(params);
         setProductResponse(res);
       } catch (err) {
         console.error("Lỗi tải sản phẩm:", err);
@@ -99,7 +109,7 @@ const CategoryDetailPage: React.FC = () => {
     if (categoryDetail) {
       fetchProducts();
     }
-  }, [categoryDetail, pageFromUrl, sortOption]);
+  }, [categoryDetail, pageFromUrl, sortOption, searchParams]);
 
   const handlePageChange = (newPage: number) => {
     setSearchParams((prev) => {
@@ -155,7 +165,9 @@ const CategoryDetailPage: React.FC = () => {
           sản phẩm
         </p>
 
-        {/* [TỐI ƯU 3]: Dropdown Sắp xếp hoạt động thực tế */}
+        <ProductFilterBar categoryName={categoryDetail?.name} />
+
+        {/* Sort by createAt */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="gap-2">
