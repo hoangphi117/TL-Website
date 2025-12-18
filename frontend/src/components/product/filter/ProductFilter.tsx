@@ -113,7 +113,7 @@ const PriceFilter = () => {
           <Slider
             value={range}
             min={0}
-            max={200000000} // Giới hạn kéo tối đa 100 triệu
+            max={200000000}
             step={500000}
             onValueChange={setRange}
             className="my-6"
@@ -274,12 +274,28 @@ export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
 
   const handleResetAll = () => {
     setSearchParams((prev) => {
-      const cat = prev.get("category");
       const newParams = new URLSearchParams();
-      if (cat) newParams.set("category", cat);
+
+      const currentCategory = prev.get("category");
+      if (currentCategory) {
+        newParams.set("category", currentCategory);
+      }
+
+      const currentKeyword = prev.get("keyword");
+      if (currentKeyword) {
+        newParams.set("keyword", currentKeyword);
+      }
+
+      // 3. Reset về trang 1
+      newParams.set("page", "1");
+
       return newParams;
     });
   };
+
+  const hasActiveFilters = Array.from(searchParams.keys()).some(
+    (key) => !["page", "sort", "limit", "category", "keyword"].includes(key)
+  );
 
   return (
     <div className="flex flex-wrap items-center gap-2 mb-4 p-2 bg-gray-50 rounded-lg border border-gray-200">
@@ -314,16 +330,14 @@ export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
       ))}
 
       {/* Xóa bộ lọc */}
-      {Array.from(searchParams.keys()).some(
-        (k) => k !== "category" && k !== "page" && k !== "sort"
-      ) && (
+      {hasActiveFilters && (
         <Button
           variant="ghost"
           size="sm"
           onClick={handleResetAll}
           className="ml-auto text-red-600 hover:text-red-700 hover:bg-red-50"
         >
-          <X className="w-4 h-4 mr-1" /> Xóa bộ lọc
+          <X className="w-4 h-4 mr-1" /> Xoá bộ lọc
         </Button>
       )}
     </div>
