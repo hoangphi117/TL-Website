@@ -88,7 +88,8 @@ const ProductDetailPage: React.FC = () => {
       const res = await productService.getProducts({
         category: categoryName,
         limit: 11,
-        fields: "name,price,images,originalPrice,averageRating, specifications",
+        fields:
+          "name,price,images,originalPrice,averageRating, specifications, soldCount",
       });
 
       const products = res.data?.products || [];

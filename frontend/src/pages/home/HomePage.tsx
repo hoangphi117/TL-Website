@@ -44,7 +44,7 @@ const HomePage = () => {
               category: cat.name,
               limit: 10,
               fields:
-                "name,price,images,originalPrice, averageRating,specifications",
+                "name,price,images,originalPrice, averageRating,specifications, soldCount",
             });
 
             const productsData = productRes.data?.products || [];
