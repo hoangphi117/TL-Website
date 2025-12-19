@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Truck, Dot } from "lucide-react";
 
 import Carousel from "@/components/product/carousel/carousel";
 import ProductCard from "@/components/product/ProductCard";
@@ -24,9 +24,16 @@ const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
   return (
     <div className={`w-full bg-white rounded-md px-3 py-3 ${className || ""}`}>
       <div className="flex items-center justify-between mb-4 px-1">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-800 uppercase border-l-4 border-red-600 pl-3">
-          {title}
-        </h2>
+        <div className="flex">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-800 uppercase border-l-4 border-red-600 pl-3">
+            {title}
+          </h2>
+          <h2 className="flex items-center ml-3 gap-3">
+            <Dot className="text-gray-400" />
+            <Truck className="text-red-600" />
+            Miễn phí giao hàng
+          </h2>
+        </div>
 
         {viewAllLink && (
           <Link
