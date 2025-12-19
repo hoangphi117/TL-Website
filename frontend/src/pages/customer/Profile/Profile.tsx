@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User, ShoppingBag, Loader2, Key } from "lucide-react";
@@ -55,11 +56,39 @@ const profileSchema = z.object({
 export type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function ProfilePage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const { user, updateUser, changePassword } = useAuth();
+  const [loading, setLoading] = useState(false);
+
   const [activeTab, setActiveTab] = useState<"profile" | "password" | "orders">(
     "profile"
   );
-  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const hash = location.hash;
+
+    if (hash === "#orders-history") {
+      setActiveTab("orders");
+    } else if (hash === "#password-change") {
+      setActiveTab("password");
+    } else {
+      setActiveTab("profile");
+    }
+  }, [location.hash]);
+
+  const handleTabChange = (tab: "profile" | "orders" | "password") => {
+    setActiveTab(tab);
+
+    const hashMap = {
+      profile: "", // Về mặc định, xóa hash
+      orders: "#orders-history",
+      password: "#password-change",
+    };
+
+    navigate(`/users/me${hashMap[tab]}`, { replace: true });
+  };
 
   const [selectedAddrIndex, setSelectedAddrIndex] = useState<string>("0");
 
@@ -167,7 +196,7 @@ export default function ProfilePage() {
                         ? "bg-red-600/10 text-red-500 hover:bg-red-600/20 hover:text-red-500"
                         : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
                     }`}
-                    onClick={() => setActiveTab("profile")}
+                    onClick={() => handleTabChange("profile")}
                   >
                     <User className="w-4 h-4" /> Hồ sơ của tôi
                   </Button>
@@ -179,7 +208,7 @@ export default function ProfilePage() {
                         ? "bg-red-600/10 text-red-500 hover:bg-red-600/20 hover:text-red-500"
                         : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
                     }`}
-                    onClick={() => setActiveTab("orders")}
+                    onClick={() => handleTabChange("orders")}
                   >
                     <ShoppingBag className="w-4 h-4" /> Đơn mua
                   </Button>
@@ -191,7 +220,7 @@ export default function ProfilePage() {
                         ? "bg-red-600/10 text-red-500 hover:bg-red-600/20 hover:text-red-500"
                         : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
                     }`}
-                    onClick={() => setActiveTab("password")}
+                    onClick={() => handleTabChange("password")}
                   >
                     <Key className="w-4 h-4" /> Đổi mật khẩu
                   </Button>
