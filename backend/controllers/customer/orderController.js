@@ -186,7 +186,17 @@ const createOrder = async (req, res) => {
     }
 
     // Cập nhật lại giỏ hàng, voucher, tồn kho
-    await Cart.findOneAndDelete({ userId });
+    // Chỉ xóa những sản phẩm đã được chọn mua ra khỏi giỏ hàng
+    await Cart.findOneAndUpdate(
+      { userId },
+      {
+        $pull: {
+          items: {
+            productId: { $in: items },
+          },
+        },
+      }
+    );
 
     if (voucherId) {
       await Promotion.findByIdAndUpdate(voucherId, { $inc: { usedCount: 1 } });
