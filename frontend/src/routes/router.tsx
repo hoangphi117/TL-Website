@@ -32,9 +32,6 @@ const CategoryDetailPage = React.lazy(
 const ProductDetailPage = React.lazy(
   () => import("@/pages/product/ProductDetailPage")
 );
-const OrderLookupPage = React.lazy(
-  () => import("@/pages/order/orderLookupPage")
-);
 const CheckoutPage = React.lazy(() => import("@/pages/order/CheckoutPage"));
 const OrderDetailPage = React.lazy(
   () => import("@/pages/order/OrderDetailPage")
@@ -79,7 +76,6 @@ const router = createBrowserRouter([
         children: [
           { path: "users/me", element: <CustomerProfilePage /> },
           { path: "cart", element: <CustomerCartPage /> },
-          { path: "order/lookup", element: <OrderLookupPage /> },
           { path: "checkout", element: <CheckoutPage /> },
           { path: "/orders/:code", element: <OrderDetailPage /> },
           { path: "/order-success", element: <OrderSuccessPage /> },

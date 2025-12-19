@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Package, Calendar, Loader2, Box } from "lucide-react";
+import {
+  Package,
+  Calendar,
+  Loader2,
+  Search,
+  Box,
+  X,
+  RotateCcw,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -12,13 +20,13 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
 import { formatVND } from "@/utils/admin/formatMoney";
 import { orderService } from "@/services/api/customer/order.service";
 import { type IOrder } from "@/types/order";
-
 import CancelOrderDialog from "@/pages/order/CancelDialog";
 
 const getStatusInfo = (status: string) => {
@@ -71,240 +79,354 @@ const getPaymentStatusInfo = (status: string) => {
 
 const MyOrders: React.FC = () => {
   const navigate = useNavigate();
+
+  // State
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
+  const [searchCode, setSearchCode] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Ref để lưu danh sách gốc (Backup) nhằm tránh phải gọi API lại khi xóa tìm kiếm
+  const originalOrdersRef = useRef<IOrder[]>([]);
+
+  // 1. Fetch toàn bộ đơn hàng khi vào trang
+  const fetchAllOrders = async () => {
+    setLoading(true);
+    try {
+      const res: any = await orderService.getMyOrders();
+      if (res && res.data) {
+        const sortedOrders = res.data.sort(
+          (a: IOrder, b: IOrder) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setOrders(sortedOrders);
+        originalOrdersRef.current = sortedOrders; // Lưu backup
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Không thể tải lịch sử đơn hàng");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res: any = await orderService.getMyOrders();
-        if (res && res.data) {
-          // Sắp xếp đơn mới nhất lên đầu
-          const sortedOrders = res.data.sort(
-            (a: IOrder, b: IOrder) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-          setOrders(sortedOrders);
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error("Không thể tải lịch sử đơn hàng");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
+    fetchAllOrders();
   }, []);
 
+  // 2. Tìm kiếm đơn hàng
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchCode.trim()) return;
+
+    setLoading(true);
+    setIsSearching(true);
+
+    try {
+      const res: any = await orderService.getOrderByCode(searchCode.trim());
+
+      if (res && res.order) {
+        setOrders([res.order]);
+      } else {
+        setOrders([]);
+      }
+    } catch (error: any) {
+      setOrders([]);
+      toast.error(error.response?.data?.message || "Không tìm thấy đơn hàng");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetSearch = () => {
+    setSearchCode("");
+    setIsSearching(false);
+    setOrders(originalOrdersRef.current); // Khôi phục lại danh sách gốc từ backup
+  };
+
+  // Logic lọc theo Tab (Chỉ chạy khi không tìm kiếm)
   const filteredOrders = orders.filter((order) => {
     if (activeTab === "all") return true;
     return order.orderStatus === activeTab;
   });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-red-600" />
-      </div>
-    );
-  }
-
   return (
     <Card className="bg-[#151517] border-neutral-800 text-slate-200 shadow-xl min-h-[600px]">
       <CardHeader className="border-b border-neutral-800 pb-6">
-        <CardTitle className="text-2xl font-bold text-white flex items-center gap-2">
-          <Package className="w-6 h-6 text-red-500" /> Đơn mua
-        </CardTitle>
-        <CardDescription className="text-neutral-400">
-          Theo dõi trạng thái và lịch sử mua sắm của bạn
-        </CardDescription>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <CardTitle className="text-2xl font-bold text-white flex items-center gap-2">
+              <Package className="w-6 h-6 text-red-500" /> Đơn mua
+            </CardTitle>
+            <CardDescription className="text-neutral-400 mt-1">
+              Quản lý và theo dõi đơn hàng của bạn
+            </CardDescription>
+          </div>
+
+          {/* --- THANH TÌM KIẾM --- */}
+          <form
+            onSubmit={handleSearch}
+            className="flex w-full md:w-auto items-center gap-2"
+          >
+            <div className="relative w-full md:w-[250px]">
+              <Input
+                placeholder="Nhập mã đơn hàng (VD: ORD123...)"
+                className="bg-[#2a2a2c] border-neutral-700 text-white placeholder:text-neutral-500 pr-8 focus:border-red-500"
+                value={searchCode}
+                onChange={(e) => setSearchCode(e.target.value)}
+              />
+              {searchCode && (
+                <X
+                  className="w-4 h-4 text-neutral-400 absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer hover:text-white"
+                  onClick={() => setSearchCode("")}
+                />
+              )}
+            </div>
+            <Button
+              type="submit"
+              variant="secondary"
+              className="bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700"
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Search className="w-4 h-4" />
+              )}
+            </Button>
+          </form>
+        </div>
       </CardHeader>
 
       <CardContent className="pt-6">
-        {/* Tabs Filter */}
-        <Tabs
-          defaultValue="all"
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="mb-6"
-        >
-          <TabsList className="bg-[#2a2a2c] p-1 border border-neutral-800 h-auto flex-wrap justify-start w-full sm:w-auto">
-            <TabsTrigger
-              value="all"
-              className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
+        {/* Nếu đang tìm kiếm thì hiện nút quay lại */}
+        {isSearching && (
+          <div className="flex items-center justify-between mb-4 bg-blue-500/10 border border-blue-500/20 p-3 rounded-md">
+            <span className="text-sm text-blue-400">
+              Kết quả tìm kiếm cho:{" "}
+              <span className="font-bold text-white">{searchCode}</span>
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleResetSearch}
+              className="text-neutral-400 hover:text-white h-8"
             >
-              Tất cả
-            </TabsTrigger>
-            <TabsTrigger
-              value="pending_confirmation"
-              className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-            >
-              Chờ xác nhận
-            </TabsTrigger>
-            <TabsTrigger
-              value="processing"
-              className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-            >
-              Đang xử lý
-            </TabsTrigger>
-            <TabsTrigger
-              value="shipping"
-              className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-            >
-              Đang giao
-            </TabsTrigger>
-            <TabsTrigger
-              value="completed"
-              className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-            >
-              Hoàn thành
-            </TabsTrigger>
-            <TabsTrigger
-              value="cancelled"
-              className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-            >
-              Đã hủy
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+              <RotateCcw className="w-3 h-3 mr-2" /> Xem tất cả
+            </Button>
+          </div>
+        )}
 
-        {/* Order List */}
-        <div className="space-y-4">
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order) => {
-              const statusInfo = getStatusInfo(order.orderStatus);
-              const paymentStatusInfo = getPaymentStatusInfo(
-                order.paymentStatus
-              );
+        {/* Tabs Filter (Ẩn khi đang tìm kiếm để tránh rối) */}
+        {!isSearching && (
+          <Tabs
+            defaultValue="all"
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="mb-6"
+          >
+            <TabsList className="bg-[#2a2a2c] p-1 border border-neutral-800 h-auto flex-wrap justify-start w-full sm:w-auto">
+              <TabsTrigger
+                value="all"
+                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
+              >
+                Tất cả
+              </TabsTrigger>
+              <TabsTrigger
+                value="pending_confirmation"
+                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
+              >
+                Chờ xác nhận
+              </TabsTrigger>
+              <TabsTrigger
+                value="processing"
+                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
+              >
+                Đang xử lý
+              </TabsTrigger>
+              <TabsTrigger
+                value="shipping"
+                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
+              >
+                Đang giao
+              </TabsTrigger>
+              <TabsTrigger
+                value="completed"
+                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
+              >
+                Hoàn thành
+              </TabsTrigger>
+              <TabsTrigger
+                value="cancelled"
+                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
+              >
+                Đã hủy
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        )}
 
-              return (
-                <div
-                  key={order._id}
-                  className="border border-neutral-800 rounded-lg bg-[#1e1e20] overflow-hidden hover:border-neutral-600 transition-colors"
-                >
-                  {/* Header của mỗi Card đơn hàng */}
-                  <div className="p-4 border-b border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#252527]">
-                    <div className="flex items-center gap-3">
-                      <span className="font-bold text-white">
-                        #{order.orderCode}
-                      </span>
-                      <span className="text-neutral-600">|</span>
-                      <div className="text-sm text-neutral-400 flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {new Date(order.createdAt).toLocaleDateString("vi-VN")}
-                      </div>
-                    </div>
-                    <Badge
-                      variant="outline"
-                      className={`${statusInfo.className} font-normal border`}
-                    >
-                      {statusInfo.label}
-                    </Badge>
-                  </div>
+        {/* Loading State */}
+        {loading && !isSearching ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-red-600" />
+          </div>
+        ) : (
+          /* Order List */
+          <div className="space-y-4">
+            {filteredOrders.length > 0 ? (
+              filteredOrders.map((order) => {
+                const statusInfo = getStatusInfo(order.orderStatus);
+                const paymentStatusInfo = getPaymentStatusInfo(
+                  order.paymentStatus
+                );
 
-                  {/* Body của Card đơn hàng */}
-                  <div className="p-4">
-                    <div className="space-y-3 mb-4">
-                      {order.items.slice(0, 2).map((item, idx) => (
-                        <div key={idx} className="flex items-center gap-4">
-                          {/* Placeholder ảnh nếu backend chưa trả về image */}
-                          <div className="w-16 h-16 bg-[#2a2a2c] rounded border border-neutral-700 flex items-center justify-center text-xs text-neutral-500 shrink-0">
-                            IMG
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium text-slate-200 line-clamp-1">
-                              {item.name}
-                            </p>
-                            <p className="text-sm text-neutral-500">
-                              x{item.quantity}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-medium text-slate-300">
-                              {formatVND(item.price)}
-                            </p>
-                          </div>
+                return (
+                  <div
+                    key={order._id}
+                    className="border border-neutral-800 rounded-lg bg-[#1e1e20] overflow-hidden hover:border-neutral-600 transition-colors animate-in fade-in zoom-in duration-300"
+                  >
+                    <div className="p-4 border-b border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#252527]">
+                      <div className="flex items-center gap-3">
+                        <span className="font-bold text-white">
+                          #{order.orderCode}
+                        </span>
+                        <span className="text-neutral-600">|</span>
+                        <div className="text-sm text-neutral-400 flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {new Date(order.createdAt).toLocaleDateString(
+                            "vi-VN"
+                          )}
                         </div>
-                      ))}
-                      {order.items.length > 2 && (
-                        <p className="text-xs text-neutral-500 italic pt-1">
-                          + {order.items.length - 2} sản phẩm khác
-                        </p>
-                      )}
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className={`${statusInfo.className} font-normal border`}
+                      >
+                        {statusInfo.label}
+                      </Badge>
                     </div>
 
-                    <Separator className="bg-neutral-800 my-4" />
-
-                    <div className="flex flex-col sm:flex-row justify-between items-end sm:items-center gap-4">
-                      <div className="text-sm">
-                        <span className="text-neutral-500 mr-2">
-                          Thanh toán:
-                        </span>
-                        <span
-                          className={`font-medium ${paymentStatusInfo.color}`}
-                        >
-                          {paymentStatusInfo.label}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="text-xs text-neutral-500">Tổng tiền</p>
-                          <p className="text-lg font-bold text-red-500">
-                            {formatVND(order.totalAmount)}
+                    <div className="p-4">
+                      <div className="space-y-3 mb-4">
+                        {order.items.slice(0, 2).map((item, idx) => (
+                          <div key={idx} className="flex items-center gap-4">
+                            <div className="flex-1">
+                              <p className="font-medium text-slate-200 line-clamp-1">
+                                {item.name}
+                              </p>
+                              <p className="text-sm text-neutral-500">
+                                x{item.quantity}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-medium text-slate-300">
+                                {formatVND(item.price)}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                        {order.items.length > 2 && (
+                          <p className="text-xs text-neutral-500 italic pt-1">
+                            + {order.items.length - 2} sản phẩm khác
                           </p>
-                        </div>
-                        <Button
-                          variant="outline"
-                          className="ml-2 border-neutral-600 text-neutral-300 hover:bg-neutral-800 hover:text-white bg-transparent"
-                          onClick={() => navigate(`/orders/${order.orderCode}`)}
-                        >
-                          Chi tiết
-                        </Button>
-                        {order.orderStatus === "pending_confirmation" && (
-                          <CancelOrderDialog
-                            orderCode={order.orderCode}
-                            variant="ghost"
-                            onSuccess={() => {
-                              setOrders((prev) =>
-                                prev.map((o) =>
-                                  o.orderCode === order.orderCode
-                                    ? { ...o, orderStatus: "cancelled" }
-                                    : o
-                                )
-                              );
-                            }}
-                          />
                         )}
                       </div>
+
+                      <Separator className="bg-neutral-800 my-4" />
+
+                      <div className="flex flex-col sm:flex-row justify-between items-end sm:items-center gap-4">
+                        <div className="text-sm">
+                          <span className="text-neutral-500 mr-2">
+                            Thanh toán:
+                          </span>
+                          <span
+                            className={`font-medium ${paymentStatusInfo.color}`}
+                          >
+                            {paymentStatusInfo.label}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="text-xs text-neutral-500">
+                              Tổng tiền
+                            </p>
+                            <p className="text-lg font-bold text-red-500">
+                              {formatVND(order.totalAmount)}
+                            </p>
+                          </div>
+
+                          {/* Nút Chi tiết */}
+                          <Button
+                            variant="outline"
+                            className="ml-2 border-neutral-600 text-neutral-300 hover:bg-neutral-800 hover:text-white bg-transparent"
+                            onClick={() =>
+                              navigate(`/orders/${order.orderCode}`)
+                            }
+                          >
+                            Chi tiết
+                          </Button>
+
+                          {/* Hủy Đơn Dialog*/}
+                          {order.orderStatus === "pending_confirmation" && (
+                            <CancelOrderDialog
+                              orderCode={order.orderCode}
+                              variant="ghost"
+                              onSuccess={() => {
+                                setOrders((prev) =>
+                                  prev.map((o) =>
+                                    o.orderCode === order.orderCode
+                                      ? { ...o, orderStatus: "cancelled" }
+                                      : o
+                                  )
+                                );
+                              }}
+                            />
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
+                );
+              })
+            ) : (
+              <div className="text-center py-20 flex flex-col items-center justify-center">
+                <div className="w-20 h-20 bg-neutral-800 rounded-full flex items-center justify-center mb-4">
+                  <Box className="w-10 h-10 text-neutral-600" />
                 </div>
-              );
-            })
-          ) : (
-            <div className="text-center py-20 flex flex-col items-center justify-center">
-              <div className="w-20 h-20 bg-neutral-800 rounded-full flex items-center justify-center mb-4">
-                <Box className="w-10 h-10 text-neutral-600" />
+                <h3 className="text-lg font-medium text-white">
+                  {isSearching
+                    ? "Không tìm thấy đơn hàng"
+                    : "Chưa có đơn hàng nào"}
+                </h3>
+                <p className="text-neutral-500 mb-6 max-w-xs mx-auto">
+                  {isSearching
+                    ? "Vui lòng kiểm tra lại mã đơn hàng."
+                    : "Bạn chưa có đơn hàng nào trong mục này."}
+                </p>
+                {!isSearching && (
+                  <Button
+                    onClick={() => navigate("/")}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    Mua sắm ngay
+                  </Button>
+                )}
+                {isSearching && (
+                  <Button
+                    variant="outline"
+                    onClick={handleResetSearch}
+                    className="border-neutral-700 text-white hover:bg-neutral-800"
+                  >
+                    Quay lại danh sách
+                  </Button>
+                )}
               </div>
-              <h3 className="text-lg font-medium text-white">
-                Chưa có đơn hàng nào
-              </h3>
-              <p className="text-neutral-500 mb-6 max-w-xs mx-auto">
-                Bạn chưa có đơn hàng nào trong trạng thái này. Hãy dạo một vòng
-                cửa hàng nhé!
-              </p>
-              <Button
-                onClick={() => navigate("/")}
-                className="bg-red-600 hover:bg-red-700 text-white"
-              >
-                Mua sắm ngay
-              </Button>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
