@@ -28,6 +28,7 @@ import { formatVND } from "@/utils/admin/formatMoney";
 import { orderService } from "@/services/api/customer/order.service";
 import { type IOrder } from "@/types/order";
 import CancelOrderDialog from "@/pages/order/CancelDialog";
+import PaginationCustom from "@/components/common/Pagination";
 
 const getStatusInfo = (status: string) => {
   switch (status) {
@@ -78,6 +79,8 @@ const getPaymentStatusInfo = (status: string) => {
 };
 
 const MyOrders: React.FC = () => {
+  const ITEMS_PER_PAGE = 5;
+
   const navigate = useNavigate();
 
   // State
@@ -86,6 +89,8 @@ const MyOrders: React.FC = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [searchCode, setSearchCode] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Ref để lưu danh sách gốc (Backup) nhằm tránh phải gọi API lại khi xóa tìm kiếm
   const originalOrdersRef = useRef<IOrder[]>([]);
@@ -150,6 +155,17 @@ const MyOrders: React.FC = () => {
     if (activeTab === "all") return true;
     return order.orderStatus === activeTab;
   });
+
+  const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
+  const currentItems = filteredOrders.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <Card className="bg-[#151517] border-neutral-800 text-slate-200 shadow-xl min-h-[600px]">
@@ -275,8 +291,8 @@ const MyOrders: React.FC = () => {
         ) : (
           /* Order List */
           <div className="space-y-4">
-            {filteredOrders.length > 0 ? (
-              filteredOrders.map((order) => {
+            {currentItems.length > 0 ? (
+              currentItems.map((order) => {
                 const statusInfo = getStatusInfo(order.orderStatus);
                 const paymentStatusInfo = getPaymentStatusInfo(
                   order.paymentStatus
@@ -425,6 +441,11 @@ const MyOrders: React.FC = () => {
                 )}
               </div>
             )}
+            <PaginationCustom
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
         )}
       </CardContent>
