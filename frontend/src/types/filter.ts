@@ -137,16 +137,6 @@ export const FILTER_CONFIG: Record<string, IFilterGroup[]> = {
         { label: "6400 DPI", value: "6400" },
       ],
     },
-    {
-      label: "Hãng",
-      key: "brand",
-      options: [
-        { label: "Logitech", value: "Logitech" },
-        { label: "Razer", value: "Razer" },
-        { label: "SteelSeries", value: "SteelSeries" },
-        { label: "DareU", value: "DareU" },
-      ],
-    },
   ],
   "Bàn phím": [
     {
@@ -184,16 +174,6 @@ export const FILTER_CONFIG: Record<string, IFilterGroup[]> = {
         { label: "TKL (87 phím)", value: "TKL" },
         { label: "75%", value: "75%" },
         { label: "60%", value: "60%" },
-      ],
-    },
-    {
-      label: "Hãng",
-      key: "brand",
-      options: [
-        { label: "Keychron", value: "Keychron" },
-        { label: "Logitech", value: "Logitech" },
-        { label: "Akko", value: "Akko" },
-        { label: "Razer", value: "Razer" },
       ],
     },
   ],

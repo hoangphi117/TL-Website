@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
+import { type IBrand } from "@/types/brand";
+import { brandService } from "@/services/api/customer/brand.service";
+import { categoryService } from "@/services/api/customer/category.service";
+
 import { FILTER_CONFIG, detectCategoryFromKeyword } from "@/types/filter";
 import { formatVND } from "@/utils/admin/formatMoney";
 
@@ -265,8 +269,77 @@ export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
   categoryName = "",
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [brands, setBrands] = useState<{ label: string; value: string }[]>([]);
 
   const currentKeyword = searchParams.get("keyword") || "";
+  const currentCategoryId = searchParams.get("category");
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        // TRƯỜNG HỢP 1: Có ID trên URL (Vào thẳng trang danh mục)
+        // Logic này giống hệt: brandService.getBrandsByCategory(cat._id) ở Homepage
+        if (currentCategoryId) {
+          const res = await brandService.getBrandsByCategory(currentCategoryId);
+          if (res.brands) {
+            setBrands(
+              res.brands.map((b) => ({ label: b.name, value: b.name }))
+            );
+          }
+          return;
+        }
+
+        // TRƯỜNG HỢP 2: Đang Search, chưa có ID -> Phải tìm ID
+        if (currentKeyword) {
+          const detectedName = detectCategoryFromKeyword(currentKeyword);
+
+          if (detectedName) {
+            // Bước phụ: Lấy list category về để tra ID (Giống Homepage fetch categoryRes)
+            const catRes = await categoryService.getAllCategories();
+
+            if (catRes.success && catRes.data) {
+              // Tìm Category có tên khớp với từ khóa đoán được
+              const targetCat = catRes.data.find((c) =>
+                c.name.toLowerCase().includes(detectedName.toLowerCase())
+              );
+
+              if (targetCat) {
+                // Đã tìm thấy ID -> Gọi API lấy Brand chuẩn
+                const brandRes = await brandService.getBrandsByCategory(
+                  targetCat._id
+                );
+                if (brandRes.brands) {
+                  setBrands(
+                    brandRes.brands.map((b) => ({
+                      label: b.name,
+                      value: b.name,
+                    }))
+                  );
+                  return;
+                }
+              }
+            }
+          }
+        }
+
+        // TRƯỜNG HỢP 3: Không đoán được gì cả -> Lấy tất cả Brand (Fallback)
+        const resAll = await brandService.getAllBrands();
+        if (resAll.data) {
+          // Lưu ý: getAllBrands trả về data, getBrandsByCategory trả về brands
+          // Kiểm tra kiểu dữ liệu trả về của getAllBrands trong file service của bạn
+          // Thường là resAll.data
+          const list = Array.isArray(resAll.data) ? resAll.data : [];
+          setBrands(
+            list.map((b: IBrand) => ({ label: b.name, value: b.name }))
+          );
+        }
+      } catch (error) {
+        console.error("Lỗi tải brand filter:", error);
+      }
+    };
+
+    fetchBrands();
+  }, [currentCategoryId, currentKeyword]);
 
   const dynamicFilters = useMemo(() => {
     if (categoryName) {
@@ -331,8 +404,7 @@ export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
       <PriceFilter />
 
       {/* 3. Hãng (Hiện tại rỗng) */}
-      <AttributeFilter label="Hãng" paramKey="brand" options={[]} />
-
+      <AttributeFilter label="Hãng" paramKey="brand" options={brands} />
       {/* 4. Filter Specifications */}
       {dynamicFilters.map((filter, index) => (
         <AttributeFilter
