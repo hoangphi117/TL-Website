@@ -27,4 +27,8 @@ export const orderService = {
   }) => {
     return axiosClient.post("/payment", data);
   },
+
+  cancelOrder: async (orderCode: string) => {
+    return axiosClient.post(`/order/${orderCode}`);
+  },
 };

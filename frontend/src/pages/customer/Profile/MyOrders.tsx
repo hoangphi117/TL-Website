@@ -97,6 +97,24 @@ const MyOrders: React.FC = () => {
     fetchOrders();
   }, []);
 
+  const handleCancelOrder = async (orderCode: string) => {
+    const isConfirm = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này?");
+    if (!isConfirm) return;
+
+    try {
+      await orderService.cancelOrder(orderCode);
+      toast.success("Đã hủy đơn hàng");
+
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.orderCode === orderCode ? { ...o, orderStatus: "cancelled" } : o
+        )
+      );
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Lỗi khi hủy đơn");
+    }
+  };
+
   const filteredOrders = orders.filter((order) => {
     if (activeTab === "all") return true;
     return order.orderStatus === activeTab;
@@ -262,6 +280,18 @@ const MyOrders: React.FC = () => {
                         >
                           Chi tiết
                         </Button>
+                        {order.orderStatus === "pending_confirmation" && (
+                          <Button
+                            variant="ghost"
+                            className="text-red-500 hover:bg-red-500/10 hover:text-red-400 px-3"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Ngăn click nhầm vào card
+                              handleCancelOrder(order.orderCode);
+                            }}
+                          >
+                            Hủy
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>
