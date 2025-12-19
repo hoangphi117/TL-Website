@@ -22,6 +22,8 @@ import { formatVND } from "@/utils/admin/formatMoney";
 import { orderService } from "@/services/api/customer/order.service";
 import { type IOrder } from "@/types/order";
 
+import CancelOrderDialog from "./CancelDialog";
+
 const OrderDetailPage: React.FC = () => {
   const { code } = useParams();
   const navigate = useNavigate();
@@ -73,26 +75,6 @@ const OrderDetailPage: React.FC = () => {
       toast.error(error.response?.data?.message || "Lỗi tạo thanh toán");
     } finally {
       setProcessingPayment(false);
-    }
-  };
-
-  const handleCancelOrder = async () => {
-    if (!order) return;
-
-    // Xác nhận đơn giản bằng trình duyệt (hoặc dùng Modal của UI library nếu có)
-    const isConfirm = window.confirm(
-      "Bạn có chắc chắn muốn hủy đơn hàng này không?"
-    );
-    if (!isConfirm) return;
-
-    try {
-      await orderService.cancelOrder(order.orderCode);
-      toast.success("Đã hủy đơn hàng thành công");
-
-      // Reload lại data để cập nhật trạng thái mới
-      window.location.reload();
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Không thể hủy đơn hàng");
     }
   };
 
@@ -200,13 +182,10 @@ const OrderDetailPage: React.FC = () => {
                 </Button>
               )}
             {order.orderStatus === "pending_confirmation" && (
-              <Button
-                variant="outline"
-                className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
-                onClick={handleCancelOrder}
-              >
-                <XCircle className="w-4 h-4 mr-2" /> Hủy đơn hàng
-              </Button>
+              <CancelOrderDialog
+                orderCode={order.orderCode}
+                onSuccess={() => window.location.reload()}
+              />
             )}
           </div>
         </div>

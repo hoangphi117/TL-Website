@@ -19,7 +19,8 @@ import { formatVND } from "@/utils/admin/formatMoney";
 import { orderService } from "@/services/api/customer/order.service";
 import { type IOrder } from "@/types/order";
 
-// Helper chọn màu Badge cho Dark Mode
+import CancelOrderDialog from "@/pages/order/CancelDialog";
+
 const getStatusInfo = (status: string) => {
   switch (status) {
     case "pending_confirmation":
@@ -96,24 +97,6 @@ const MyOrders: React.FC = () => {
 
     fetchOrders();
   }, []);
-
-  const handleCancelOrder = async (orderCode: string) => {
-    const isConfirm = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này?");
-    if (!isConfirm) return;
-
-    try {
-      await orderService.cancelOrder(orderCode);
-      toast.success("Đã hủy đơn hàng");
-
-      setOrders((prev) =>
-        prev.map((o) =>
-          o.orderCode === orderCode ? { ...o, orderStatus: "cancelled" } : o
-        )
-      );
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Lỗi khi hủy đơn");
-    }
-  };
 
   const filteredOrders = orders.filter((order) => {
     if (activeTab === "all") return true;
@@ -281,16 +264,19 @@ const MyOrders: React.FC = () => {
                           Chi tiết
                         </Button>
                         {order.orderStatus === "pending_confirmation" && (
-                          <Button
+                          <CancelOrderDialog
+                            orderCode={order.orderCode}
                             variant="ghost"
-                            className="text-red-500 hover:bg-red-500/10 hover:text-red-400 px-3"
-                            onClick={(e) => {
-                              e.stopPropagation(); // Ngăn click nhầm vào card
-                              handleCancelOrder(order.orderCode);
+                            onSuccess={() => {
+                              setOrders((prev) =>
+                                prev.map((o) =>
+                                  o.orderCode === order.orderCode
+                                    ? { ...o, orderStatus: "cancelled" }
+                                    : o
+                                )
+                              );
                             }}
-                          >
-                            Hủy
-                          </Button>
+                          />
                         )}
                       </div>
                     </div>
