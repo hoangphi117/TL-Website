@@ -8,12 +8,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { productService } from "@/services/api/customer/product.service";
 import { categoryService } from "@/services/api/customer/category.service";
+import { brandService } from "@/services/api/customer/brand.service";
 import type { IProduct } from "@/types/product";
+import type { IBrand } from "@/types/brand";
 
 interface IHomeSection {
   title: string;
   categoryId: string;
   products: IProduct[];
+  brands: IBrand[];
 }
 
 const HomePage = () => {
@@ -40,19 +43,23 @@ const HomePage = () => {
           );
 
           const sectionPromises = selectedCats.map(async (cat) => {
-            const productRes = await productService.getProducts({
-              category: cat.name,
-              limit: 10,
-              fields:
-                "name,price,images,originalPrice, averageRating,specifications, soldCount",
-            });
+            const [productRes, brandRes] = await Promise.all([
+              productService.getProducts({
+                category: cat.name,
+                limit: 10,
+                fields:
+                  "name,price,images,originalPrice,averageRating,specifications,soldCount,slug",
+              }),
+              brandService.getBrandsByCategory(cat._id),
+            ]);
 
             const productsData = productRes.data?.products || [];
 
             return {
               title: cat.name,
               categoryId: cat._id,
-              products: productsData,
+              products: productsData || [],
+              brands: brandRes.brands || [],
             };
           });
 
@@ -95,6 +102,7 @@ const HomePage = () => {
               products={section.products}
               viewAllLink={`/category/${section.categoryId}`}
               autoplay={true}
+              brands={section.brands}
             />
           </section>
         ))

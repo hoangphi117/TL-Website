@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronRight, Truck, Dot } from "lucide-react";
 
 import Carousel from "@/components/product/carousel/carousel";
@@ -12,6 +12,7 @@ interface ProductListCarouselProps {
   viewAllLink?: string;
   autoplay?: boolean;
   className?: string;
+  brands?: any[];
 }
 
 const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
@@ -20,7 +21,10 @@ const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
   viewAllLink,
   autoplay = false,
   className,
+  brands = [],
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div className={`w-full bg-white rounded-md px-3 py-3 ${className || ""}`}>
       <div className="flex items-center justify-between mb-4 px-1">
@@ -35,15 +39,31 @@ const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
           </h2>
         </div>
 
-        {viewAllLink && (
-          <Link
-            to={viewAllLink}
-            className="group flex items-center text-sm font-medium text-blue-600 hover:text-red-600 transition-colors"
-          >
-            Xem tất cả
-            <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
-          </Link>
-        )}
+        <div className="flex">
+          {brands && brands.length > 0 && (
+            <div className="flex flex-wrap gap-2 mr-2">
+              {brands.map((brand) => (
+                <span
+                  key={brand._id}
+                  onClick={() => navigate(`/products?brand=${brand.name}`)}
+                  className="cursor-pointer px-2 py-1 text-xs font-medium bg-gray-100 hover:bg-red-50 hover:text-red-600 rounded transition-colors"
+                >
+                  {brand.name}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {viewAllLink && (
+            <Link
+              to={viewAllLink}
+              className="group flex items-center text-sm font-medium text-blue-600 hover:text-red-600 transition-colors"
+            >
+              Xem tất cả
+              <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* --- CAROUSEL BODY --- */}
