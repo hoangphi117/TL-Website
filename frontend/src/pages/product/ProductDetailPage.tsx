@@ -7,6 +7,7 @@ import {
   ChevronRight,
   ShoppingCart,
   CreditCard,
+  Heart,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { productService } from "@/services/api/customer/product.service";
 import { cartService } from "@/services/api/customer/cart.service";
+import { wishlistService } from "@/services/api/customer/wishlist.service";
 import { useCart } from "@/context/CartContext";
 
 import type { IProduct } from "@/types/product";
@@ -42,6 +44,8 @@ const ProductDetailPage: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   useDocumentTitle(product?.name || "Chi tiết sản phẩm");
 
@@ -134,6 +138,47 @@ const ProductDetailPage: React.FC = () => {
       setIsAddingToCart(false);
     }
   };
+
+  const handleToggleWishlist = async () => {
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
+    if (!token) {
+      toast.error("Vui lòng đăng nhập để lưu sản phẩm!");
+      return;
+    }
+    if (!product) return;
+
+    try {
+      if (isWishlisted) {
+        await wishlistService.removeFromWishlist(product._id);
+        setIsWishlisted(false);
+        toast.success("Đã xóa khỏi sản phẩm yêu thích");
+      } else {
+        await wishlistService.addToWishlist(product._id);
+        setIsWishlisted(true);
+        toast.success("Đã thêm vào sản phẩm yêu thích");
+      }
+    } catch (error) {
+      toast.error("Thao tác thất bại");
+    }
+  };
+
+  useEffect(() => {
+    const checkWishlistStatus = async () => {
+      if (!product) return;
+      try {
+        const res: any = await wishlistService.getWishlist();
+        // Kiểm tra xem product._id có trong danh sách trả về không
+        const list = res.wishlist?.products || res.wishlist || [];
+        const exists = list.some((item: any) => item._id === product._id);
+        setIsWishlisted(exists);
+      } catch (e) {
+        /* Ignore error if guest */
+      }
+    };
+    if (product) checkWishlistStatus();
+  }, [product]);
 
   if (loading) {
     return (
@@ -278,11 +323,19 @@ const ProductDetailPage: React.FC = () => {
 
                   <Button
                     variant="outline"
-                    className="flex-1 h-14 border-blue-600 text-blue-700 cursor-pointer"
+                    className={`h-14 w-14 border-gray-300 flex-shrink-0 ${
+                      isWishlisted ? "border-red-500 bg-red-50" : ""
+                    }`}
+                    onClick={handleToggleWishlist}
+                    title="Thêm vào yêu thích"
                   >
-                    <span className="flex items-center gap-2 text-lg font-bold uppercase">
-                      TRẢ GÓP 0% <CreditCard className="w-5 h-5" />
-                    </span>
+                    <Heart
+                      className={`w-6 h-6 transition-colors ${
+                        isWishlisted
+                          ? "fill-red-600 text-red-600"
+                          : "text-gray-400 hover:text-red-500"
+                      }`}
+                    />
                   </Button>
                 </div>
 

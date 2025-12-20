@@ -3,12 +3,13 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User, ShoppingBag, Loader2, Key } from "lucide-react";
+import { User, ShoppingBag, Loader2, Key, Heart } from "lucide-react";
 
 import { useAuth } from "@/context/CustomerAuthContext";
 import AddressManager from "./AddressManager";
 import PasswordChanger from "./PasswordChanger";
 import MyOrders from "./MyOrders";
+import MyWishlist from "./MyWishlist";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,9 +75,9 @@ export default function ProfilePage() {
   const { user, updateUser, changePassword } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const [activeTab, setActiveTab] = useState<"profile" | "password" | "orders">(
-    "profile"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "profile" | "password" | "orders" | "wishlist"
+  >("profile");
 
   useEffect(() => {
     const hash = location.hash;
@@ -85,18 +86,23 @@ export default function ProfilePage() {
       setActiveTab("orders");
     } else if (hash === "#password-change") {
       setActiveTab("password");
+    } else if (hash === "#wishlist") {
+      setActiveTab("wishlist");
     } else {
       setActiveTab("profile");
     }
   }, [location.hash]);
 
-  const handleTabChange = (tab: "profile" | "orders" | "password") => {
+  const handleTabChange = (
+    tab: "profile" | "orders" | "password" | "wishlist"
+  ) => {
     setActiveTab(tab);
 
     const hashMap = {
       profile: "", // Về mặc định, xóa hash
       orders: "#orders-history",
       password: "#password-change",
+      wishlist: "#wishlist",
     };
 
     navigate(`/users/me${hashMap[tab]}`, { replace: true });
@@ -223,6 +229,18 @@ export default function ProfilePage() {
                     onClick={() => handleTabChange("orders")}
                   >
                     <ShoppingBag className="w-4 h-4" /> Đơn mua
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start gap-3 ${
+                      activeTab === "wishlist"
+                        ? "bg-red-600/10 text-red-500 hover:bg-red-600/20 hover:text-red-500"
+                        : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                    }`}
+                    onClick={() => handleTabChange("wishlist")}
+                  >
+                    <Heart className="w-4 h-4" /> Sản phẩm yêu thích
                   </Button>
 
                   <Button
@@ -357,7 +375,8 @@ export default function ProfilePage() {
 
             {activeTab === "orders" && <MyOrders />}
 
-            {/* TAB: PASSWORD */}
+            {activeTab === "wishlist" && <MyWishlist />}
+
             {activeTab === "password" && (
               <PasswordChanger changePassword={changePassword} />
             )}
