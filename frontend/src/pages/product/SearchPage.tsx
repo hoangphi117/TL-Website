@@ -50,7 +50,6 @@ const SearchPage: React.FC = () => {
 
         const res = await productService.getProducts(params);
         setProductResponse(res);
-        console.log(productResponse?.data?.products);
       } catch (err) {
         console.error("Search error: ", err);
         setProductResponse(null);
