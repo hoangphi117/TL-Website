@@ -36,10 +36,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
       : "https://placehold.co/300x300?text=No+Image";
 
   return (
-    <Link to={productLink} className="block h-full">
+    <Link to={productLink} className="block">
       <Card
         className={cn(
-          "group relative h-full bg-white border border-gray-200 rounded-lg p-2 sm:p-3 flex flex-col justify-between transition-shadow sm:hover:shadow-xl",
+          "group relative bg-white border border-gray-200 rounded-lg p-2 flex flex-col gap-1.5 transition-shadow sm:hover:shadow-xl",
           className
         )}
       >
