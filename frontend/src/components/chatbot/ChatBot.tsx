@@ -3,6 +3,9 @@ import { MessageSquare, Send, X, Loader2, Bot, User } from "lucide-react";
 import { chatbotService } from "@/services/api/customer/chatbot.service";
 import { type IChatMessage } from "@/types/chatbot";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+
+import { useAuth } from "@/context/CustomerAuthContext";
 
 import BotMessage from "./BotMessage";
 
@@ -16,6 +19,8 @@ const ChatBot: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { user, isLoading: isAuthLoading } = useAuth();
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -25,7 +30,7 @@ const ChatBot: React.FC = () => {
   }, [messages, isOpen, isStreaming]);
 
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
+    if (isOpen && messages.length === 0 && user) {
       const fetchHistory = async () => {
         setIsLoading(true);
         const history = await chatbotService.getHistory();
@@ -34,7 +39,22 @@ const ChatBot: React.FC = () => {
       };
       fetchHistory();
     }
-  }, [isOpen]);
+  }, [isOpen, user]);
+
+  const handleToggleBot = () => {
+    if (!user) {
+      toast.error("Vui lòng đăng nhập để sử dụng trợ lý ảo!", {
+        description:
+          "Bạn cần đăng nhập để chúng tôi có thể hỗ trợ thông tin đơn hàng và tài khoản.",
+        duration: 3000,
+      });
+      return;
+    }
+    setIsOpen(!isOpen);
+  };
+
+  // Tạm thời chưa render để tránh lag khi load auth
+  if (isAuthLoading) return null;
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -84,7 +104,13 @@ const ChatBot: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-10 z-50 flex flex-col items-end ">
+    <div
+      className={cn(
+        "fixed right-6 sm:right-3 z-50 flex flex-col items-end transition-all duration-300",
+        "bottom-[84px] md:bottom-6",
+        isOpen && "bottom-18 md:bottom-6"
+      )}
+    >
       {isOpen && (
         <div className="mb-4 w-[350px] sm:w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-10 duration-300 ">
           {/* Header */}
@@ -204,7 +230,7 @@ const ChatBot: React.FC = () => {
       )}
 
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggleBot}
         className={cn(
           "h-14 w-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer",
           isOpen ? "bg-gray-600 text-white rotate-90" : "bg-red-600 text-white"
