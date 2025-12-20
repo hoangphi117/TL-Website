@@ -100,7 +100,7 @@ export default function RegisterPage() {
     <div className="min-h-screen flex flex-col bg-neutral-700 ">
       <style>{autofillFixStyle}</style>
       <ScrollToTop />
-      <main className="flex-grow flex items-center justify-center p-10">
+      <main className="min-h-screen flex items-center justify-center p-10">
         <div className="w-full max-w-5xl bg-[#151517] bg-opacity-90 p-8 rounded-2xl shadow-2xl backdrop-blur-md flex flex-col lg:flex-row gap-10 border border-gray-800">
           <div className="w-full lg:w-1/2">
             {/* Logo Section */}
@@ -119,7 +119,6 @@ export default function RegisterPage() {
               Đăng ký tài khoản
             </h2>
 
-            {/* 4. Hiển thị thông báo thành công (Màu xanh) */}
             {successMessage && (
               <div className="p-3 mb-4 rounded-lg bg-green-500/10 border border-green-500/50 text-green-500 text-sm text-center flex items-center justify-center gap-2 animate-in fade-in slide-in-from-top-2">
                 <CheckCircle size={18} />
@@ -127,7 +126,6 @@ export default function RegisterPage() {
               </div>
             )}
 
-            {/* Hiển thị thông báo lỗi (Màu đỏ) */}
             {errors.root && (
               <div className="p-3 mb-4 rounded-lg bg-red-500/10 border border-red-500/50 text-red-500 text-sm text-center">
                 {errors.root.message}
