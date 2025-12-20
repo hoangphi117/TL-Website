@@ -64,6 +64,7 @@ export interface ICreateOrderPayload {
   paymentProvider?: "VNPAY" | "Momo";
   voucherCode?: string;
   notes?: string;
+  items: string[];
 }
 
 // Interface cho response trả về khi tạo đơn thành công

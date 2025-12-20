@@ -18,24 +18,27 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 
+import { useCart } from "@/context/CartContext";
+import { type ICreateOrderPayload } from "@/types/order";
+
 import { formatVND } from "@/utils/admin/formatMoney";
+
 import { cartService } from "@/services/api/customer/cart.service";
 import { orderService } from "@/services/api/customer/order.service";
 import { promotionService } from "@/services/api/customer/promotion.service";
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // Hook để lấy dữ liệu gửi từ trang Cart
+  const location = useLocation();
+  const { updateCartCount } = useCart();
 
   // Lấy danh sách ID sản phẩm được chọn. Nếu không có thì mặc định là mảng rỗng
   const selectedItemIds = location.state?.selectedItems || [];
 
-  // --- State ---
   const [cart, setCart] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [processingOrder, setProcessingOrder] = useState(false);
 
-  // Form State
   const [paymentMethod, setPaymentMethod] = useState<
     "COD" | "BankTransfer" | "OnlineGateway"
   >("COD");
@@ -45,7 +48,6 @@ const CheckoutPage: React.FC = () => {
   const [notes, setNotes] = useState("");
   const [voucherCode, setVoucherCode] = useState("");
 
-  // Voucher Calculation State
   const [discountAmount, setDiscountAmount] = useState(0);
   const [appliedVoucher, setAppliedVoucher] = useState<string | null>(null);
 
@@ -144,25 +146,24 @@ const CheckoutPage: React.FC = () => {
   const handlePlaceOrder = async () => {
     setProcessingOrder(true);
     try {
-      // Cần gửi thêm danh sách items lên backend để backend biết món nào cần thanh toán
-      // Bạn cần update interface ICreateOrderPayload để chấp nhận thêm field 'items' hoặc dùng 'as any' tạm thời
-      const payload: any = {
+      const payload: ICreateOrderPayload = {
         paymentMethod,
         notes,
         voucherCode: appliedVoucher || undefined,
         paymentProvider:
           paymentMethod === "OnlineGateway" ? paymentProvider : undefined,
-        items: selectedItemIds, // <--- QUAN TRỌNG: Gửi danh sách ID món hàng
+        items: selectedItemIds,
       };
 
       const res: any = await orderService.createOrder(payload);
 
       if (res) {
         toast.success("Đặt hàng thành công!");
+        await updateCartCount();
         if (res.paymentUrl) {
           window.location.href = res.paymentUrl;
         } else {
-          navigate(`/order-success?code=${res.order.orderCode}`); // Đã sửa theo route mới map với backend
+          navigate(`/order-success?code=${res.order.orderCode}`);
         }
       }
     } catch (error: any) {
