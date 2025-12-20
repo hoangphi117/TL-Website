@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Heart, Trash2, ShoppingCart, Loader2, PackageX } from "lucide-react";
 import { toast } from "sonner";
@@ -15,11 +15,15 @@ import { Badge } from "@/components/ui/badge";
 
 import { wishlistService } from "@/services/api/customer/wishlist.service";
 import { formatVND } from "@/utils/admin/formatMoney";
+import PaginationCustom from "@/components/common/Pagination";
 
 const MyWishlist: React.FC = () => {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 6;
 
   const fetchWishlist = async () => {
     setLoading(true);
@@ -39,6 +43,19 @@ const MyWishlist: React.FC = () => {
   useEffect(() => {
     fetchWishlist();
   }, []);
+
+  const currentItems = useMemo(() => {
+    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+    return items.slice(indexOfFirstItem, indexOfLastItem);
+  }, [items, currentPage]);
+
+  const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleRemove = async (productId: string) => {
     try {
@@ -76,87 +93,96 @@ const MyWishlist: React.FC = () => {
             <Loader2 className="w-8 h-8 animate-spin text-red-600" />
           </div>
         ) : items.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {items.map((product) => {
-              const categoryName =
-                typeof product.category === "object"
-                  ? product.category?.name || "Uncategorized"
-                  : String(product.category || "Uncategorized");
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {currentItems.map((product) => {
+                const categoryName =
+                  typeof product.category === "object"
+                    ? product.category?.name || "Uncategorized"
+                    : String(product.category || "Uncategorized");
 
-              const productLink = `/product/${encodeURIComponent(
-                categoryName
-              )}/${product._id}`;
+                const productLink = `/product/${encodeURIComponent(
+                  categoryName
+                )}/${product._id}`;
 
-              return (
-                <div
-                  key={product._id}
-                  className="group relative bg-[#1e1e20] border border-neutral-800 rounded-md overflow-hidden hover:border-neutral-600 transition-all"
-                >
-                  {/* IMAGE */}
-                  <div className="aspect-square bg-white relative overflow-hidden">
-                    <img
-                      src={
-                        product.images?.[0] || "https://placehold.co/300x300"
-                      }
-                      alt={product.name}
-                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                    />
+                return (
+                  <div
+                    key={product._id}
+                    className="group relative bg-[#1e1e20] border border-neutral-800 rounded-md overflow-hidden hover:border-neutral-600 transition-all"
+                  >
+                    {/* IMAGE */}
+                    <div className="aspect-square bg-white relative overflow-hidden">
+                      <img
+                        src={
+                          product.images?.[0] || "https://placehold.co/300x300"
+                        }
+                        alt={product.name}
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      />
 
-                    {/* REMOVE BUTTON */}
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleRemove(product._id);
-                      }}
-                      className="absolute top-1.5 right-1.5 p-1.5 bg-black/60 hover:bg-red-600 text-white rounded-full transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
-                      title="Xóa khỏi wishlist"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  {/* CONTENT */}
-                  <div className="p-3">
-                    <Link to={productLink}>
-                      <h3 className="text-sm font-medium text-white line-clamp-1 hover:text-red-500 transition-colors mb-1">
-                        {product.name}
-                      </h3>
-                    </Link>
-
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-red-500 font-semibold text-base">
-                        {formatVND(product.price)}
-                      </span>
-
-                      {product.stockQuantity > 0 ? (
-                        <Badge
-                          variant="outline"
-                          className="border-green-800 text-green-500 bg-green-500/10 text-xs px-1.5 py-0"
-                        >
-                          Còn hàng
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="border-neutral-700 text-neutral-500 bg-neutral-800 text-xs px-1.5 py-0"
-                        >
-                          Hết hàng
-                        </Badge>
-                      )}
+                      {/* REMOVE BUTTON */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleRemove(product._id);
+                        }}
+                        className="absolute top-1.5 right-1.5 p-1.5 bg-black/60 hover:bg-red-600 text-white rounded-full transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                        title="Xóa khỏi wishlist"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
 
-                    <Button
-                      onClick={() => navigate(productLink)}
-                      className="w-full h-8 bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700 text-xs"
-                    >
-                      <ShoppingCart className="w-3.5 h-3.5 mr-1.5" />
-                      Xem chi tiết
-                    </Button>
+                    {/* CONTENT */}
+                    <div className="p-3">
+                      <Link to={productLink}>
+                        <h3 className="text-sm font-medium text-white line-clamp-1 hover:text-red-500 transition-colors mb-1">
+                          {product.name}
+                        </h3>
+                      </Link>
+
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-red-500 font-semibold text-base">
+                          {formatVND(product.price)}
+                        </span>
+
+                        {product.stockQuantity > 0 ? (
+                          <Badge
+                            variant="outline"
+                            className="border-green-800 text-green-500 bg-green-500/10 text-xs px-1.5 py-0"
+                          >
+                            Còn hàng
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant="outline"
+                            className="border-neutral-700 text-neutral-500 bg-neutral-800 text-xs px-1.5 py-0"
+                          >
+                            Hết hàng
+                          </Badge>
+                        )}
+                      </div>
+
+                      <Button
+                        onClick={() => navigate(productLink)}
+                        className="w-full h-8 bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700 text-xs"
+                      >
+                        <ShoppingCart className="w-3.5 h-3.5 mr-1.5" />
+                        Xem chi tiết
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+            <div className="mt-8 border-t border-neutral-800 pt-4">
+              <PaginationCustom
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          </>
         ) : (
           <div className="text-center py-20 flex flex-col items-center justify-center">
             <div className="w-20 h-20 bg-neutral-800 rounded-full flex items-center justify-center mb-4">
