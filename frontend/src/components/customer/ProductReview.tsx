@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Star } from "lucide-react";
+import { Star, BadgeCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -149,6 +149,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId }) => {
                 key={rv._id}
                 className="border-b border-gray-100 last:border-0 pb-6"
               >
+                {/* REVIEW CỦA USER */}
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold shrink-0">
                     {rv.userId?.fullName?.charAt(0) || "U"}
@@ -180,6 +181,38 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId }) => {
                     </p>
                   </div>
                 </div>
+
+                {/* ADMIN REPLY */}
+                {rv.adminReply && (
+                  <div className="relative mt-4 ml-12 pl-6">
+                    {/* ĐƯỜNG CHỮ L */}
+                    <div className="flex items-start gap-3 p-4 border-l-3">
+                      {/* AVATAR ADMIN */}
+                      <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold shrink-0">
+                        A
+                      </div>
+
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold text-blue-700">
+                            Admin
+                          </span>
+
+                          {/* VERIFIED ICON */}
+                          <BadgeCheck className="w-4 h-4 text-blue-600" />
+
+                          <span className="text-xs text-gray-500">
+                            phản hồi {rv.userId?.fullName || "khách hàng"}
+                          </span>
+                        </div>
+
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          {rv.adminReply}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
