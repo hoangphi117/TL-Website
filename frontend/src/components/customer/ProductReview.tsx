@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 
 import { reviewService } from "@/services/api/customer/review.service";
 
+import { formatDate } from "@/utils/formatDateCreatedAt";
+
 interface ProductReviewsProps {
   productId: string;
 }
@@ -153,9 +155,12 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({ productId }) => {
                   </div>
 
                   <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2 mb-1">
                       <span className="font-bold text-gray-900">
                         {rv.userId?.fullName || "Ẩn danh"}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {formatDate(rv.createdAt)}
                       </span>
                     </div>
 
