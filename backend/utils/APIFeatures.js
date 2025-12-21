@@ -17,13 +17,29 @@ class APIFeatures {
     return this;
   }
 
-  search() {
-    if (this.queryString.keyword) {
-      const keyword = this.queryString.keyword;
-      this.query = this.query.find({
-        name: { $regex: keyword, $options: 'i' }
-      });
-    }
+  async search() {
+    if (!this.queryString.keyword) return this;
+
+    const keyword = this.queryString.keyword;
+    const Brand = require("../models/brandModel");
+    const Category = require("../models/categoryModel");
+
+    const brands = await Brand.find({
+      name: { $regex: keyword, $options: "i" },
+    }).select("_id");
+
+    const categories = await Category.find({
+      name: { $regex: keyword, $options: "i" },
+    }).select("_id");
+
+    this.query = this.query.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { brand: { $in: brands.map((b) => b._id) } },
+        { category: { $in: categories.map((c) => c._id) } },
+      ],
+    });
+
     return this;
   }
 
