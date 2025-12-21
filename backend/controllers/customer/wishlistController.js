@@ -1,8 +1,8 @@
-const Wishlist = require('../../models/wishlistModel')
+const Wishlist = require("../../models/wishlistModel");
 
 const addWithList = async (req, res) => {
-  const { id } = req.params
-  const userId = req.user.id
+  const { id } = req.params;
+  const userId = req.user.id;
 
   try {
     await Wishlist.updateOne(
@@ -11,82 +11,70 @@ const addWithList = async (req, res) => {
         $addToSet: { products: id },
         $setOnInsert: {
           userId,
-          createdAt: new Date()
+          createdAt: new Date(),
         },
         $set: {
-          updatedAt: new Date()
-        }
+          updatedAt: new Date(),
+        },
       },
       { upsert: true }
     );
 
-    const wishlist = await Wishlist.find({ userId })
+    const wishlistDoc = await Wishlist.findOne({ userId }).populate("products");
 
     res.status(200).json({
       message: "Add wish list successful",
-      wishlist
-    })
+      wishlist: wishlistDoc ? wishlistDoc.products : [],
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Add wish list error", error });
   }
-  catch (error) {
-    res.status(500).json({
-      message: "Add wish list error",
-      error
-    })
-  }
-}
+};
 
 const removeWithList = async (req, res) => {
-  const { id } = req.params
-  const userId = req.user.id
+  const { id } = req.params;
+  const userId = req.user.id;
 
   try {
     await Wishlist.updateOne(
       { userId },
       {
         $pull: { products: id },
-        $set: { updatedAt: new Date() }
+        $set: { updatedAt: new Date() },
       }
     );
 
-    const wishlist = await Wishlist.find({ userId })
+    const wishlistDoc = await Wishlist.findOne({ userId }).populate("products");
 
     res.status(200).json({
       message: "Remove wish list successful",
-      wishlist
-    })
+      wishlist: wishlistDoc ? wishlistDoc.products : [],
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Remove wish list error", error });
   }
-  catch (error) {
-    res.status(500).json({
-      message: "Remove wish list error",
-      error
-    })
-  }
-
-}
+};
 
 const getWishList = async (req, res) => {
-  const userId = req.user.id
+  const userId = req.user.id;
 
   try {
-    const wishlist = await Wishlist.find({ userId })
+    const wishlistDoc = await Wishlist.findOne({ userId }).populate("products");
 
-    if (!wishlist) {
-      return res.status(404).json({
-        message: "Wish list not found"
-      })
+    if (!wishlistDoc) {
+      return res.status(200).json({
+        message: "Wishlist empty",
+        wishlist: [],
+      });
     }
 
     res.status(200).json({
       message: "Get wish list successful",
-      wishlist
-    })
+      wishlist: wishlistDoc.products,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Get wish list error", error });
   }
-  catch (error) {
-    res.status(500).json({
-      message: "Get wish list error",
-      error
-    })
-  }
-}
+};
 
-module.exports = { addWithList, removeWithList, getWishList }
+module.exports = { addWithList, removeWithList, getWishList };
