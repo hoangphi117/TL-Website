@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as z from "zod";
@@ -75,6 +75,8 @@ export default function ProfilePage() {
   const { user, updateUser, changePassword } = useAuth();
   const [loading, setLoading] = useState(false);
 
+  const isLocalUpdate = useRef(false);
+
   const [activeTab, setActiveTab] = useState<
     "profile" | "password" | "orders" | "wishlist"
   >("profile");
@@ -123,6 +125,12 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
+      //  Nếu đang là cập nhật thủ công (vừa bấm Lưu xong), thì BỎ QUA việc reset form theo user cũ
+      if (isLocalUpdate.current) {
+        isLocalUpdate.current = false;
+        return;
+      }
+
       profileForm.reset({
         fullName: user.fullName || "",
         email: user.email || "",
@@ -151,6 +159,9 @@ export default function ProfilePage() {
   // --- HANDLERS ---
   const onProfileSubmit = async (values: ProfileFormValues) => {
     setLoading(true);
+    // Bật cờ đánh dấu: "đang update local, đừng ghi đè dữ liệu"
+    isLocalUpdate.current = true;
+
     try {
       const result = await updateUser(values);
 
@@ -158,6 +169,9 @@ export default function ProfilePage() {
         toast.success("Cập nhật thành công!", {
           description: "Hồ sơ và địa chỉ của bạn đã được lưu.",
         });
+
+        // Reset form theo giá trị MỚI NHẤT vừa gửi đi (để giao diện cập nhật ngay)
+        profileForm.reset(values);
       } else {
         toast.error("Lỗi cập nhật!", {
           description:
@@ -171,9 +185,6 @@ export default function ProfilePage() {
       });
     } finally {
       setLoading(false);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
     }
   };
 
