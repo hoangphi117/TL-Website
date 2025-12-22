@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { Toaster } from "sonner";
 import ScrollToTop from "../common/ScrollToTop";
 import ChatBot from "../chatbot/ChatBot";
+import Zalo from "../common/Zalo";
 
 const PageLoader = () => (
   <div className="p-4 space-y-4">
@@ -33,6 +34,7 @@ const MainLayout: React.FC = () => {
       </main>
       <Footer />
       <ChatBot />
+      <Zalo />
       <Toaster theme="dark" position="top-center" richColors />
     </div>
   );
