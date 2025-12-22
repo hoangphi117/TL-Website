@@ -26,13 +26,15 @@ function Banner() {
               Xin chào {user.fullName}!
             </p>
           ) : (
-            <p className="text-3xl md:text-5xl text-white font-bold">
-              Chào mừng bạn đến với LiquidShop!
-            </p>
+            <>
+              <p className="text-3xl md:text-5xl text-white font-bold">
+                Chào mừng bạn đến với LiquidShop!
+              </p>
+              <p className="text-sm text-white mt-3">
+                Hãy đăng nhập hoặc đăng ký để trải nghiệm mua sắm tuyệt vời
+              </p>
+            </>
           )}
-          <p className="text-sm text-white mt-3">
-            Hãy đăng nhập hoặc đăng ký để trải nghiệm mua sắm tuyệt vời
-          </p>
         </div>
       </div>
 
@@ -68,7 +70,7 @@ function Banner() {
           ))}
         </div>
 
-        <div className="flex gap-2 mb-3">
+        <div className="flex gap-2">
           {subBanners.slice(2).map((banner) => (
             <div
               key={banner.id}
