@@ -22,58 +22,58 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-white border-t border-gray-200 pt-10 mt-5">
+    <footer className="bg-[#111111] text-gray-300 border-t border-zinc-800 pt-16">
       <div className="container mx-auto max-w-7xl px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          {/* GIỚI THIỆU */}
           <div>
-            <h4 className="font-bold text-gray-900 text-lg mb-4 uppercase">
+            <h4 className="font-bold text-white text-lg mb-6 uppercase tracking-wider">
               Về LiquidShop
             </h4>
-            <p className="text-sm text-gray-500 mb-4 text-justify">
+            <p className="text-sm text-gray-400 mb-6 text-justify leading-relaxed">
               LiquidShop là hệ thống bán lẻ máy tính và phụ kiện gaming hàng đầu
               Việt Nam, cam kết mang đến những trải nghiệm tốt nhất cho game
               thủ.
             </p>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div>
-                <p className="text-sm font-semibold text-gray-600">
-                  Gọi mua hàng:
+                <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">
+                  Gọi mua hàng
                 </p>
                 <a
                   href="tel:18006975"
-                  className="text-lg font-bold text-red-600 hover:underline flex items-center gap-2"
+                  className="text-xl font-semibold text-red-500 hover:text-red-400 transition-colors flex items-center gap-2"
                 >
-                  <Phone className="w-4 h-4" /> 1800 6975
+                  <Phone className="w-5 h-5" /> 1800 6975
                 </a>
-                <p className="text-xs text-gray-400">(8:30 - 21:30)</p>
+                <p className="text-[10px] text-gray-600 mt-1">(8:30 - 21:30)</p>
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-600">
-                  Hỗ trợ kỹ thuật:
+                <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">
+                  Hỗ trợ kỹ thuật
                 </p>
                 <a
                   href="tel:18006173"
-                  className="text-lg font-bold text-gray-800 hover:text-red-600 transition-colors flex items-center gap-2"
+                  className="text-xl font-semibold text-white hover:text-red-500 transition-colors flex items-center gap-2"
                 >
-                  <Phone className="w-4 h-4" /> 1800 6173
+                  <Phone className="w-5 h-5" /> 1800 6173
                 </a>
-                <p className="text-xs text-gray-400">(8:30 - 21:30)</p>
+                <p className="text-[10px] text-gray-600 mt-1">(8:30 - 21:30)</p>
               </div>
             </div>
           </div>
 
           {/* CHÍNH SÁCH */}
           <div>
-            <h4 className="font-bold text-gray-900 text-lg mb-4 uppercase">
+            <h4 className="font-bold text-white text-lg mb-6 uppercase tracking-wider">
               Chính sách chung
             </h4>
-            <ul className="space-y-2 text-sm text-gray-600">
+            <ul className="space-y-3 text-sm">
               {generalPolicies.map((item) => (
                 <li key={item.name}>
-                  {/* Sử dụng Link cho điều hướng nội bộ */}
                   <Link
                     to={item.href}
-                    className="hover:text-red-600 hover:underline transition-colors block py-1"
+                    className="text-gray-400 hover:text-red-500 transition-all duration-300 block"
                   >
                     {item.name}
                   </Link>
@@ -84,16 +84,15 @@ const Footer: React.FC = () => {
 
           {/* THÔNG TIN & THANH TOÁN */}
           <div>
-            <h4 className="font-bold text-gray-900 text-lg mb-4 uppercase">
+            <h4 className="font-bold text-white text-lg mb-6 uppercase tracking-wider">
               Thông tin
             </h4>
-            <ul className="space-y-2 text-sm text-gray-600 mb-6">
+            <ul className="space-y-3 text-sm mb-8">
               {infoLinks.map((item) => (
                 <li key={item.name}>
-                  {/* Sử dụng Link cho điều hướng nội bộ */}
                   <Link
                     to={item.href}
-                    className="hover:text-red-600 block py-1"
+                    className="text-gray-400 hover:text-red-500 transition-all duration-300 block"
                   >
                     {item.name}
                   </Link>
@@ -101,20 +100,17 @@ const Footer: React.FC = () => {
               ))}
             </ul>
 
-            <h4 className="font-bold text-gray-900 text-sm mb-3 uppercase">
+            <h4 className="font-bold text-white text-xs mb-4 uppercase tracking-widest text-gray-500">
               Thanh toán
             </h4>
-            <div className="flex flex-wrap gap-2">
-              <div className="w-10 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-[8px] font-bold">
-                VISA
+            <div className="flex flex-wrap gap-2 opacity-80 hover:opacity-100 transition-opacity">
+              <div className="w-10 h-6 bg-green-600 border border-zinc-700 rounded flex items-center justify-center text-white text-[8px] font-bold">
+                COD
               </div>
-              <div className="w-10 h-6 bg-orange-500 rounded flex items-center justify-center text-white text-[8px] font-bold">
-                MC
-              </div>
-              <div className="w-10 h-6 bg-pink-600 rounded flex items-center justify-center text-white text-[8px] font-bold">
+              <div className="w-10 h-6 bg-pink-800 border border-zinc-700 rounded flex items-center justify-center text-white text-[8px] font-bold">
                 MOMO
               </div>
-              <div className="w-10 h-6 bg-blue-400 rounded flex items-center justify-center text-white text-[8px] font-bold">
+              <div className="w-10 h-6 bg-blue-700 border border-zinc-700 rounded flex items-center justify-center text-white text-[8px] font-bold">
                 VNPAY
               </div>
             </div>
@@ -122,46 +118,46 @@ const Footer: React.FC = () => {
 
           {/* KẾT NỐI & CHỨNG NHẬN */}
           <div>
-            <h4 className="font-bold text-gray-900 text-lg mb-4 uppercase">
-              Kết nối với chúng tôi
+            <h4 className="font-bold text-white text-lg mb-6 uppercase tracking-wider">
+              Kết nối
             </h4>
-            <div className="flex gap-3 mb-6">
+            <div className="flex gap-4 mb-8">
               <Button
                 size="icon"
                 variant="outline"
-                className="rounded-full border-gray-300 text-gray-600 hover:bg-blue-600 hover:text-white transition-colors"
+                className="rounded-full border-zinc-700 bg-transparent text-gray-400 hover:bg-red-600 hover:border-red-600 hover:text-white transition-all"
                 aria-label="Facebook"
               >
-                <Facebook className="w-4 h-4" />
+                <Facebook className="w-5 h-5" />
               </Button>
               <Button
                 size="icon"
                 variant="outline"
-                className="rounded-full border-gray-300 text-gray-600 hover:bg-red-600 hover:text-white transition-colors"
+                className="rounded-full border-zinc-700 bg-transparent text-gray-400 hover:bg-red-600 hover:border-red-600 hover:text-white transition-all"
                 aria-label="Youtube"
               >
-                <Youtube className="w-4 h-4" />
+                <Youtube className="w-5 h-5" />
               </Button>
               <Button
                 size="icon"
                 variant="outline"
-                className="rounded-full border-gray-300 text-gray-600 hover:bg-pink-600 hover:text-white transition-colors"
+                className="rounded-full border-zinc-700 bg-transparent text-gray-400 hover:bg-red-600 hover:border-red-600 hover:text-white transition-all"
                 aria-label="Instagram"
               >
-                <Instagram className="w-4 h-4" />
+                <Instagram className="w-5 h-5" />
               </Button>
             </div>
 
-            <h4 className="font-bold text-gray-900 text-sm mb-3 uppercase">
+            <h4 className="font-bold text-white text-xs mb-4 uppercase tracking-widest text-gray-500">
               Chứng nhận
             </h4>
-            <div className="flex gap-4 items-center">
-              <div className="w-32 h-12 bg-contain bg-no-repeat bg-center bg-[url('https://webmedia.com.vn/images/2021/09/logo-da-thong-bao-bo-cong-thuong-mau-xanh.png')]"></div>
+            <div className="flex gap-4 items-center mb-6">
+              <div className="w-32 h-12 bg-contain bg-no-repeat bg-center grayscale brightness-200 opacity-70 hover:opacity-100 transition-all bg-[url('https://webmedia.com.vn/images/2021/09/logo-da-thong-bao-bo-cong-thuong-mau-xanh.png')]"></div>
             </div>
 
-            <div className="mt-4 p-3 bg-gray-50 rounded border border-gray-100">
-              <div className="flex items-center gap-2 mb-1 text-xs font-bold text-gray-700">
-                <QrCode className="w-4 h-4" /> Quét mã tư vấn
+            <div className="p-4 bg-zinc-900/50 border border-zinc-800 rounded-lg group hover:border-red-500/50 transition-colors">
+              <div className="flex items-center gap-2 mb-1 text-xs font-bold text-white">
+                <QrCode className="w-4 h-4 text-red-500" /> Quét mã tư vấn
               </div>
               <p className="text-[10px] text-gray-500">
                 Zalo OA chính thức của LiquidShop
@@ -170,13 +166,13 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <Separator className="my-6" />
+        <Separator className="bg-zinc-800" />
 
         {/* --- BOTTOM COPYRIGHT --- */}
-        <div className="pb-8 text-center md:text-left">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-500">
+        <div className="py-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[11px] text-gray-500 tracking-tight">
             <div>
-              <p className="font-bold text-gray-700 mb-1">
+              <p className="font-bold text-gray-300 mb-2 uppercase tracking-widest">
                 CÔNG TY TNHH THƯƠNG MẠI TEAM LIQUID
               </p>
               <p className="mb-1">
@@ -184,9 +180,11 @@ const Footer: React.FC = () => {
               </p>
               <p>Mã số thuế: 0313883xxx do Sở Kế hoạch và Đầu tư TP.HCM cấp</p>
             </div>
-            <div className="md:text-right flex flex-col justify-end">
+            <div className="md:text-right flex flex-col justify-end italic">
               <p>© 2025 LiquidShop. All rights reserved.</p>
-              <p>Designed by March7th</p>
+              <p className="text-red-500/50 font-medium">
+                Designed by March7th
+              </p>
             </div>
           </div>
         </div>

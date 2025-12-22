@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   User,
@@ -35,6 +35,31 @@ const Header: React.FC = () => {
   const { cartCount } = useCart();
 
   const navigate = useNavigate();
+
+  const [showMobileHeader, setShowMobileHeader] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        // Lướt xuống
+        setShowMobileHeader(false);
+      } else {
+        // Lướt lên
+        setShowMobileHeader(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const getFirstLetter = (name?: string) => {
     return name ? name.charAt(0).toUpperCase() : "@";
@@ -124,28 +149,34 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 shadow-md bg-[#151517] text-white">
-        {/* --- MOBILE LAYOUT --- */}
-        <div className="md:hidden px-4 py-3">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-              <Logo />
-            </Link>
+      <header className="sticky top-0 z-50 md:shadow-2xl sm:bg-[#151517] text-white">
+        <div
+          className={`
+    md:hidden
+    transition-transform duration-300 ease-in-out bg-[#151517]
+    ${showMobileHeader ? "translate-y-0" : "-translate-y-full"}
+  `}
+        >
+          <div className="px-4 py-3">
+            <div className="flex items-center gap-3">
+              <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+                <Logo />
+              </Link>
 
-            <SearchBar />
+              <SearchBar />
 
-            <Link to="/cart" className="relative group">
-              <ShoppingCart className="h-7 w-7 text-white group-hover:text-red-500 transition-all" />
-
-              {cartCount > 0 && (
-                <Badge
-                  variant="destructive"
-                  className="absolute -top-2 -right-2 px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold rounded-full border-2 border-[#151517]"
-                >
-                  {cartCount}
-                </Badge>
-              )}
-            </Link>
+              <Link to="/cart" className="relative group">
+                <ShoppingCart className="h-7 w-7 text-white group-hover:text-red-500 transition-all" />
+                {cartCount > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-2 -right-2 px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold rounded-full border-2 border-[#151517]"
+                  >
+                    {cartCount}
+                  </Badge>
+                )}
+              </Link>
+            </div>
           </div>
         </div>
 

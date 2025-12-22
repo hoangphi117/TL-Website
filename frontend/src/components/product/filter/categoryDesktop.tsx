@@ -145,7 +145,7 @@ const CategoryDesktop: React.FC = () => {
     >
       <Button
         variant="outline"
-        className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-black gap-2 cursor-pointer"
+        className="border-2 border-white bg-transparent rounded-sm text-white hover:bg-white hover:text-black gap-2 cursor-pointer"
       >
         <Menu className="h-4 w-4" /> Danh mục
       </Button>
