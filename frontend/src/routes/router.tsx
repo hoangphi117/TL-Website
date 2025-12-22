@@ -4,6 +4,7 @@ import ProtectedRouteAdmin from "./ProtectedRouteAdmin";
 import ProtectedRouteCustomer from "./ProtectedRouteCustomer";
 
 import MainLayout from "@/components/layouts/MainLayout";
+import AuthLayout from "@/components/layouts/AuthLayout";
 import HomePage from "@/pages/home/HomePage";
 
 //CUSTOMER
@@ -94,21 +95,31 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/auth/login/customer",
-    element: <CustomerLoginPage />,
-    errorElement: <ErrorPage />,
+    path: "auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login/customer",
+        element: <CustomerLoginPage />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "register/customer",
+        element: <CustomerRegisterPage />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "reset-password",
+        element: <CustomerForgotPasswordPage />,
+        errorElement: <ErrorPage />,
+      },
+    ],
   },
   {
-    path: "/auth/register/customer",
-    element: <CustomerRegisterPage />,
-    errorElement: <ErrorPage />,
+    path: "/reset-password/:token",
+    element: <CustomerResetPasswordPage />,
   },
-  {
-    path: "/auth/reset-password",
-    element: <CustomerForgotPasswordPage />,
-    errorElement: <ErrorPage />,
-  },
-  { path: "/reset-password/:token", element: <CustomerResetPasswordPage /> },
+
   {
     path: "/admin",
     element: (
