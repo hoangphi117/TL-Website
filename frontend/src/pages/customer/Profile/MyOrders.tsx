@@ -80,7 +80,6 @@ const getPaymentStatusInfo = (status: string) => {
 
 const MyOrders: React.FC = () => {
   const ITEMS_PER_PAGE = 5;
-
   const navigate = useNavigate();
 
   // State
@@ -89,13 +88,12 @@ const MyOrders: React.FC = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [searchCode, setSearchCode] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Ref để lưu danh sách gốc (Backup) nhằm tránh phải gọi API lại khi xóa tìm kiếm
+  // Ref lưu danh sách gốc
   const originalOrdersRef = useRef<IOrder[]>([]);
 
-  // 1. Fetch toàn bộ đơn hàng khi vào trang
+  // 1. Fetch toàn bộ đơn hàng
   const fetchAllOrders = async () => {
     setLoading(true);
     try {
@@ -106,7 +104,7 @@ const MyOrders: React.FC = () => {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         setOrders(sortedOrders);
-        originalOrdersRef.current = sortedOrders; // Lưu backup
+        originalOrdersRef.current = sortedOrders;
       }
     } catch (error) {
       console.error(error);
@@ -130,7 +128,6 @@ const MyOrders: React.FC = () => {
 
     try {
       const res: any = await orderService.getOrderByCode(searchCode.trim());
-
       if (res && res.order) {
         setOrders([res.order]);
       } else {
@@ -147,10 +144,10 @@ const MyOrders: React.FC = () => {
   const handleResetSearch = () => {
     setSearchCode("");
     setIsSearching(false);
-    setOrders(originalOrdersRef.current); // Khôi phục lại danh sách gốc từ backup
+    setOrders(originalOrdersRef.current);
   };
 
-  // Logic lọc theo Tab (Chỉ chạy khi không tìm kiếm)
+  // Logic lọc
   const filteredOrders = orders.filter((order) => {
     if (activeTab === "all") return true;
     return order.orderStatus === activeTab;
@@ -169,26 +166,27 @@ const MyOrders: React.FC = () => {
 
   return (
     <Card className="bg-[#151517] border-neutral-800 text-slate-200 shadow-xl min-h-[600px]">
-      <CardHeader className="border-b border-neutral-800 pb-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <CardHeader className="border-b border-neutral-800 pb-4 sm:pb-6 px-4 sm:px-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          {/* HEADER TITLE */}
           <div>
-            <CardTitle className="text-2xl font-bold text-white flex items-center gap-2">
-              <Package className="w-6 h-6 text-red-500" /> Đơn mua
+            <CardTitle className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+              <Package className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" /> Đơn mua
             </CardTitle>
-            <CardDescription className="text-neutral-400 mt-1">
+            <CardDescription className="text-neutral-400 mt-1 text-sm sm:text-base">
               Quản lý và theo dõi đơn hàng của bạn
             </CardDescription>
           </div>
 
-          {/* --- THANH TÌM KIẾM --- */}
+          {/* SEARCH BOX */}
           <form
             onSubmit={handleSearch}
             className="flex w-full md:w-auto items-center gap-2"
           >
-            <div className="relative w-full md:w-[250px]">
+            <div className="relative flex-1 md:w-[250px]">
               <Input
-                placeholder="Nhập mã đơn hàng (VD: ORD123...)"
-                className="bg-[#2a2a2c] border-neutral-700 text-white placeholder:text-neutral-500 pr-8 focus:border-red-500"
+                placeholder="Mã đơn (VD: ORD123...)"
+                className="bg-[#2a2a2c] border-neutral-700 text-white placeholder:text-neutral-500 pr-8 focus:border-red-500 text-sm h-9 sm:h-10"
                 value={searchCode}
                 onChange={(e) => setSearchCode(e.target.value)}
               />
@@ -202,7 +200,7 @@ const MyOrders: React.FC = () => {
             <Button
               type="submit"
               variant="secondary"
-              className="bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700"
+              className="bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700 h-9 sm:h-10"
               disabled={loading}
             >
               {loading ? (
@@ -215,81 +213,63 @@ const MyOrders: React.FC = () => {
         </div>
       </CardHeader>
 
-      <CardContent className="pt-6">
-        {/* Nếu đang tìm kiếm thì hiện nút quay lại */}
+      <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
+        {/* Reset Search Button */}
         {isSearching && (
-          <div className="flex items-center justify-between mb-4 bg-blue-500/10 border border-blue-500/20 p-3 rounded-md">
-            <span className="text-sm text-blue-400">
-              Kết quả tìm kiếm cho:{" "}
+          <div className="flex items-center justify-between mb-4 bg-blue-500/10 border border-blue-500/20 p-2 sm:p-3 rounded-md">
+            <span className="text-xs sm:text-sm text-blue-400">
+              Kết quả:{" "}
               <span className="font-bold text-white">{searchCode}</span>
             </span>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleResetSearch}
-              className="text-neutral-400 hover:text-white h-8"
+              className="text-neutral-400 hover:text-white h-7 sm:h-8 text-xs sm:text-sm"
             >
-              <RotateCcw className="w-3 h-3 mr-2" /> Xem tất cả
+              <RotateCcw className="w-3 h-3 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Xem tất cả</span>
+              <span className="sm:hidden">Reset</span>
             </Button>
           </div>
         )}
 
-        {/* Tabs Filter (Ẩn khi đang tìm kiếm để tránh rối) */}
+        {/* TABS FILTER */}
         {!isSearching && (
-          <Tabs
-            defaultValue="all"
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="mb-6"
-          >
-            <TabsList className="bg-[#2a2a2c] p-1 border border-neutral-800 h-auto flex-wrap justify-start w-full sm:w-auto">
-              <TabsTrigger
-                value="all"
-                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-              >
-                Tất cả
-              </TabsTrigger>
-              <TabsTrigger
-                value="pending_confirmation"
-                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-              >
-                Chờ xác nhận
-              </TabsTrigger>
-              <TabsTrigger
-                value="processing"
-                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-              >
-                Đang xử lý
-              </TabsTrigger>
-              <TabsTrigger
-                value="shipping"
-                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-              >
-                Đang giao
-              </TabsTrigger>
-              <TabsTrigger
-                value="completed"
-                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-              >
-                Hoàn thành
-              </TabsTrigger>
-              <TabsTrigger
-                value="cancelled"
-                className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400"
-              >
-                Đã hủy
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="w-full overflow-x-auto pb-2 mb-4 sm:mb-6 -mx-3 px-3 sm:mx-0 sm:px-0 no-scrollbar">
+            <Tabs
+              defaultValue="all"
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
+              <TabsList className="bg-[#2a2a2c] p-1 border border-neutral-800 h-auto inline-flex w-max sm:w-auto sm:flex-wrap">
+                {[
+                  { value: "all", label: "Tất cả" },
+                  { value: "pending_confirmation", label: "Chờ xác nhận" },
+                  { value: "processing", label: "Đang xử lý" },
+                  { value: "shipping", label: "Đang giao" },
+                  { value: "completed", label: "Hoàn thành" },
+                  { value: "cancelled", label: "Đã hủy" },
+                ].map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400 text-xs sm:text-sm px-3 py-1.5"
+                  >
+                    {tab.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </div>
         )}
 
-        {/* Loading State */}
         {loading && !isSearching ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="w-8 h-8 animate-spin text-red-600" />
           </div>
         ) : (
-          /* Order List */
           <div className="space-y-4">
             {currentItems.length > 0 ? (
               currentItems.map((order) => {
@@ -301,42 +281,54 @@ const MyOrders: React.FC = () => {
                 return (
                   <div
                     key={order._id}
-                    className="border border-neutral-800 rounded-lg bg-[#1e1e20] overflow-hidden hover:border-neutral-600 transition-colors animate-in fade-in zoom-in duration-300"
+                    className="border border-neutral-800 rounded-lg bg-[#1e1e20] overflow-hidden hover:border-neutral-600 transition-colors"
                   >
-                    <div className="p-4 border-b border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-[#252527]">
-                      <div className="flex items-center gap-3">
-                        <span className="font-bold text-white">
+                    {/* ORDER HEADER */}
+                    <div className="p-3 sm:p-4 border-b border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#252527]">
+                      <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-col sm:flex-row">
+                        <span className="font-bold text-white text-sm sm:text-base">
                           #{order.orderCode}
                         </span>
-                        <span className="text-neutral-600">|</span>
-                        <div className="text-sm text-neutral-400 flex items-center gap-1">
+                        <span className="hidden sm:inline text-neutral-600">
+                          |
+                        </span>
+                        <div className="text-xs sm:text-sm text-neutral-400 flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {new Date(order.createdAt).toLocaleDateString(
                             "vi-VN"
                           )}
                         </div>
                       </div>
-                      <Badge
-                        variant="outline"
-                        className={`${statusInfo.className} font-normal border`}
-                      >
-                        {statusInfo.label}
-                      </Badge>
+
+                      <div className="self-start sm:self-auto">
+                        <Badge
+                          variant="outline"
+                          className={`${statusInfo.className} font-normal border text-xs sm:text-sm whitespace-nowrap`}
+                        >
+                          {statusInfo.label}
+                        </Badge>
+                      </div>
                     </div>
 
-                    <div className="p-4">
+                    {/* ORDER BODY */}
+                    <div className="p-3 sm:p-4">
                       <div className="space-y-3 mb-4">
                         {order.items.slice(0, 2).map((item, idx) => (
-                          <div key={idx} className="flex items-center gap-4">
-                            <div className="flex-1">
-                              <p className="font-medium text-slate-200 line-clamp-1">
+                          <div
+                            key={idx}
+                            className="flex items-start gap-3 sm:gap-4"
+                          >
+                            {/* Product Info */}
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-slate-200 text-sm sm:text-base line-clamp-2 sm:line-clamp-1">
                                 {item.name}
                               </p>
-                              <p className="text-sm text-neutral-500">
+                              <p className="text-xs sm:text-sm text-neutral-500 mt-0.5">
                                 x{item.quantity}
                               </p>
                             </div>
-                            <div className="text-right">
+                            {/* Price */}
+                            <div className="text-right whitespace-nowrap">
                               <p className="text-sm font-medium text-slate-300">
                                 {formatVND(item.price)}
                               </p>
@@ -350,10 +342,12 @@ const MyOrders: React.FC = () => {
                         )}
                       </div>
 
-                      <Separator className="bg-neutral-800 my-4" />
+                      <Separator className="bg-neutral-800 my-3 sm:my-4" />
 
-                      <div className="flex flex-col sm:flex-row justify-between items-end sm:items-center gap-4">
-                        <div className="text-sm">
+                      {/* ORDER FOOTER */}
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        {/* Payment Status */}
+                        <div className="text-xs sm:text-sm w-full sm:w-auto flex justify-between sm:block">
                           <span className="text-neutral-500 mr-2">
                             Thanh toán:
                           </span>
@@ -364,43 +358,54 @@ const MyOrders: React.FC = () => {
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className="text-xs text-neutral-500">
-                              Tổng tiền
-                            </p>
-                            <p className="text-lg font-bold text-red-500">
-                              {formatVND(order.totalAmount)}
-                            </p>
+                        {/* Total & Actions */}
+                        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                          <div className="flex items-center justify-between w-full sm:w-auto gap-4">
+                            <span className="text-xs text-neutral-500 sm:hidden">
+                              Tổng tiền:
+                            </span>
+                            <div className="text-right">
+                              <p className="hidden sm:block text-xs text-neutral-500">
+                                Tổng tiền
+                              </p>
+                              <p className="text-base sm:text-lg font-bold text-red-500">
+                                {formatVND(order.totalAmount)}
+                              </p>
+                            </div>
                           </div>
 
-                          {/* Nút Chi tiết */}
-                          <Button
-                            variant="outline"
-                            className="ml-2 border-neutral-600 text-neutral-300 hover:bg-neutral-800 hover:text-white bg-transparent"
-                            onClick={() =>
-                              navigate(`/orders/${order.orderCode}`)
-                            }
-                          >
-                            Chi tiết
-                          </Button>
+                          {/* Buttons Group */}
+                          <div className="flex items-center justify-end gap-2 w-full sm:w-auto">
+                            {/* Hủy Đơn Dialog */}
+                            {order.orderStatus === "pending_confirmation" && (
+                              <div className="flex-1 sm:flex-none">
+                                <CancelOrderDialog
+                                  orderCode={order.orderCode}
+                                  variant="ghost"
+                                  onSuccess={() => {
+                                    setOrders((prev) =>
+                                      prev.map((o) =>
+                                        o.orderCode === order.orderCode
+                                          ? { ...o, orderStatus: "cancelled" }
+                                          : o
+                                      )
+                                    );
+                                  }}
+                                />
+                              </div>
+                            )}
 
-                          {/* Hủy Đơn Dialog*/}
-                          {order.orderStatus === "pending_confirmation" && (
-                            <CancelOrderDialog
-                              orderCode={order.orderCode}
-                              variant="ghost"
-                              onSuccess={() => {
-                                setOrders((prev) =>
-                                  prev.map((o) =>
-                                    o.orderCode === order.orderCode
-                                      ? { ...o, orderStatus: "cancelled" }
-                                      : o
-                                  )
-                                );
-                              }}
-                            />
-                          )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex-1 sm:flex-none border-neutral-600 text-neutral-300 hover:bg-neutral-800 hover:text-white bg-transparent h-9"
+                              onClick={() =>
+                                navigate(`/orders/${order.orderCode}`)
+                              }
+                            >
+                              Chi tiết
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -408,16 +413,17 @@ const MyOrders: React.FC = () => {
                 );
               })
             ) : (
-              <div className="text-center py-20 flex flex-col items-center justify-center">
-                <div className="w-20 h-20 bg-neutral-800 rounded-full flex items-center justify-center mb-4">
-                  <Box className="w-10 h-10 text-neutral-600" />
+              // Empty State Responsive
+              <div className="text-center py-10 sm:py-20 flex flex-col items-center justify-center">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-neutral-800 rounded-full flex items-center justify-center mb-4">
+                  <Box className="w-8 h-8 sm:w-10 sm:h-10 text-neutral-600" />
                 </div>
-                <h3 className="text-lg font-medium text-white">
+                <h3 className="text-base sm:text-lg font-medium text-white">
                   {isSearching
                     ? "Không tìm thấy đơn hàng"
                     : "Chưa có đơn hàng nào"}
                 </h3>
-                <p className="text-neutral-500 mb-6 max-w-xs mx-auto">
+                <p className="text-sm text-neutral-500 mb-6 max-w-xs mx-auto">
                   {isSearching
                     ? "Vui lòng kiểm tra lại mã đơn hàng."
                     : "Bạn chưa có đơn hàng nào trong mục này."}
@@ -425,7 +431,7 @@ const MyOrders: React.FC = () => {
                 {!isSearching && (
                   <Button
                     onClick={() => navigate("/")}
-                    className="bg-red-600 hover:bg-red-700 text-white"
+                    className="bg-red-600 hover:bg-red-700 text-white w-full sm:w-auto"
                   >
                     Mua sắm ngay
                   </Button>
@@ -434,18 +440,21 @@ const MyOrders: React.FC = () => {
                   <Button
                     variant="outline"
                     onClick={handleResetSearch}
-                    className="border-neutral-700 text-white hover:bg-neutral-800"
+                    className="border-neutral-700 text-white hover:bg-neutral-800 w-full sm:w-auto"
                   >
                     Quay lại danh sách
                   </Button>
                 )}
               </div>
             )}
-            <PaginationCustom
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+
+            <div className="py-2">
+              <PaginationCustom
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
           </div>
         )}
       </CardContent>
