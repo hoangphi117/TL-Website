@@ -18,8 +18,6 @@ export default function BrandCard({ brand, onEdit, onDelete }: BrandCardProps) {
         rounded-xl
         border
         shadow-xs
-        hover:shadow-md
-        hover:border-blue-400
         transition-all
         duration-200
         overflow-hidden

@@ -81,7 +81,7 @@ export default function CategoriesPage() {
     },[]);
     
   return (
-    <div className="p-5">
+    <div className="p-2 md:p-4">
         {isLoading && (
             <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
         )}
@@ -90,7 +90,7 @@ export default function CategoriesPage() {
             <div className="flex flex-col gap-3 p-4 shadow-sm bg-white ">
                 <PageTitle title="Quản lí danh mục" subTitle="Tổ chức và phân loại sản phẩm theo danh mục"/>
                 <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-8 py-3">
-                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
                         <p className="text-lg font-semibold">Tổng danh mục</p>
                         <div className="flex flex-row items-center gap-2">
                             <p className="text-xl lg:text-2xl font-bold">{categories.length}</p>
@@ -98,7 +98,7 @@ export default function CategoriesPage() {
                         </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
                         <p className="text-lg font-semibold">Danh mục cha</p>
                         <div className="flex flex-row items-center gap-2">
                             <p className="text-xl lg:text-2xl font-bold">0</p>
@@ -106,7 +106,7 @@ export default function CategoriesPage() {
                         </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
                         <p className="text-lg font-semibold">Tổng sản phẩm</p>
                          <div className="flex flex-row items-center gap-2">
                             <p className="text-xl lg:text-2xl font-bold">{products}</p>

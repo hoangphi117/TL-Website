@@ -70,7 +70,7 @@ export default function AddCategoryPage() {
   },[]);
 
   return (
-    <div className="flex flex-col gap-5 shadow-sm p-5">
+    <div className="flex flex-col gap-5 shadow-sm p-2 md:p-4">
       <PageTitle title="Thêm danh mục" subTitle="Tạo mới danh mục"/>
       <div className="bg-white border-gray-200 shadow-md p-4 min-h-screen">
         <div className="flex justify-center">

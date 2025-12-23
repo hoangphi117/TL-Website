@@ -60,6 +60,7 @@ const AddCategoriesPage = React.lazy(
   () => import("@/pages/admin/AddCategoriesPage")
 );
 const ReviewsPage = React.lazy(() => import("@/pages/admin/ReviewsPage"));
+const PromotionPage = React.lazy(() => import("@/pages/admin/PromotionsPage"));
 
 const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
 
@@ -129,6 +130,7 @@ const router = createBrowserRouter([
       { path: "product/edit/:id", element: <EditProductPage/>},
       { path: "orders", element:<OrdersPage/>},
       { path: "reviews", element: <ReviewsPage/>},
+      { path: "promotions", element: <PromotionPage/>},
     ],
   },
   {

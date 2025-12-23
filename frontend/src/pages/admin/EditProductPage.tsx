@@ -136,7 +136,7 @@ export default function EditProductPage() {
   if (loading) return <p className="text-center text-gray-500">Đang tải dữ liệu...</p>;
 
   return (
-    <div className="p-6 space-y-6 bg-white border rounded-lg">
+    <div className="p-2 md:p-4 space-y-6 bg-white border rounded-lg">
         <div className="flex flex-col bg-white mt-0 px-1 gap-3 border-b border-gray-300 pb-3 pt-3">
             <Button 
                 className="bg-white border border-gray-300 w-25 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"

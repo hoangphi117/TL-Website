@@ -67,7 +67,7 @@ export default function UserDetailPage() {
   if (!user) return <div className="p-10 text-lg">Đang tải...</div>;
 
   return (
-    <div className="p-5 space-y-8">
+    <div className="p-2 md:p-4 space-y-8">
        <div className="flex flex-col bg-white mt-4 p-5 gap-3 border-b border-gray-300">
         <Button 
           className="bg-white border border-gray-300 w-25 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"

@@ -56,8 +56,7 @@ export default function AdminLoginPage() {
 
   return (
     <div 
-      className="w-full min-h-screen bg-center bg-cover flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-200 p-4"
-      style={{backgroundImage: `url(${bg})`}}
+      className="w-full min-h-screen bg-center flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-200 p-4"
       >
       <form 
         onSubmit={(e) => {

@@ -101,7 +101,7 @@ export default function BrandsPage() {
     })
 
   return (
-    <div className="p-5">
+    <div className="p-2 md:p-4">
             {isLoading && (
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}
@@ -110,7 +110,7 @@ export default function BrandsPage() {
                 <div className="flex flex-col gap-3 p-4 shadow-sm bg-white">
                     <PageTitle title="Quản lí thương hiệu" subTitle="Quản lí thương hiệu và nhà cung cấp sản phẩm"/>
                     <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-8 py-3">
-                        <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+                        <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
                             <p className="text-lg font-semibold">Tổng thương hiệu</p>
                             <div className="flex flex-row items-center gap-2">
                                 <p className="text-xl lg:text-2xl font-bold">{brands.length}</p>
@@ -118,7 +118,7 @@ export default function BrandsPage() {
                             </div>
                         </div>
 
-                        <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+                        <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
                             <p className="text-lg font-semibold">Đang hoạt động</p>
                             <div className="flex flex-row items-center gap-2">
                                 <p className="text-xl lg:text-2xl font-bold">{brands.length}</p>
@@ -142,7 +142,7 @@ export default function BrandsPage() {
                                 Thêm
                             </Button>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:px-8 gap-5 mt-4"  >
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 xl:px-8 gap-5 mt-4"  >
                             {brands.map((b) =>(
                                 <BrandCard 
                                     key={b._id} 

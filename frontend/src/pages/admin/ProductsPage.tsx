@@ -22,6 +22,7 @@ import { Crown, LayoutGrid, LucidePackage, SearchX, X } from "lucide-react"
 import { DeleteCategoryAlert } from "@/components/admin/category/delete-category-alert"
 import { useNavigate } from "react-router-dom"
 import PageTitle from "@/components/admin/common/PageTitle"
+import Pagination from "@/components/admin/common/Pagination"
 
 
 export default function ProductsPage() {
@@ -138,14 +139,14 @@ export default function ProductsPage() {
   }, [selectedBrand, selectedCategory, selectedStatus, page, search])
 
   return (
-    <div className="space-y-6 p-5">
+    <div className="space-y-4 p-2 md:p-4">
       {isLoading && (
         <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
       )}
       <div className="bg-white">
         <PageTitle title="Quản lí sản phẩm" subTitle="Quản lí thông tin chi tiết sản phẩm"/>
         <div className="flex flex-col bg-white md:flex-row gap-4 items-center justify-center mt-4 px-6 py-3">
-          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
               <p className="text-lg font-semibold">Sản phẩm</p>
               <div className="flex flex-row items-center gap-2">
                 <p className="text-xl lg:text-2xl font-bold">{totalProducts}</p>
@@ -153,7 +154,7 @@ export default function ProductsPage() {
               </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
               <p className="text-lg font-semibold">Thương hiệu</p>
               <div className="flex flex-row items-center gap-2">
                 <p className="text-xl lg:text-2xl font-bold">{brands.length}</p>
@@ -161,7 +162,7 @@ export default function ProductsPage() {
               </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm hover:shadow-md transition w-full md:w-1/3 flex items-center justify-between">
+          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
               <p className="text-lg font-semibold">Danh mục</p>
               <div className="flex flex-row items-center gap-2">
                 <p className="text-xl lg:text-2xl font-bold">{categories.length}</p>
@@ -171,7 +172,7 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <div className="flex flex-col bg-white h-40 sm:h-30 lg:h-15 lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between p-2">
+      <div className="flex flex-col bg-white h-40 sm:h-30 lg:h-15 lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between p-2 rounded-md">
         <Input 
           placeholder="Tìm kiếm theo tên sản phẩm"
           value={search}
@@ -209,6 +210,7 @@ export default function ProductsPage() {
           </Select>
           
           <div className="flex flex-row gap-2">
+              {/* {lọc theo loại sản phẩm} */}
               <Select value={selectedCategory} onValueChange={(selectedCategory) => setSelectedCategory(selectedCategory)}>
                 <SelectTrigger><SelectValue placeholder="Loại"/></SelectTrigger>
                 <SelectContent>
@@ -230,8 +232,6 @@ export default function ProductsPage() {
                 </SelectContent>
               </Select>
           </div>
-          {/* {lọc theo loại sản phẩm} */}
-          
         </div>
       </div>
 
@@ -269,32 +269,12 @@ export default function ProductsPage() {
       />
 
       {/* Pagination */}
-      <div className="flex justify-center gap-2 mt-8">
-        <Button
-          variant="outline"
-          disabled={page === 1}
-          onClick={() => setPage((p) => p - 1)}
-        >
-          Prev
-        </Button>
-
-        {Array.from({length: totalPages}, (_, idx) => (
-          <Button
-            key={idx}
-            variant={page === idx + 1 ? "default" : "outline"}
-            onClick={() => setPage(idx + 1)}
-          >
-            {idx + 1}
-          </Button>
-        ))}
-
-        <Button
-          variant="outline"
-          disabled={page === totalPages}
-          onClick={() => setPage((p) => p + 1)}
-        >
-          Next
-        </Button>
+      <div className="flex justify-center">
+        <Pagination
+          page={page}
+          setPage={setPage}
+          totalPages={totalPages}
+        />
       </div>
     </div>
   )

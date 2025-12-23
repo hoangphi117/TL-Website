@@ -54,7 +54,7 @@ export default function Pagination({
           key={p}
           size="sm"
           onClick={() => setPage(p)}
-          className={`min-w-8 px-2 sm:px-3
+          className={`min-w-4 px-2 sm:px-3
             ${
               p === page
                 ? "bg-blue-500 text-white border-blue-500"

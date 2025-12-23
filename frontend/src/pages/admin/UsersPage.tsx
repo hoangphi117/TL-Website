@@ -40,7 +40,7 @@ export default function UsersPage() {
     }, [loadUsers]);
 
     return (
-        <div className="p-5">
+        <div className="p-2">
             {isLoading && (
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}

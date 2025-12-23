@@ -5,7 +5,7 @@ import { DollarSign, ShoppingCart, Tag, UserRound } from "lucide-react";
 
 export default function DashboardPage() {
     return (
-        <div className="p-3 bg-white space-y-4">
+        <div className="p-2 md:p-4 bg-white space-y-4">
             <PageTitle title="Quản lí doanh thu" subTitle="Tổng quan về hoạt động kinh doanh và chỉ số quan trọng"/>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-5 px-3">
                 <Card>

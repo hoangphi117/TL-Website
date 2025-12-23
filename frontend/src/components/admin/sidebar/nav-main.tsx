@@ -58,7 +58,7 @@ export function NavMain({
                     >
                       <div className="flex items-center justify-between gap-2">
                           {item.icon && <item.icon className="!h-6 !w-6"/>}
-                          <span className="text-md data-[active=true]:text-blue-400">{item.title}</span>
+                          <span className="text-base data-[active=true]:text-blue-400">{item.title}</span>
                           <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </div>
                     </SidebarMenuButton>
@@ -105,7 +105,7 @@ export function NavMain({
               >
                 <Link to={item.url} className="flex items-center gap-2">
                   {item.icon && <item.icon className="!h-6 !w-6"/>}
-                  <span className="text-md data-[active=true]:text-blue-400">{item.title}</span>
+                  <span className="text-base data-[active=true]:text-blue-400">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

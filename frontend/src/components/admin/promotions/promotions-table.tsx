@@ -3,54 +3,51 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-
 import { SearchX } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 
+import { Button } from "@/components/ui/button"
 import {
   Table, TableBody, TableCell,
   TableHead, TableHeader, TableRow
 } from "@/components/ui/table"
 
-import type { IUser } from "@/types/user"
 import { columns } from "./columns"
-import { useNavigate } from "react-router-dom"
+import type { IPromotion } from "@/types/promotion"
+import PromotionStatusSelect from "./PromotionStatusSelect"
 import Pagination from "../common/Pagination"
 
-
 interface DataTableProps {
-  users: IUser[];
+  promotions: IPromotion[];
   page: number;
   totalPages: number;
   setPage: (page: number) => void;
-
-  search: string;
-  setSearch: (search: string) => void;
+  handleDetailOpen: (promotion: IPromotion) => void;
+  status: string;
+  setStatus: (value: string) => void;
+  onDelete: (id: string) => void;
 }
 
-export function DataTable({ users, page, totalPages, setPage, search, setSearch }: DataTableProps) {
-  const navigate = useNavigate();
+export function PromotionsTable({
+  promotions, page, totalPages, setPage,
+  handleDetailOpen,
+  status, setStatus,
+  onDelete,
+}: DataTableProps) {
 
   const table = useReactTable({
-    data: users,
-    columns,
-    meta: {
-      onUserClick: (id: string) => navigate(`/admin/users/${id}`)
-    },
+    data: promotions,
+    columns: columns(handleDetailOpen, onDelete),
     getCoreRowModel: getCoreRowModel(),
   });
 
   return (
     <div className="w-full">
-
-      {/* SEARCH */}
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Tìm kiếm theo email và tên khách hàng"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm bg-white text-md"
+      
+      {/* FILTER BAR */}
+      <div className="flex items-center justify-end py-3">
+        <PromotionStatusSelect
+          value={status}
+          onChange={(val) => setStatus(val)}
         />
       </div>
 
@@ -58,9 +55,9 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
       <div className="overflow-hidden rounded-md border bg-white">
         <Table>
           <TableHeader className="bg-blue-100">
-            {table.getHeaderGroups().map((group) => (
-              <TableRow key={group.id} className="hover:bg-transparent">
-                {group.headers.map((header) => (
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
+                {headerGroup.headers.map((header) => (
                   <TableHead key={header.id} className="text-md sm:text-lg font-bold">
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
@@ -70,7 +67,7 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
           </TableHeader>
 
           <TableBody>
-            {users.length > 0 ? (
+            {promotions.length > 0 ? (
               table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
@@ -87,13 +84,18 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length}>
+                <TableCell colSpan={columns(handleDetailOpen, onDelete).length}>
                   <div className="flex flex-col items-center justify-center py-10 text-center text-muted-foreground">
                     <SearchX className="w-12 h-12 mb-3 opacity-70" />
                     <span className="text-lg font-semibold">Không tìm thấy dữ liệu</span>
-                    <span className="text-sm mb-3">Thử từ khóa khác hoặc reset tìm kiếm.</span>
+                    <span className="text-sm mb-3">Thử dùng từ khóa khác hoặc reset tìm kiếm.</span>
 
-                    <Button variant="outline" onClick={() => setSearch("")}>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setStatus("all");
+                      }}
+                    >
                       Xoá bộ lọc
                     </Button>
                   </div>
@@ -101,6 +103,7 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
               </TableRow>
             )}
           </TableBody>
+
         </Table>
       </div>
 
