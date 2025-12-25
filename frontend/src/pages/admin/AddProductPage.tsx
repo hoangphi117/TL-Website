@@ -102,8 +102,8 @@ export default function EditProductPage() {
 
 
   return (
-    <div className="p-2 md:p-4 space-y-6 bg-white">
-        <div className="flex flex-col bg-white mt-0 px-1 gap-3 border-b border-gray-300 pb-3 pt-3">
+    <div className="p-2 md:p-4 space-y-6">
+        <div className="flex flex-col bg-white mt-0 gap-3 border-b border-gray-300 p-3">
             <Button 
                 className="bg-white border border-gray-300 w-25 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"
                 onClick={() => handleComeBack()}
@@ -115,7 +115,7 @@ export default function EditProductPage() {
             <p className="text-md md:text-lg text-gray-600">Thêm thông tin sản phẩm mới</p>
         </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border border-gray-300 p-3 rounded-md">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white border border-gray-300 p-3 rounded-md">
 
         {/* Product Name */}
         <div className="flex flex-col gap-1">
@@ -212,16 +212,18 @@ export default function EditProductPage() {
 
       </div>
 
-      {/* Description */}
-      <div className="flex flex-col gap-1">
-        <label className="font-semibold">Mô tả</label>
-        <Textarea rows={5} value={description} onChange={(e) => setDescription(e.target.value)} />
-      </div>
+      <div className="flex flex-col bg-white p-3 gap-6 rounded-md border border-gray-300" >
+        {/* Description */}
+        <div className="flex flex-col gap-1 ">
+          <label className="font-semibold">Mô tả</label>
+          <Textarea rows={5} value={description} onChange={(e) => setDescription(e.target.value)} />
+        </div>
 
-      {/* Images */}
-      <div>
-        <h3 className="font-semibold mb-2">Hình ảnh</h3>
-        <ImagesInput images={images} setImages={setImages}/>
+        {/* Images */}
+        <div>
+          <h3 className="font-semibold mb-2">Hình ảnh</h3>
+          <ImagesInput images={images} setImages={setImages}/>
+        </div>
       </div>
 
       {/* {response message} */}

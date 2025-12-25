@@ -172,14 +172,16 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <div className="flex flex-col bg-white h-40 sm:h-30 lg:h-15 lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between p-2 rounded-md">
+    <div className="flex flex-col bg-white gap-3 p-3">
+
+      <div className="flex flex-col h-40 sm:h-30 lg:h-15 lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between p-2 rounded-md">
         <Input 
           placeholder="Tìm kiếm theo tên sản phẩm"
           value={search}
           onChange={(event) =>
             setSearch(event.target.value)
           }
-          className="max-w-lg w-full bg-white text-md border-2 border-gray-400"
+          className="max-w-lg w-full text-md border-2 border-gray-400"
         />  
         
         <div className="flex flex-col sm:flex-row items-center justify-start gap-1 sm:gap-2">
@@ -260,6 +262,8 @@ export default function ProductsPage() {
           onDelete={onDelete}
         />
       )}
+
+    </div>
 
       <DeleteCategoryAlert
         open={openDeleteAlert}

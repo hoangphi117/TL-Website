@@ -44,9 +44,9 @@ export default function UsersPage() {
             {isLoading && (
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}
-            <div className="flex flex-col bg-white shadow-sm gap-3 p-4">
+            <div className="flex flex-col bg-white gap-3 p-4">
                 <PageTitle title="Quản lí khách hàng" subTitle="Quản lí thông tin khách hàng và lịch sử mua hàng"/>
-                <div className="border border-gray-200 p-3 shadow-lg rounded-lg">
+                <div className="border border-gray-200 p-3 shadow-lg rounded-lg mt-10">
                     <p className="flex flex-row gap-2 items-center font-bold text-lg">
                         <Grid2X2 size={24} color="#3f6cf3"/>
                         Tổng tài khoản: {totalUsers}

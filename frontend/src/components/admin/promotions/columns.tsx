@@ -14,10 +14,14 @@ export const columns = (
         cell: ({ row }) => {
             const code = row.original.code
             const description = row.original.description
-
+            
             return (
                 <div className="flex flex-col whitespace-normal max-w-[250px]">
-                    <span className="font-semibold">{code}</span>
+                    <span 
+                        onClick={() => onOpenDetail(row.original)}
+                        className="font-semibold hover:underline cursor-pointer">
+                        {code}
+                    </span>
                     <span className="text-sm text-muted-foreground">
                     {description}
                     </span>

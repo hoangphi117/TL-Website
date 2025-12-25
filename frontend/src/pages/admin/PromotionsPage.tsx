@@ -4,6 +4,7 @@ import promotionApi from "@/services/api/admin/promotionApi";
 import type { PromotionQuery } from "@/services/api/admin/query";
 import type { IPromotion } from "@/types/promotion";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function PromotionsPage() {
   const [promotions, setPromotions] = useState<IPromotion[]>([]);
@@ -11,10 +12,10 @@ export default function PromotionsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalPromotions, setTotalPromotions] = useState(0);
   const [status, setStatus] = useState("all");
-  const [detailOpen, setDetailOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleDetailOpen = (promotion: IPromotion) => {
-
+    navigate(`/admin/promotions/${promotion._id}`);
   } 
 
   const handleDelete = (id: string) => {
@@ -55,7 +56,7 @@ export default function PromotionsPage() {
         title="Quản lí mã giảm giá"
         subTitle="Quản lí các loại mã giảm giá, khuyến mãi"
       />
-      <div className="bg-white">
+      <div className="bg-white mt-10 p-3">
         <PromotionsTable
             promotions={promotions}
             page={page}

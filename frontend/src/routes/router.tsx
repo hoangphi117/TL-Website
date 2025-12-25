@@ -50,6 +50,7 @@ import UserDetailPage from "@/pages/admin/UserDetailPage";
 import EditProductPage from "@/pages/admin/EditProductPage";
 import AdminLoginPage from "@/pages/admin/LoginPage";
 import OrdersPage from "@/pages/admin/OrdersPage";
+import DetailedPromotion from "@/pages/admin/DetailedPromotion";
 
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
@@ -131,6 +132,7 @@ const router = createBrowserRouter([
       { path: "orders", element:<OrdersPage/>},
       { path: "reviews", element: <ReviewsPage/>},
       { path: "promotions", element: <PromotionPage/>},
+      { path: "promotions/:id", element: <DetailedPromotion/>}
     ],
   },
   {
