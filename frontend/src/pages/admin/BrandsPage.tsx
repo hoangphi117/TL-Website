@@ -25,8 +25,6 @@ export default function BrandsPage() {
     const [formSuccess, setFormSuccess] = useState("");
 
     const handleEdit = (brand: IBrand) => {
-        console.log("Edit brand:", brand)
-        // mở dialog edit, set selectedBrand,...
         setSelectedBrand(brand)
         setOpenEdit(true)
     }
@@ -58,8 +56,7 @@ export default function BrandsPage() {
 
     const updateBrand = async (id: string, data: IBrand) => {
         try {
-            const res = await brandApi.update(id, data);
-            console.log("check update: ", res.data);
+            await brandApi.update(id, data);
         }catch(error) {
             console.log(error);
         }
@@ -101,34 +98,34 @@ export default function BrandsPage() {
     })
 
   return (
-    <div className="p-2 md:p-4">
+    <div className="p-2 md:p-3 bg-white md:bg-transparent">
             {isLoading && (
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}
     
             {!isLoading && (
-                <div className="flex flex-col gap-3 p-4 bg-white">
+                <div className="flex flex-col gap-3 p-0 md:p-3 bg-white">
                     <PageTitle title="Quản lí thương hiệu" subTitle="Quản lí thương hiệu và nhà cung cấp sản phẩm"/>
-                    <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-8 py-3">
+                    <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-0 md:px-3 py-3">
                         <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
-                            <p className="text-lg font-semibold">Tổng thương hiệu</p>
+                            <p className="text-md md:text-lg font-semibold">Tổng thương hiệu</p>
                             <div className="flex flex-row items-center gap-2">
-                                <p className="text-xl lg:text-2xl font-bold">{brands.length}</p>
-                                <Crown size={32} color="#e0e411" />
+                                <p className="text-md md:text-lg font-bold">{brands.length}</p>
+                                <Crown size={28} color="#e0e411" />
                             </div>
                         </div>
 
                         <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
-                            <p className="text-lg font-semibold">Đang hoạt động</p>
+                            <p className="text-md md:text-lg font-semibold">Đang hoạt động</p>
                             <div className="flex flex-row items-center gap-2">
-                                <p className="text-xl lg:text-2xl font-bold">{brands.length}</p>
-                                <Globe size={32} color="#40c408" />
+                                <p className="text-md md:text-lg font-bold">{brands.length}</p>
+                                <Globe size={28} color="#40c408" />
                             </div>
                         </div>
 
                     </div>
                     
-                    <div className=" flex flex-col border border-gray-200 p-4 mx-4 rounded-md">
+                    <div className=" flex flex-col border border-gray-200 p-4 mx-0 rounded-md">
                         <div className="flex flex-row justify-between items-center px-4">
                             <div className="flex flex-row gap-2">
                                <Grid2X2 size={22} color="#146bdb"/> 

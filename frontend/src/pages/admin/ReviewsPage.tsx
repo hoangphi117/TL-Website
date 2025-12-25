@@ -146,11 +146,11 @@ export default function ReviewsPage() {
         }
     }, [page, status, rating, search]);
     return (
-        <div className="p-2">
-            {isLoading && (
+        <div className="p-0 md:p-3 bg-white md:bg-transparent">
+            {isLoading && ( 
                 <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
             )}
-            <div className="flex flex-col bg-white gap-3 p-4">
+            <div className="flex flex-col bg-white gap-3 p-0 sm:p-2 md:p-3">
                 <PageTitle 
                     title="Quản lí đánh giá và bình luận" 
                     subTitle="Theo dõi và xử lí các đánh giá và bình luận về sản phẩm"

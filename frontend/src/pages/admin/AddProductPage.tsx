@@ -102,17 +102,17 @@ export default function EditProductPage() {
 
 
   return (
-    <div className="p-2 md:p-4 space-y-6">
+    <div className="p-2 md:p-3 space-y-6 bg-white md:bg-transparent">
         <div className="flex flex-col bg-white mt-0 gap-3 border-b border-gray-300 p-3">
             <Button 
-                className="bg-white border border-gray-300 w-25 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"
+                className="bg-white border border-gray-300 w-22 hover:bg-white hover:shadow-md justify-start text-black flex items-center gap-1"
                 onClick={() => handleComeBack()}
             >
                 <ChevronLeft size={28} color="black" strokeWidth={2.25}/>
                 quay về
             </Button>
             <p className="text-2xl lg:text-3xl font-bold">Thêm sản phẩm</p>
-            <p className="text-md md:text-lg text-gray-600">Thêm thông tin sản phẩm mới</p>
+            <p className="text-sm md:text-base text-gray-600">Thêm thông tin sản phẩm mới</p>
         </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white border border-gray-300 p-3 rounded-md">

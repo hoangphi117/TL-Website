@@ -62,11 +62,11 @@ export default function OrdersPage() {
     }
   },[page, search, paymentStatusSelected, orderStatusSelected])
   return (
-     <div className="p-2">
+     <div className="p-2 bg-white md:bg-transparent">
       {isLoading && (
           <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
       )}
-      <div className="flex flex-col bg-white gap-3 p-4">
+      <div className="flex flex-col bg-white gap-3 p-0 sm:p-2 md:p-3">
           <PageTitle title="Quản lí đơn hàng" subTitle="Theo dõi và xử lí đơn hàng"/>
           <div className="border border-gray-200 p-3 shadow-lg rounded-lg mt-10">
               <p className="flex flex-row gap-2 items-center font-bold text-lg">

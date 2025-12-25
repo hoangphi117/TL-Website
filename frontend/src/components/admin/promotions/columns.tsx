@@ -10,7 +10,11 @@ export const columns = (
 ): ColumnDef<IPromotion>[] => [
     {
         accessorKey: "code",
-        header: "Mã",
+         header: () => (
+            <span className="text-sm md:text-base">
+                Mã
+            </span>
+        ),
         cell: ({ row }) => {
             const code = row.original.code
             const description = row.original.description
@@ -19,7 +23,7 @@ export const columns = (
                 <div className="flex flex-col whitespace-normal max-w-[250px]">
                     <span 
                         onClick={() => onOpenDetail(row.original)}
-                        className="font-semibold hover:underline cursor-pointer">
+                        className="font-semibold text-sm md:text-base hover:underline cursor-pointer">
                         {code}
                     </span>
                     <span className="text-sm text-muted-foreground">
@@ -31,14 +35,18 @@ export const columns = (
     },
     {
         accessorKey: "discountValue",
-        header: "mức giảm giá",
+         header: () => (
+            <span className="text-sm md:text-base">
+                Mức giảm giá
+            </span>
+        ),
         cell: ({ row }) => {
             const value = row.original.discountValue;
             const type = row.original.discountType;
             return (
                 <div className="flex flex-row">
                     <span
-                        className="text-md md:text-lg font-semibold text-red-500"
+                        className="text-sm md:text-base font-semibold text-red-500"
                     >
                         {type === "percentage" ? value + "%" : formatVND(value)}
                     </span>
@@ -48,17 +56,25 @@ export const columns = (
     },
     {
         accessorKey: "usageLimit",
-        header: "Số lượng",
-        cell: ({ row }) => ( <div className="text-green-500 text:md font-semibold">{row.getValue("usageLimit")}</div>)
+         header: () => (
+            <span className="text-sm md:text-base">
+                Số lượng
+            </span>
+        ),
+        cell: ({ row }) => ( <div className="text-green-500 text:sm md:text-base font-semibold">{row.getValue("usageLimit")}</div>)
     },
     {
         accessorKey: "isActive",
-        header: "Trạng thái",
+         header: () => (
+            <span className="text-sm md:text-base">
+                Trạng thái
+            </span>
+        ),
         cell: ({ row }) => {
             const isActive = row.getValue("isActive") as boolean;
             return (
                 <div 
-                    className={`text-sm md:text-md rounded-lg px-2 py-1 w-fit text-white
+                    className={`text-sm rounded-lg px-2 py-1 w-fit text-white
                         ${
                             isActive ? "bg-green-500" : "bg-yellow-500"
                         }    
@@ -71,7 +87,11 @@ export const columns = (
     },
     {
         id: "actions",
-        header: "xóa",
+         header: () => (
+            <span className="text-sm md:text-base">
+                Xóa
+            </span>
+        ),
         cell: ({ row }) => {
             const id = row.original._id;
             return (

@@ -139,34 +139,34 @@ export default function ProductsPage() {
   }, [selectedBrand, selectedCategory, selectedStatus, page, search])
 
   return (
-    <div className="space-y-4 p-2 md:p-4">
+    <div className="space-y-4 p-0 md:p-3 bg-white md:bg-transparent">
       {isLoading && (
         <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
       )}
       <div className="bg-white">
         <PageTitle title="Quản lí sản phẩm" subTitle="Quản lí thông tin chi tiết sản phẩm"/>
-        <div className="flex flex-col bg-white md:flex-row gap-4 items-center justify-center mt-4 px-6 py-3">
+        <div className="flex flex-col bg-white md:flex-row gap-4 items-center justify-center mt-4 px-2 md:px-3 py-3">
           <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
-              <p className="text-lg font-semibold">Sản phẩm</p>
+              <p className="text-md md:text-lg font-semibold">Sản phẩm</p>
               <div className="flex flex-row items-center gap-2">
-                <p className="text-xl lg:text-2xl font-bold">{totalProducts}</p>
-                <LayoutGrid size={32} color="#146bdb" />
+                <p className="text-md md:text-lg font-bold">{totalProducts}</p>
+                <LayoutGrid size={28} color="#146bdb" />  
               </div>
           </div>
 
           <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
-              <p className="text-lg font-semibold">Thương hiệu</p>
+              <p className="text-md md:text-lg font-semibold">Thương hiệu</p>
               <div className="flex flex-row items-center gap-2">
-                <p className="text-xl lg:text-2xl font-bold">{brands.length}</p>
-                <Crown size={32} color="#e1c614" />
+                <p className="text-md md:text-lg font-bold">{brands.length}</p>
+                <Crown size={28} color="#e1c614" />
               </div>
           </div>
 
           <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
-              <p className="text-lg font-semibold">Danh mục</p>
+              <p className="text-md md:text-lg font-semibold">Danh mục</p>
               <div className="flex flex-row items-center gap-2">
-                <p className="text-xl lg:text-2xl font-bold">{categories.length}</p>
-                <LucidePackage size={32} color="#10b238" />
+                <p className="text-md md:text-lg font-bold">{categories.length}</p>
+                <LucidePackage size={28} color="#10b238" />
               </div>
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function ProductsPage() {
 
     <div className="flex flex-col bg-white gap-3 p-3">
 
-      <div className="flex flex-col h-40 sm:h-30 lg:h-15 lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between p-2 rounded-md">
+      <div className="flex flex-col h-40 sm:h-30 lg:h-15 lg:flex-row gap-3 lg:gap-0 items-start justify-start lg:justify-between p-1 rounded-md">
         <Input 
           placeholder="Tìm kiếm theo tên sản phẩm"
           value={search}

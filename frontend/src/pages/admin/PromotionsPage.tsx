@@ -51,12 +51,12 @@ export default function PromotionsPage() {
   }, [page]);
 
   return (
-    <div className="p-2 md:p-4">
+    <div className="p-2 bg-white md:bg-transparent">
       <PageTitle
         title="Quản lí mã giảm giá"
         subTitle="Quản lí các loại mã giảm giá, khuyến mãi"
       />
-      <div className="bg-white mt-10 p-3">
+      <div className="bg-white mt-10 p-0 sm:p-2 md:p-3">
         <PromotionsTable
             promotions={promotions}
             page={page}

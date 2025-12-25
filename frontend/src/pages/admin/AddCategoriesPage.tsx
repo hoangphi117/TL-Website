@@ -70,18 +70,18 @@ export default function AddCategoryPage() {
   },[]);
 
   return (
-    <div className="flex flex-col gap-5 shadow-sm p-2 md:p-4">
+    <div className="flex flex-col gap-5 shadow-sm p-0 md:p-3 bg-white md:bg-transparent">
       <PageTitle title="Thêm danh mục" subTitle="Tạo mới danh mục"/>
-      <div className="bg-white border-gray-200 shadow-md p-4 min-h-screen">
+      <div className="bg-white border-gray-200 shadow-md p-2 md:p-4 min-h-screen">
         <div className="flex justify-center">
           <Card className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl mt-4 rounded-md px-3">
             <CardHeader>
-              <CardTitle className="text-xl md:text-2xl">Danh mục</CardTitle>
+              <CardTitle className="text-xl">Danh mục</CardTitle>
             </CardHeader>
 
             <CardContent className="space-y-4">
               <div>
-                <Label className="text-md md:text-lg">Tên Danh mục</Label>
+                <Label className="text-sm md:text-base">Tên Danh mục</Label>
                 <Input className="h-12 focus-visible:ring-2 
                                 focus-visible:ring-blue-500 
                                   focus-visible:ring-offset-0" 
@@ -89,7 +89,7 @@ export default function AddCategoryPage() {
               </div>
 
               <div>
-                <Label className="text-md md:text-lg">Ảnh hiển thị</Label>
+                <Label className="text-sm md:text-base">Ảnh hiển thị</Label>
                 <Input className="h-12 focus-visible:ring-2 
                                 focus-visible:ring-blue-500 
                                   focus-visible:ring-offset-0"  
@@ -97,7 +97,7 @@ export default function AddCategoryPage() {
               </div>
 
               <div>
-                <Label className="text-md md:text-lg">Mô tả</Label>
+                <Label className="text-sm md:text-base">Mô tả</Label>
                 <Input className="h-12 focus-visible:ring-2 
                                 focus-visible:ring-blue-500 
                                   focus-visible:ring-offset-0" 
@@ -105,7 +105,7 @@ export default function AddCategoryPage() {
               </div>
 
               <div className="space-y-1">
-                <Label className="text-md md:text-lg">Danh mục cha</Label>
+                <Label className="text-sm md:text-base">Danh mục cha</Label>
                 <CategoryCombobox
                   open={comboboxOpen}
                   categories={categories}

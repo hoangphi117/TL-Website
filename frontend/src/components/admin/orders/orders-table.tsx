@@ -60,7 +60,7 @@ export function OrdersTable({
           placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, sdt"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="max-w-md w-full bg-white text-md"
+          className="max-w-md w-full bg-white text-sm"
         />
 
         <div className="flex flex-row gap-1">

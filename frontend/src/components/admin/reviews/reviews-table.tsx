@@ -15,6 +15,7 @@ import {
 import { columns } from "./columns"
 import type { IReview } from "@/types/review"
 import { EnumSelect } from "./EnumSelect"
+import Pagination from "../common/Pagination"
 
 
 interface DataTableProps {
@@ -157,32 +158,11 @@ export function ReviewsTable({
       </div>
 
       {/* PAGINATION */}
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button variant="outline" size="sm" onClick={prevPage}>
-          <ChevronsLeft size={28} strokeWidth={2.25} />
-        </Button>
-
-        <div className="flex gap-1">
-          {Array.from({ length: totalPages }, (_, i) => {
-            const num = i + 1;
-            return (
-              <button
-                key={num}
-                onClick={() => setPage(num)}
-                className={`px-3 py-1 rounded border ${
-                  page === num ? "bg-blue-600 text-white" : "bg-white"
-                }`}
-              >
-                {num}
-              </button>
-            );
-          })}
-        </div>
-
-        <Button variant="outline" size="sm" onClick={nextPage}>
-          <ChevronsRight size={28} strokeWidth={2.25} />
-        </Button>
-      </div>
+      <Pagination
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

@@ -14,27 +14,35 @@ import {
 } from "@/components/ui/popover"
 
 interface Calendar24Props {
-    date: Date,
+  date?: Date,
+  time: string | undefined,
+  onChangeDate: (date: Date | undefined) => void,
+  onChangeTime: (time: string) => void,
+  isEdit: boolean,
+  isStart: boolean,
 }
 
-export function Calendar24({date} : Calendar24Props) {
+export function Calendar24({date, time, onChangeDate, onChangeTime, isEdit, isStart} : Calendar24Props) {
   const [open, setOpen] = React.useState(false)
   // const [date, setDate] = React.useState<Date | undefined>(undefined)
 
   return (
-    <div className="flex gap-4">
-      <div className="flex flex-col gap-3">
-        <Label htmlFor="date-picker" className="px-1">
-          Date
+    <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="date-picker" className="px-1 text-sm md:text-base">
+          {isStart ? "Ngày bắt đầu" : "Ngày kết thúc"}
         </Label>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               id="date-picker"
-              className="w-32 justify-between font-normal"
+              disabled={!isEdit}
+              className="w-32 text-sm justify-between font-normal"
             >
-              {date ? date.toLocaleDateString() : "Select date"}
+              {date
+                ? date.toLocaleDateString("vi-VN")
+                : "Select date"}  
               <ChevronDownIcon />
             </Button>
           </PopoverTrigger>
@@ -43,24 +51,26 @@ export function Calendar24({date} : Calendar24Props) {
               mode="single"
               selected={date}
               captionLayout="dropdown"
-              onSelect={(date) => {
-                setDate(date)
+              onSelect={(d) => {
+                onChangeDate(d)
                 setOpen(false)
               }}
             />
           </PopoverContent>
         </Popover>
       </div>
-      <div className="flex flex-col gap-3">
-        <Label htmlFor="time-picker" className="px-1">
-          Time
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="time-picker" className="px-1 text-sm md:text-base">
+          {isStart ? "Giờ bắt đầu" : "Giờ kết thúc"}
         </Label>
         <Input
           type="time"
           id="time-picker"
+          value={time}
+          disabled={!isEdit}
+          onChange={(e) => onChangeTime(e.target.value)}
           step="1"
-          defaultValue="10:30:00"
-          className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+          className="bg-background text-sm max-w-32 appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
         />
       </div>
     </div>

@@ -50,7 +50,7 @@ export function DataTable({ users, page, totalPages, setPage, search, setSearch 
           placeholder="Tìm kiếm theo email và tên khách hàng"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="max-w-sm bg-white text-md"
+          className="max-w-sm bg-white text-sm"
         />
       </div>
 

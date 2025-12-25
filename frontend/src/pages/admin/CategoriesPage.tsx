@@ -81,55 +81,56 @@ export default function CategoriesPage() {
     },[]);
     
   return (
-    <div className="p-2 md:p-4">
+    <div className="p-2 bg-white md:bg-transparent">
         {isLoading && (
             <p className="text-gray-500 text-center text-md sm:text-lg">Đang tải dữ liệu...</p>
         )}
 
         {!isLoading && (
-            <div className="flex flex-col gap-3 p-4 shadow-sm bg-white ">
+            <div className="flex flex-col gap-3 p-0 md:p-3 shadow-sm bg-white h-screen">
                 <PageTitle title="Quản lí danh mục" subTitle="Tổ chức và phân loại sản phẩm theo danh mục"/>
-                <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-8 py-3">
+                <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-2 md:px-5 py-3">
                     <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
-                        <p className="text-lg font-semibold">Tổng danh mục</p>
+                        <p className="text-md md:text-lg font-semibold">Tổng danh mục</p>
                         <div className="flex flex-row items-center gap-2">
-                            <p className="text-xl lg:text-2xl font-bold">{categories.length}</p>
-                            <LayoutGrid size={32} color="#146bdb" />
+                            <p className="text-md md:text-lg font-bold">{categories.length}</p>
+                            <LayoutGrid size={28} color="#146bdb" />
                         </div>
                     </div>
 
                     <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
-                        <p className="text-lg font-semibold">Danh mục cha</p>
+                        <p className="text-md md:text-lg font-semibold">Danh mục cha</p>
                         <div className="flex flex-row items-center gap-2">
-                            <p className="text-xl lg:text-2xl font-bold">0</p>
-                            <PackageSearch size={32} color="#e1c614" />
+                            <p className="text-md md:text-lg font-bold">0</p>
+                            <PackageSearch size={28} color="#e1c614" />
                         </div>
                     </div>
 
                     <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
-                        <p className="text-lg font-semibold">Tổng sản phẩm</p>
+                        <p className="text-md md:text-lg font-semibold">Tổng sản phẩm</p>
                          <div className="flex flex-row items-center gap-2">
-                            <p className="text-xl lg:text-2xl font-bold">{products}</p>
-                            <Package size={32} color="#10b238" />
+                            <p className="text-md md:text-lg font-bold">{products}</p>
+                            <Package size={28} color="#10b238" />
                         </div>
                     </div>
                 </div>
-                <div className="border border-gray-200 flex flex-col gap-4 rounded-md px-4 lg:px-4 xl:px-10 py-4">
-                    <div className="flex flex-row gap-2">
+                <div className="border border-gray-200 flex flex-col gap-4 rounded-md px-2 md:px-4 py-4 h-screen">
+                    <div className="flex flex-row items-center justify-start gap-2">
                         <Grid2X2 size={22} color="#146bdb" />
                         <p className="text-lg font-bold">Danh sách danh mục</p>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"  >
+                    <div className="flex-wrap gap-3 flex items-center" >
                         {categories.map((c) =>(
-                            <CategoryCard 
-                                key={c._id} 
-                                category={c} 
-                                handleEdit={handleEdit}
-                                onAskDelete={(category) => {
+                            <div key={c._id} className="basis-40 shrink-0">
+                                <CategoryCard
+                                    category={c}
+                                    handleEdit={handleEdit}
+                                    onAskDelete={(category) => {
                                     setDeleteTarget(category);
                                     setOpenDelete(true);
-                                }}
-                            />
+                                    }}
+                                />
+                            </div>
                         ))}
                     </div>
                     <EditCategoryDialog

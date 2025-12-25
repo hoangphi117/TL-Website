@@ -33,14 +33,14 @@ export default function AutoBreadcrumb() {
             <BreadcrumbItem key={idx}>
               {!isLast ? (
                 <>
-                  <BreadcrumbPage className="text-md sm:text-lg">
+                  <BreadcrumbPage className="text-sm sm:text-base">
                     {format(seg)}
                   </BreadcrumbPage>
 
                   <BreadcrumbSeparator />
                 </>
               ) : (
-                <BreadcrumbPage className="text-md sm:text-lg">{format(seg)}</BreadcrumbPage>
+                <BreadcrumbPage className="text-sm sm:text-base">{format(seg)}</BreadcrumbPage>
               )}
             </BreadcrumbItem>
           );
