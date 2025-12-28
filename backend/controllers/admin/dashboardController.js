@@ -70,12 +70,10 @@ class DashboardController {
       const topProducts = await Product.find()
         .sort({ soldCount: -1 })
         .limit(10)
-        .select("name soldCount");
 
       const topNewUsers = await User.find()
         .sort({ createdAt: -1 })
         .limit(10)
-        .select("fullName email");
 
       const [
         totalUsers,
