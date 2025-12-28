@@ -25,6 +25,7 @@ const promotionRoutesAdmin = require('./api/admin/promotion')
 const feedbackRoutesAdmin = require('./api/admin/feedback')
 const reviewRoutesAdmin = require('./api/admin/review')
 const paymentRoutesAdmin = require('./api/admin/payment')
+const dashboard = require('./api/admin/dashboard')
 
 router.use('/auth', authRoutes);
 router.use('/users', protectCustomer, userRoutes)
@@ -51,6 +52,7 @@ router.use('/admin/promotion', protectAdmin, promotionRoutesAdmin);
 router.use('/admin/feedback', protectAdmin, feedbackRoutesAdmin);
 router.use('/admin/review', protectAdmin, reviewRoutesAdmin);
 router.use('/admin/payment', protectAdmin, paymentRoutesAdmin);
+router.use('/admin/dashboard',protectAdmin,dashboard);
 
 
 
