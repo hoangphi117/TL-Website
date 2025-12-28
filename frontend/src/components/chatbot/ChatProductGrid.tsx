@@ -59,7 +59,7 @@ const ChatProductGrid: React.FC<ChatProductGridProps> = ({ productIds }) => {
         >
           <ProductCard
             product={product}
-            className="w-full shadow-sm border border-gray-100 sm:hover:shadow-md"
+            className="w-full shadow-sm border border-gray-700 sm:hover:shadow-md"
           />
         </div>
       ))}

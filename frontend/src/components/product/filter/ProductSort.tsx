@@ -53,7 +53,10 @@ export const ProductSort: React.FC<ProductSortProps> = ({
         <Button
           variant="outline"
           size="sm"
-          className={cn("gap-2 min-w-[140px] justify-between", className)}
+          className={cn(
+            "gap-2 min-w-[140px] justify-between rounded",
+            className
+          )}
         >
           <span>{getLabel()}</span>
           <ArrowLeftRight className="w-4 h-4 text-gray-500" />

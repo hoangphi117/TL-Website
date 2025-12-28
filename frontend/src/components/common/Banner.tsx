@@ -1,85 +1,95 @@
 import CarouselTemplate from "@/components/product/carousel/carousel";
 
-import { useAuth } from "@/context/CustomerAuthContext";
-
-const subBanners = [
-  { id: 2, name: "Banner 2", height: "h-[160px]", className: "bg-blue-100" },
-  { id: 3, name: "Banner 3", height: "h-[160px]", className: "bg-green-100" },
-  { id: 4, name: "Banner 4", height: "h-[180px]", className: "bg-yellow-100" },
-  { id: 5, name: "Banner 5", height: "h-[180px]", className: "bg-red-100" },
-  { id: 6, name: "Banner 6", height: "h-[180px]", className: "bg-purple-100" },
-  { id: 7, name: "Banner 7", height: "h-[180px]", className: "bg-orange-100" },
+const mainBanners = [
+  {
+    id: 1,
+    image:
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-thu-cu-doi-moi-t10-slider.jpeg",
+  },
+  {
+    id: 2,
+    image:
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-builld-pc-sub-banner-t12.png",
+  },
+  {
+    id: 3,
+    image:
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-ban-phim-co-sub-banner-t12.png",
+  },
+  {
+    id: 4,
+    image:
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-gaming-sub-banner-t12.png",
+  },
+  {
+    id: 5,
+    image:
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-van-phong-sub-banner-t12.png",
+  },
+  {
+    id: 6,
+    image:
+      "https://cdn.hstatic.net/files/200000722513/file/gearvn-pc-gvn-i5-sub-banner-t12.png",
+  },
 ];
 
 function Banner() {
-  const { user } = useAuth();
-
   return (
-    <section className="flex flex-col gap-2 ">
-      <div
-        className="flex items-center w-full h-[200px] mx-auto px-4 bg-gradient-to-r
-        from-black to-red-700 rounded-sm"
-      >
-        <div className="flex flex-col">
-          {user ? (
-            <p className="text-3xl md:text-5xl text-white font-bold">
-              Xin chào {user.fullName}!
-            </p>
-          ) : (
-            <>
-              <p className="text-3xl md:text-5xl text-white font-bold">
-                Chào mừng bạn đến với LiquidShop!
-              </p>
-              <p className="text-sm text-white mt-3">
-                Hãy đăng nhập hoặc đăng ký để trải nghiệm mua sắm tuyệt vời
-              </p>
-            </>
-          )}
-        </div>
-      </div>
-
-      <div className="block md:hidden mt-2">
-        <CarouselTemplate
-          data={subBanners}
-          autoplay={true}
-          autoplayDelay={3000}
-          itemClassName="basis-full"
-          renderItem={(item) => (
-            <div className="p-1">
-              {/* Render Banner Item */}
-              <div
-                className={`flex items-center justify-center w-full rounded-md shadow-sm border border-gray-200 ${item.className}`}
-                style={{ height: "120px" }}
-              >
-                <p className="font-bold text-gray-600">{item.name}</p>
+    <section className="w-full max-w-7xl mx-auto p-2 space-y-3">
+      {/* KHỐI TRÊN: GỒM HERO VÀ 2 BANNER PHẢI */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {/* HERO BANNER - Chiếm 2/3 chiều rộng */}
+        <div className="md:col-span-2 overflow-hidden rounded-lg shadow-sm">
+          <CarouselTemplate
+            data={mainBanners}
+            autoplay
+            autoplayDelay={4000}
+            itemClassName="basis-full"
+            showDots
+            className="h-full"
+            renderItem={(item) => (
+              <div className="h-[200px] sm:h-[300px] md:h-[400px] w-full">
+                <img
+                  src={item.image}
+                  className="w-full h-full object-cover transition-transform duration-500"
+                  alt="Hero Banner"
+                />
               </div>
+            )}
+          />
+        </div>
+
+        {/* 2 BANNER BÊN PHẢI */}
+        <div className="flex flex-col gap-3">
+          {mainBanners.slice(1, 3).map((item) => (
+            <div
+              key={item.id}
+              className="relative flex-1 overflow-hidden rounded-lg shadow-sm "
+            >
+              <img
+                src={item.image}
+                className="w-full h-full object-cover transition-transform duration-500 "
+                alt="Sub Banner"
+              />
             </div>
-          )}
-        />
+          ))}
+        </div>
       </div>
 
-      <div className="hidden md:flex flex-col gap-2">
-        <div className="flex gap-2">
-          {subBanners.slice(0, 2).map((banner) => (
-            <div
-              key={banner.id}
-              className="flex h-[180px] w-1/2 items-center justify-center mx-auto px-4 bg-gray-300 rounded-sm"
-            >
-              {banner.name}
-            </div>
-          ))}
-        </div>
-
-        <div className="flex gap-2">
-          {subBanners.slice(2).map((banner) => (
-            <div
-              key={banner.id}
-              className="flex h-[180px] w-1/4 items-center justify-center mx-auto px-4 bg-gray-300 rounded-sm"
-            >
-              {banner.name}
-            </div>
-          ))}
-        </div>
+      {/* 3 BANNER NGANG HÀNG */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {mainBanners.slice(3, 6).map((item) => (
+          <div
+            key={item.id}
+            className="h-[120px] sm:h-[160px] md:h-[180px] overflow-hidden rounded-lg shadow-sm "
+          >
+            <img
+              src={item.image}
+              className="w-full h-full object-cover transition-transform duration-500 "
+              alt="Bottom Banner"
+            />
+          </div>
+        ))}
       </div>
     </section>
   );

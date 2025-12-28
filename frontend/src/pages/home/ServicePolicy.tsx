@@ -25,16 +25,22 @@ const policies = [
 
 const ServicePolicy = () => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white p-4 rounded-md shadow-sm">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-[#151517]/80 backdrop-blur-md p-6 rounded border border-zinc-800 shadow-lg">
       {policies.map((item, index) => (
         <div
           key={index}
-          className="flex items-center gap-3 p-2 border border-transparent hover:border-gray-100 rounded-lg transition-all"
+          className="flex flex-col md:flex-row items-center gap-4 p-3 rounded-lg border border-transparent hover:bg-white/5 hover:border-red-600/30 transition-all duration-300 group"
         >
-          <item.icon className="w-8 h-8 text-red-600" />
+          <div className="p-2 bg-red-600/10 rounded-full group-hover:bg-red-600/20 transition-colors">
+            <item.icon className="w-6 h-6 text-red-500 group-hover:scale-110 transition-transform" />
+          </div>
           <div>
-            <h4 className="font-bold text-sm text-gray-800">{item.title}</h4>
-            <p className="text-xs text-gray-500">{item.desc}</p>
+            <h4 className="font-bold text-sm text-gray-200 group-hover:text-white transition-colors">
+              {item.title}
+            </h4>
+            <p className="text-xs text-gray-400 group-hover:text-gray-300 transition-colors">
+              {item.desc}
+            </p>
           </div>
         </div>
       ))}

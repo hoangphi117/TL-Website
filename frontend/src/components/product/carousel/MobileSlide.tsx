@@ -23,15 +23,16 @@ const MobileProductSlide: React.FC<MobileProductSlideProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className={`bg-white rounded-md p-3 mb-2 ${className || ""}`}>
-      <div className="flex items-center justify-between mb-3 ">
-        <h2 className="text-base font-bold text-gray-800 uppercase border-l-4 border-red-600 pl-2 leading-none">
+    // Xóa bg-white, dùng bg-transparent hoặc nền tối mờ
+    <div className={`rounded-md p-0 mb-6 ${className || ""}`}>
+      <div className="flex items-center justify-between mb-4 px-2">
+        <h2 className="text-lg font-bold text-white uppercase border-l-4 border-red-600 pl-3 leading-none tracking-wide">
           {title}
         </h2>
         {viewAllLink && (
           <Link
             to={viewAllLink}
-            className="text-xs text-blue-600 flex items-center gap-0.5 font-medium active:text-red-600"
+            className="text-xs text-red-500 flex items-center gap-0.5 font-medium active:text-red-500 hover:text-white transition-colors"
           >
             Xem tất cả <ChevronRight className="w-3 h-3" />
           </Link>
@@ -40,12 +41,12 @@ const MobileProductSlide: React.FC<MobileProductSlideProps> = ({
 
       {/* BRANDS FILTER */}
       {brands && brands.length > 0 && (
-        <div className="flex overflow-x-auto gap-2 mb-3 pb-1 no-scrollbar">
+        <div className="flex overflow-x-auto gap-2 mb-4 px-2 pb-1 no-scrollbar">
           {brands.map((brand) => (
             <button
               key={brand._id}
               onClick={() => navigate(`/products?brand=${brand.name}`)}
-              className="flex-shrink-0 px-2.5 py-1 text-[11px] font-medium text-gray-600 bg-gray-100 rounded border border-gray-100 active:bg-red-50 active:border-red-200 active:text-red-600 transition-colors"
+              className="flex-shrink-0 px-3 py-1.5 text-[11px] font-medium text-gray-300 bg-zinc-800/80 backdrop-blur rounded border border-zinc-700 active:bg-red-600 active:border-red-600 active:text-white transition-all"
             >
               {brand.name}
             </button>
@@ -54,11 +55,11 @@ const MobileProductSlide: React.FC<MobileProductSlideProps> = ({
       )}
 
       {/* PRODUCTS LIST */}
-      <div className="flex overflow-x-auto gap-2 pb-2 snap-x snap-mandatory scroll-smooth no-scrollbar">
+      <div className="flex overflow-x-auto gap-3 pb-4 px-2 snap-x snap-mandatory scroll-smooth no-scrollbar">
         {products.map((product) => (
           <div
             key={product._id}
-            className="w-[160px] flex-shrink-0 snap-start h-auto"
+            className="w-[170px] flex-shrink-0 snap-start h-auto"
           >
             <ProductCard product={product} />
           </div>
@@ -68,12 +69,12 @@ const MobileProductSlide: React.FC<MobileProductSlideProps> = ({
           <div className="w-[100px] flex-shrink-0 snap-start flex items-center justify-center">
             <Link
               to={viewAllLink}
-              className="flex flex-col items-center text-gray-500 text-xs gap-1 p-4"
+              className="flex flex-col items-center justify-center text-gray-400 text-xs gap-2 p-4 h-full w-full bg-zinc-900/50 border border-zinc-800 rounded-xl hover:bg-zinc-800 hover:text-red-500 transition-all"
             >
-              <div className="bg-gray-100 rounded-full p-2">
-                <ChevronRight className="w-5 h-5" />
+              <div className="bg-zinc-800 rounded-full p-3 group-hover:bg-red-600/20">
+                <ChevronRight className="w-6 h-6" />
               </div>
-              <span>Xem thêm</span>
+              <span className="font-semibold">Xem thêm</span>
             </Link>
           </div>
         )}

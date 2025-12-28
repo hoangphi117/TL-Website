@@ -48,59 +48,66 @@ const CategoryDropdownContent: React.FC = () => {
 
   if (loading)
     return (
-      <div className="w-[900px] h-[500px] bg-white p-6">
-        <Skeleton className="h-full w-full" />
+      <div className="w-[900px] h-[500px] bg-[#151517] p-6 rounded border border-zinc-800">
+        <Skeleton className="h-full w-full bg-zinc-800" />
       </div>
     );
 
   return (
-    <div className="bg-white text-black shadow-xl w-3xl border border-gray-200 flex rounded-md overflow-hidden h-[500px] animate-in fade-in zoom-in-95">
+    <div className="bg-[#151517]/95 backdrop-blur-md text-white shadow-2xl w-3xl border border-zinc-800 flex rounded overflow-hidden h-[500px] animate-in fade-in zoom-in-95">
       {/* DANH MỤC CHA */}
-      <div className="w-64 bg-gray-50 border-r border-gray-200 py-2 overflow-y-auto">
+      <div className="w-64 bg-black/40 border-r border-zinc-800 py-2 overflow-y-auto no-scrollbar">
         {categories.map((cat, i) => (
           <div
             key={cat._id}
             onMouseEnter={() => setActiveIdx(i)}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 cursor-pointer text-sm font-medium transition-all",
+              "flex items-center gap-3 px-4 py-3 cursor-pointer text-sm font-bold transition-all uppercase tracking-tight",
               activeIdx === i
-                ? "bg-white text-red-600 border-l-4 border-red-600 shadow-sm"
-                : "text-gray-600 border-l-4 border-transparent"
+                ? "bg-zinc-800 text-red-500 border-l-4 border-red-600"
+                : "text-gray-400 border-l-4 border-transparent hover:text-gray-200"
             )}
           >
             <span
-              className={activeIdx === i ? "text-red-600" : "text-gray-400"}
+              className={activeIdx === i ? "text-red-500" : "text-gray-500"}
             >
               {getCategoryIcon(cat.name)}
             </span>
             <span className="flex-1 truncate">{cat.name}</span>
-            <ChevronRight className="w-4 h-4 opacity-30" />
+            <ChevronRight
+              className={cn(
+                "w-4 h-4 transition-opacity",
+                activeIdx === i ? "opacity-100" : "opacity-20"
+              )}
+            />
           </div>
         ))}
       </div>
 
-      {/* CON */}
-      <div className="flex-1 p-3 bg-white overflow-y-auto">
+      {/* DANH MỤC CON & BỘ LỌC */}
+      <div className="flex-1 p-6 bg-transparent overflow-y-auto no-scrollbar">
         <Link
           to={`/category/${activeCat?._id}`}
-          className="text-xs text-blue-600 hover:text-red-600 font-medium underline"
+          className="text-xs text-red-500 hover:text-red-400 font-bold uppercase tracking-widest underline underline-offset-4 mb-6 block"
         >
           Xem tất cả {activeCat?.name}
         </Link>
-        <div className="grid grid-cols-3">
+
+        <div className="space-y-8">
           {activeCat?.children.length > 0 && (
-            <div className="col-span-3 mb-2">
-              <h3 className="font-bold text-gray-800 uppercase text-xs mb-3 border-b pb-1">
+            <div>
+              <h3 className="font-bold text-white uppercase text-xs mb-4 border-b border-zinc-800 pb-2 flex items-center gap-2">
+                <span className="w-1 h-3 bg-red-600 rounded-full"></span>
                 Danh mục con
               </h3>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-y-3 gap-x-4">
                 {activeCat.children.map((child) => (
                   <Link
                     key={child._id}
                     to={`/category/${
                       activeCat._id
                     }?category=${encodeURIComponent(child.name)}`}
-                    className="text-sm text-gray-600 hover:text-red-600 transition-colors"
+                    className="text-sm text-gray-400 hover:text-red-500 transition-colors"
                   >
                     {child.name}
                   </Link>
@@ -108,27 +115,31 @@ const CategoryDropdownContent: React.FC = () => {
               </div>
             </div>
           )}
-          {activeFilters.map((group, idx) => (
-            <div key={idx} className="space-y-2">
-              <h3 className="font-bold text-xs text-red-600 uppercase">
-                {group.label}
-              </h3>
-              <ul className="space-y-1">
-                {group.options.map((opt, i) => (
-                  <li key={i}>
-                    <Link
-                      to={`/category/${activeCat?._id}?${
-                        group.key
-                      }=${encodeURIComponent(opt.value)}`}
-                      className="text-sm text-gray-500 hover:text-red-600 block transition-all hover:translate-x-1"
-                    >
-                      {opt.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+
+          <div className="grid grid-cols-3 gap-8">
+            {activeFilters.map((group, idx) => (
+              <div key={idx} className="space-y-4">
+                <h3 className="font-bold text-xs text-red-600 uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-1 h-3 bg-red-600 rounded-full"></span>
+                  {group.label}
+                </h3>
+                <ul className="space-y-2">
+                  {group.options.map((opt, i) => (
+                    <li key={i}>
+                      <Link
+                        to={`/category/${activeCat?._id}?${
+                          group.key
+                        }=${encodeURIComponent(opt.value)}`}
+                        className="text-sm text-gray-400 hover:text-white block transition-all hover:translate-x-1"
+                      >
+                        {opt.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -145,7 +156,7 @@ const CategoryDesktop: React.FC = () => {
     >
       <Button
         variant="outline"
-        className="border-2 border-white bg-transparent rounded-sm text-white hover:bg-white hover:text-black gap-2 cursor-pointer"
+        className="border-2 border-white bg-transparent rounded text-white hover:border-red-600 hover:text-red-600 gap-2 cursor-pointer font-bold uppercase transition-all"
       >
         <Menu className="h-4 w-4" /> Danh mục
       </Button>
@@ -157,4 +168,5 @@ const CategoryDesktop: React.FC = () => {
     </div>
   );
 };
+
 export default CategoryDesktop;

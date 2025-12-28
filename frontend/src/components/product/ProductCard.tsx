@@ -39,37 +39,37 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
     <Link to={productLink} className="block h-full">
       <Card
         className={cn(
-          "group relative bg-white border border-gray-200 rounded p-2",
-          "flex flex-col gap-2",
+          "relative bg-[#1a1a1c] border border-2 border-zinc-800 rounded p-3",
+          "flex flex-col gap-3",
           "h-full",
-          "transition-shadow sm:hover:shadow-xl overflow-hidden",
+          "hover:border-red-600/50",
           className
         )}
       >
-        {/* IMAGE */}
-        <div className="relative w-full aspect-square sm:aspect-[4/3] overflow-hidden rounded bg-white">
+        <div className="relative w-full aspect-square sm:aspect-[4/3] overflow-hidden rounded bg-gray-700 p-1">
           <img
             src={displayImage}
             alt={product.name}
             loading="lazy"
-            className="w-full h-full object-contain transition-transform sm:group-hover:scale-105"
+            className="w-full h-full object-contain"
           />
           {product.status === "out_of_stock" && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-xs sm:text-sm">
-              Hết hàng
+            <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white font-bold text-xs sm:text-sm backdrop-blur-sm">
+              HẾT HÀNG
             </div>
           )}
         </div>
 
         {/* NAME */}
         <h3
-          className="text-xs sm:text-sm font-bold text-gray-800 line-clamp-2 min-h-[2.5em] transition-colors sm:group-hover:text-red-600"
+          className="text-xs sm:text-sm font-bold text-gray-200 line-clamp-2 min-h-[2.5em] transition-colors hover:text-red-500"
           title={product.name}
         >
           {product.name}
         </h3>
 
-        <div className="bg-[#f3f4f6] rounded-md p-1.5 sm:p-2 text-[10px] sm:text-xs text-gray-600">
+        {/* SPECS */}
+        <div className="bg-zinc-900/50 border border-zinc-800 rounded-md p-2 text-[10px] sm:text-xs text-gray-400">
           <div className="flex flex-wrap gap-y-1 gap-x-3 items-center">
             {specItems.map((item, index) => {
               const IconComponent = item.icon;
@@ -79,7 +79,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
                   className="flex items-center gap-1 min-w-fit"
                   title={item.label}
                 >
-                  <IconComponent className="w-2.5 h-2.5 sm:w-3 h-3 flex-shrink-0 text-gray-500" />
+                  <IconComponent className="w-3 h-3 flex-shrink-0 text-gray-500" />
                   <span className="font-medium whitespace-nowrap">
                     {item.label}
                   </span>
@@ -90,39 +90,41 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         </div>
 
         {/* PRICE & RATING */}
-        <div className="mt-auto pt-1 sm:pt-2 flex flex-col gap-1">
+        <div className="mt-auto pt-2 flex flex-col gap-1">
           {/* PRICE */}
           <div>
             {product.originalPrice && product.originalPrice > product.price && (
-              <div className="flex flex-wrap items-center gap-1 text-sm sm:text-sm mb-0.5">
-                <span className="text-gray-400 line-through">
+              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm mb-1">
+                <span className="text-gray-500 line-through decoration-gray-500">
                   {formatPrice(product.originalPrice)}
                 </span>
                 {product.discountPercentage &&
                   product.discountPercentage > 0 && (
-                    <span className="font-bold text-red-600 bg-red-50 border border-red-200 px-0.5 rounded text-sm sm:text-sm">
+                    <span className="font-bold text-red-500 bg-red-500/10 border border-red-500/20 px-1 rounded text-[10px]">
                       -{product.discountPercentage}%
                     </span>
                   )}
               </div>
             )}
 
-            <span className="block text-lg sm:text-lg font-bold text-[#d70018]">
+            <span className="block text-lg sm:text-xl font-bold text-red-600 tracking-tight">
               {formatPrice(product.price)}
             </span>
           </div>
 
           {/* RATING */}
-          <div className="flex flex-wrap items-center gap-2 text-xs sm:text-xs text-gray-500">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
             {product.averageRating > 0 && (
-              <div className="flex items-center gap-0.5 bg-yellow-50 border border-yellow-200 px-1 py-0.5 rounded-sm">
-                <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-orange-500 text-orange-500" />
-                <span className="font-bold text-orange-500">
+              <div className="flex items-center gap-1 bg-yellow-500/10 border border-yellow-500/20 px-1.5 py-0.5 rounded">
+                <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+                <span className="font-bold text-yellow-500">
                   {Number(product.averageRating).toFixed(1)}
                 </span>
               </div>
             )}
-            <span className="hidden sm:inline">Đã bán {product.soldCount}</span>
+            <span className="hidden sm:inline text-gray-400">
+              Đã bán {product.soldCount}
+            </span>
           </div>
         </div>
       </Card>

@@ -8,30 +8,50 @@ import { Toaster } from "sonner";
 import ScrollToTop from "../common/ScrollToTop";
 import ChatBot from "../chatbot/ChatBot";
 import Zalo from "../common/Zalo";
+import SideBanner from "../common/SideBanner";
+
+import mainBG from "@/assets/images/main-bg.jpg";
 
 const PageLoader = () => (
   <div className="p-4 space-y-4">
-    <Skeleton className="h-[200px] w-full rounded-xl" />
+    <Skeleton className="h-[200px] w-full rounded-xl bg-zinc-800" />
     <div className="space-y-2">
-      <Skeleton className="h-4 w-[250px]" />
-      <Skeleton className="h-4 w-[200px]" />
+      <Skeleton className="h-4 w-[250px] bg-zinc-800" />
+      <Skeleton className="h-4 w-[200px] bg-zinc-800" />
     </div>
   </div>
 );
 
 const MainLayout: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen pb-16 md:pb-0">
+    <div className="flex flex-col min-h-screen pb-16 md:pb-0 bg-[#0a0a0a]">
       <ScrollToTop />
       <Header />
 
-      <main className="grow bg-[#ececec] w-full">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
+      <SideBanner
+        position="left"
+        imgSrc="https://cdn.hstatic.net/files/200000722513/file/gearvn-pc-gvn-t11-sticky-banner.jpg"
+      />
+      <SideBanner
+        position="right"
+        imgSrc="https://cdn.hstatic.net/files/200000722513/file/gearvn-laptop-t11-sticky-banner.jpg"
+      />
+
+      <main
+        className="grow relative bg-cover bg-center bg-fixed w-full"
+        style={{
+          backgroundImage: `url(${mainBG})`,
+        }}
+      >
+        <div className="absolute inset-0 bg-black/60 pointer-events-none"></div>
+
+        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6">
           <Suspense fallback={<PageLoader />}>
             <Outlet />
           </Suspense>
         </div>
       </main>
+
       <Footer />
       <ChatBot />
       <Zalo />

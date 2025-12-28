@@ -219,7 +219,7 @@ const MyOrders: React.FC = () => {
       <CardContent className="pt-4 sm:pt-6 px-3 sm:px-6">
         {/* Reset Search Button */}
         {isSearching && (
-          <div className="flex items-center justify-between mb-4 bg-blue-500/10 border border-blue-500/20 p-2 sm:p-3 rounded-md">
+          <div className="flex items-center justify-between mb-4 bg-blue-500/10 border border-blue-500/20 p-2 sm:p-3 rounded">
             <span className="text-xs sm:text-sm text-blue-400">
               Kết quả:{" "}
               <span className="font-bold text-white">{searchCode}</span>
@@ -246,7 +246,7 @@ const MyOrders: React.FC = () => {
               onValueChange={setActiveTab}
               className="w-full"
             >
-              <TabsList className="bg-[#2a2a2c] p-1 border border-neutral-800 h-auto inline-flex w-max sm:w-auto sm:flex-wrap">
+              <TabsList className="bg-[#2a2a2c] p-1 border border-neutral-800 h-auto inline-flex w-max sm:w-auto sm:flex-wrap rounded">
                 {[
                   { value: "all", label: "Tất cả" },
                   { value: "pending_confirmation", label: "Chờ xác nhận" },
@@ -258,7 +258,7 @@ const MyOrders: React.FC = () => {
                   <TabsTrigger
                     key={tab.value}
                     value={tab.value}
-                    className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400 text-xs sm:text-sm px-3 py-1.5"
+                    className="data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400 text-xs sm:text-sm px-3 py-1.5 cursor-pointer"
                   >
                     {tab.label}
                   </TabsTrigger>
@@ -284,7 +284,7 @@ const MyOrders: React.FC = () => {
                 return (
                   <div
                     key={order._id}
-                    className="border border-neutral-800 rounded-lg bg-[#1e1e20] overflow-hidden hover:border-neutral-600 transition-colors"
+                    className="border border-neutral-800 rounded bg-[#1e1e20] overflow-hidden hover:border-neutral-600 transition-colors"
                   >
                     {/* ORDER HEADER */}
                     <div className="p-3 sm:p-4 border-b border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#252527]">

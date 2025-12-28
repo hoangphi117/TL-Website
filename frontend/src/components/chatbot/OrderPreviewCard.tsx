@@ -72,12 +72,12 @@ export const OrderPreviewCard: React.FC<OrderPreviewCardProps> = ({
   const status = getStatusLabel(order.orderStatus);
 
   return (
-    <div className="my-2 border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm w-full max-w-[280px] text-gray-800">
+    <div className="my-2 border border-zinc-800 rounded-xl overflow-hidden bg-zinc-950 shadow-md w-full max-w-[280px] text-zinc-200">
       {/* Header */}
-      <div className="bg-gray-50 px-3 py-2 border-b border-gray-100 flex justify-between items-center">
+      <div className="bg-zinc-900 px-3 py-2 border-b border-zinc-800 flex justify-between items-center">
         <div className="flex items-center gap-1.5">
-          <Package className="w-3.5 h-3.5 text-red-600" />
-          <span className="text-[10px] font-bold text-gray-500 uppercase">
+          <Package className="w-3.5 h-3.5 text-red-500" />
+          <span className="text-[10px] font-bold text-zinc-400 uppercase">
             Thông tin đơn
           </span>
         </div>
@@ -92,12 +92,15 @@ export const OrderPreviewCard: React.FC<OrderPreviewCardProps> = ({
       <div className="p-3">
         <div className="flex flex-col gap-2 mb-3">
           <div>
-            <p className="text-xs text-gray-400">Mã đơn</p>
-            <p className="text-sm font-bold truncate">{order.orderCode}</p>
+            <p className="text-xs text-zinc-500">Mã đơn</p>
+            <p className="text-sm font-bold truncate text-zinc-100">
+              {order.orderCode}
+            </p>
           </div>
+
           <div>
-            <p className="text-xs">Thanh toán</p>
-            <p className="text-sm font-bold text-red-600">
+            <p className="text-xs text-zinc-500">Thanh toán</p>
+            <p className="text-sm font-bold text-red-500">
               {formatVND(order.totalAmount)}
             </p>
           </div>
@@ -105,7 +108,10 @@ export const OrderPreviewCard: React.FC<OrderPreviewCardProps> = ({
 
         <Button
           onClick={() => (window.location.href = `/orders/${order.orderCode}`)}
-          className="w-full flex items-center justify-center gap-1 bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold py-2 rounded-lg transition-colors"
+          className="w-full flex items-center justify-center gap-1
+                 bg-red-600 hover:bg-red-700
+                 text-white text-[11px] font-bold
+                 py-2 rounded-lg transition-colors"
         >
           XEM CHI TIẾT
           <ChevronRight className="w-3.5 h-3.5" />
@@ -113,11 +119,11 @@ export const OrderPreviewCard: React.FC<OrderPreviewCardProps> = ({
       </div>
 
       {/* Footer */}
-      <div className="px-3 py-1.5 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
-        <span className="text-[9px] text-gray-400">
+      <div className="px-3 py-1.5 bg-zinc-900 border-t border-zinc-800 flex justify-between items-center">
+        <span className="text-[9px] text-zinc-500">
           {new Date(order.createdAt).toLocaleDateString("vi-VN")}
         </span>
-        <span className="text-[9px] font-medium text-gray-500 italic">
+        <span className="text-[9px] font-medium text-zinc-400 italic">
           {order.paymentMethod === "COD" ? "Thanh toán COD" : "Chuyển khoản"}
         </span>
       </div>

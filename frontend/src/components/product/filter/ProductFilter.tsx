@@ -42,24 +42,6 @@ const PriceFilter = () => {
     setIsOpen(false);
   };
 
-  const handleClear = () => {
-    setSearchParams((prev) => {
-      prev.delete("price[gte]");
-      prev.delete("price[lte]");
-      return prev;
-    });
-    setRange([0, 50000000]);
-    setIsOpen(false);
-  };
-
-  // Hàm xử lý khi người dùng nhập số trực tiếp vào ô Input
-  const handleInputChange = (index: number, value: string) => {
-    const numValue = Number(value.replace(/\D/g, "")); // Loại bỏ ký tự không phải số
-    const newRange = [...range];
-    newRange[index] = numValue;
-    setRange(newRange);
-  };
-
   const isActive =
     searchParams.has("price[gte]") || searchParams.has("price[lte]");
 
@@ -69,76 +51,61 @@ const PriceFilter = () => {
         <Button
           variant="outline"
           className={cn(
-            "bg-white",
-            isActive && "border-red-600 text-red-600 bg-red-50"
+            "bg-zinc-900 border-zinc-800 text-gray-300 rounded hover:bg-transparent hover:text-gray-300",
+            isActive && "border-red-600 text-red-500 bg-red-600/10"
           )}
         >
           Giá{" "}
           {isActive
             ? `(${formatVND(range[0])}đ - ${formatVND(range[1])}đ)`
-            : ""}
+            : ""}{" "}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4" align="start">
+      <PopoverContent
+        className="w-80 p-4 bg-[#1a1a1c] border-zinc-800 rounded shadow-2xl"
+        align="start"
+      >
         <div className="space-y-6">
-          <p className="text-sm font-semibold text-gray-700">
-            Chọn khoảng giá (đ)
+          <p className="text-sm font-bold text-white uppercase tracking-wider">
+            Khoảng giá (đ)
           </p>
-
-          {/* Ô NHẬP SỐ CỤ THỂ */}
           <div className="flex items-center gap-2">
-            <div className="relative">
-              <Input
-                type="text"
-                value={formatVND(range[0])}
-                onChange={(e) => handleInputChange(0, e.target.value)}
-                className="h-9 px-2 text-sm text-center"
-              />
-              <span className="absolute -top-5 left-0 text-[10px] text-gray-400 uppercase">
-                Từ
-              </span>
-            </div>
-            <span className="text-gray-400">—</span>
-            <div className="relative">
-              <Input
-                type="text"
-                value={formatVND(range[1])}
-                onChange={(e) => handleInputChange(1, e.target.value)}
-                className="h-9 px-2 text-sm text-center"
-              />
-              <span className="absolute -top-5 left-0 text-[10px] text-gray-400 uppercase">
-                Đến
-              </span>
-            </div>
+            <Input
+              value={formatVND(range[0])}
+              readOnly
+              className="h-9 bg-zinc-900 border-zinc-800 text-white rounded text-center text-xs"
+            />
+            <span className="text-zinc-700">—</span>
+            <Input
+              value={formatVND(range[1])}
+              readOnly
+              className="h-9 bg-zinc-900 border-zinc-800 text-white rounded text-center text-xs"
+            />
           </div>
-
-          {/* SLIDER */}
           <Slider
             value={range}
             min={0}
-            max={200000000}
-            step={500000}
+            max={100000000}
+            step={1000000}
             onValueChange={setRange}
-            className="my-6"
+            className="py-4 bg-gray-700"
           />
-
-          {/* NÚT ĐIỀU KHIỂN */}
-          <div className="flex justify-between gap-3 pt-2">
+          <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
-              onClick={handleClear}
-              className="flex-1 border-red-200 text-red-600 hover:bg-red-50"
+              onClick={() => setIsOpen(false)}
+              className="flex-1 border-zinc-800 text-gray-400 rounded"
             >
-              Bỏ chọn
+              Hủy
             </Button>
             <Button
               size="sm"
               onClick={handleApply}
-              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold"
+              className="flex-1 bg-red-600 text-white rounded font-bold"
             >
-              Xem kết quả
+              Lọc
             </Button>
           </div>
         </div>
@@ -178,14 +145,6 @@ const AttributeFilter: React.FC<AttributeFilterProps> = ({
     }
   }, [searchParams, paramKey, isOpen]);
 
-  const toggleOption = (value: string) => {
-    setSelected((prev) =>
-      prev.includes(value)
-        ? prev.filter((item) => item !== value)
-        : [...prev, value]
-    );
-  };
-
   const handleApply = () => {
     setSearchParams((prev) => {
       // 1. Xóa key hiện tại để tránh bị trùng hoặc lỗi
@@ -204,15 +163,6 @@ const AttributeFilter: React.FC<AttributeFilterProps> = ({
     setIsOpen(false);
   };
 
-  const handleClear = () => {
-    setSelected([]);
-    setSearchParams((prev) => {
-      prev.delete(paramKey);
-      return prev;
-    });
-    setIsOpen(false);
-  };
-
   const isActive = selected.length > 0;
 
   return (
@@ -221,48 +171,61 @@ const AttributeFilter: React.FC<AttributeFilterProps> = ({
         <Button
           variant="outline"
           className={cn(
-            "bg-white",
-            isActive && "border-red-600 text-red-600 bg-red-50"
+            "bg-zinc-900 border-zinc-800 text-gray-300 rounded hover:bg-transparent hover:text-gray-300",
+            isActive && "border-red-600 text-red-500 bg-red-600/10"
           )}
         >
           {label} {isActive ? `(${selected.length})` : ""}{" "}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-3" align="start">
-        <div className="space-y-3 ">
-          <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto cursor-pointer">
-            {options.map((opt) => (
-              <div key={opt.value} className="flex items-center space-x-2">
+      <PopoverContent
+        className="w-64 p-3 bg-[#1a1a1c] border-zinc-800 rounded shadow-2xl"
+        align="start"
+      >
+        <div className="space-y-4">
+          <div className="max-h-60 overflow-y-auto space-y-2 pr-1 no-scrollbar">
+            {options.map((opt: any) => (
+              <div
+                key={opt.value}
+                className="flex items-center space-x-3 p-2 rounded hover:bg-zinc-800 transition-colors"
+              >
                 <Checkbox
                   id={`${paramKey}-${opt.value}`}
                   checked={selected.includes(opt.value)}
-                  onCheckedChange={() => toggleOption(opt.value)}
+                  onCheckedChange={(checked) =>
+                    setSelected((p) =>
+                      checked
+                        ? [...p, opt.value]
+                        : p.filter((x) => x !== opt.value)
+                    )
+                  }
+                  className="border-zinc-700 data-[state=checked]:bg-red-600"
                 />
                 <label
                   htmlFor={`${paramKey}-${opt.value}`}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                  className="text-sm font-medium text-gray-300 cursor-pointer w-full"
                 >
                   {opt.label}
                 </label>
               </div>
             ))}
           </div>
-          <div className="flex justify-between gap-2 pt-2 border-t">
+          <div className="flex gap-2 pt-2 border-t border-zinc-800">
             <Button
               variant="outline"
               size="sm"
-              onClick={handleClear}
-              className="w-1/2 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
+              onClick={() => setSelected([])}
+              className="w-1/2 border-zinc-800 text-gray-500 rounded"
             >
-              Bỏ chọn
+              Xóa
             </Button>
             <Button
               size="sm"
               onClick={handleApply}
-              className="w-1/2 bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
+              className="w-1/2 bg-red-600 text-white rounded font-bold"
             >
-              Xem kết quả
+              Lọc
             </Button>
           </div>
         </div>
@@ -395,12 +358,10 @@ export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-2 mb-4 p-2 bg-gray-50 rounded-lg border border-gray-200">
-      <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 mr-2">
-        <span className="bg-white p-2 rounded-md border shadow-sm">Bộ lọc</span>
+    <div className="flex flex-wrap items-center gap-3 mb-6 p-3 bg-transparent border border-zinc-800 rounded">
+      <div className="flex items-center gap-2 text-xs font-bold text-white uppercase bg-zinc-800 px-3 py-2 rounded border border-zinc-700 mr-2 tracking-widest">
+        Bộ lọc
       </div>
-
-      {/* 1. Tình trạng (Cố định) */}
       <AttributeFilter
         label="Tình trạng"
         paramKey="status"
@@ -409,29 +370,22 @@ export const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
           { label: "Hết hàng", value: "out_of_stock" },
         ]}
       />
-
-      {/* 2. Giá (Slider) */}
       <PriceFilter />
-
-      {/* 3. Hãng (Hiện tại rỗng) */}
       <AttributeFilter label="Hãng" paramKey="brand" options={brands} />
-      {/* 4. Filter Specifications */}
-      {dynamicFilters.map((filter, index) => (
+      {dynamicFilters.map((f: any, i: number) => (
         <AttributeFilter
-          key={index}
-          label={filter.label}
-          paramKey={filter.key}
-          options={filter.options}
+          key={i}
+          label={f.label}
+          paramKey={f.key}
+          options={f.options}
         />
       ))}
-
-      {/* Xóa bộ lọc */}
       {hasActiveFilters && (
         <Button
           variant="ghost"
           size="sm"
           onClick={handleResetAll}
-          className="ml-auto text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="ml-auto text-red-500 hover:bg-transparent hover:text-red-600 rounded"
         >
           <X className="w-4 h-4 mr-1" /> Xoá bộ lọc
         </Button>

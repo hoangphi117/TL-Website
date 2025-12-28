@@ -4,7 +4,6 @@ interface ProductSpecsTableProps {
   specs?: Record<string, string | number | any>;
 }
 
-// Từ điển map key từ API sang Tiếng Việt hiển thị
 const SPEC_KEYS_MAP: Record<string, string> = {
   color: "Màu sắc",
   storage: "Dung lượng lưu trữ",
@@ -17,7 +16,6 @@ const SPEC_KEYS_MAP: Record<string, string> = {
   material: "Chất liệu",
   os: "Hệ điều hành",
   sim: "Thẻ SIM",
-  // thêm các trường khác tùy ý
 };
 
 const ProductSpecsTable: React.FC<ProductSpecsTableProps> = ({ specs }) => {
@@ -28,9 +26,9 @@ const ProductSpecsTable: React.FC<ProductSpecsTableProps> = ({ specs }) => {
   const specEntries = Object.entries(specs);
 
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200">
+    <div className="overflow-hidden rounded border border-zinc-800">
       <table className="w-full text-sm text-left">
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y divide-zinc-800">
           {specEntries.map(([key, value], index) => {
             const displayLabel =
               SPEC_KEYS_MAP[key] || key.charAt(0).toUpperCase() + key.slice(1);
@@ -38,16 +36,14 @@ const ProductSpecsTable: React.FC<ProductSpecsTableProps> = ({ specs }) => {
             return (
               <tr
                 key={key}
-                className={`transition-colors hover:bg-gray-50 ${
-                  index % 2 === 0 ? "bg-gray-50/50" : "bg-white"
+                className={`${
+                  index % 2 === 0 ? "bg-zinc-900/50" : "bg-transparent"
                 }`}
               >
-                <td className="w-1/3 px-4 py-3 font-medium text-gray-600 bg-gray-100/50">
+                <td className="w-1/3 px-4 py-3 font-medium text-gray-400 bg-zinc-800/30">
                   {displayLabel}
                 </td>
-                <td className="px-4 py-3 font-semibold text-gray-900">
-                  {value}
-                </td>
+                <td className="px-4 py-3 font-semibold text-white">{value}</td>
               </tr>
             );
           })}

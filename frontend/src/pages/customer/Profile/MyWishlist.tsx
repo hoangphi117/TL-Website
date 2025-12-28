@@ -97,7 +97,7 @@ const MyWishlist: React.FC = () => {
           </div>
         ) : items.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {currentItems.map((product) => {
                 const categoryName =
                   typeof product.category === "object"
@@ -111,16 +111,16 @@ const MyWishlist: React.FC = () => {
                 return (
                   <div
                     key={product._id}
-                    className="group relative bg-[#1e1e20] border border-neutral-800 rounded-md overflow-hidden hover:border-neutral-600 transition-all"
+                    className="group relative bg-[#1e1e20] border border-neutral-800 rounded overflow-hidden hover:border-neutral-600 transition-all"
                   >
                     {/* IMAGE */}
-                    <div className="aspect-square bg-white relative overflow-hidden">
+                    <div className="aspect-square relative overflow-hidden">
                       <img
                         src={
                           product.images?.[0] || "https://placehold.co/300x300"
                         }
                         alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-contain"
                       />
 
                       {/* REMOVE BUTTON */}
@@ -144,8 +144,8 @@ const MyWishlist: React.FC = () => {
                         </h3>
                       </Link>
 
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-red-500 font-semibold text-base">
+                      <div className="flex flex-col md:flex-row items-center justify-between mb-2">
+                        <span className="text-red-500 font-semibold text-sm">
                           {formatVND(product.price)}
                         </span>
 
@@ -168,7 +168,7 @@ const MyWishlist: React.FC = () => {
 
                       <Button
                         onClick={() => navigate(productLink)}
-                        className="w-full h-8 bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700 text-xs"
+                        className="w-full h-8 rounded bg-neutral-800 hover:bg-neutral-700 text-white border border-neutral-700 text-xs"
                       >
                         <ShoppingCart className="w-3.5 h-3.5 mr-1.5" />
                         Xem chi tiết

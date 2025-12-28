@@ -318,7 +318,7 @@ export default function ProfilePage() {
                           render={({ field }) => (
                             <FormItem className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center space-y-0">
                               <FormLabel className="text-neutral-400 md:text-right">
-                                Tên hiển thị
+                                Họ và tên
                               </FormLabel>
                               <div className="md:col-span-3">
                                 <FormControl>
