@@ -119,16 +119,27 @@ const loginAdmin = async (req, res) => {
       })
     }
 
+    const expiresIn = 60 * 60;
+
     const payload = {
       id: user.id,
       role: user.role
     }
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" })
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn})
+
+    const userResponse = {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      fullName: user.fullName,
+      createdAt: user.createdAt
+    };
 
     res.json({
       message: "Login successful",
       token: token,
-      data: user,
+      expires_in: expiresIn,
+      user: userResponse,
     })
 
   }
