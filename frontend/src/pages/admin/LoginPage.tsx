@@ -9,12 +9,11 @@ import { AlertCircle, Loader2 } from "lucide-react";
 import authApi from "@/services/api/admin/authApi";
 import type { AxiosError } from "axios";
 import logoShop from "@/assets/icons/TL-Logo.png"
-import bg from "@/assets/images/BG-red.png"
-// import { useAuth } from "@/context/AdminAuthContext";
+import { useAuth } from "@/context/AdminAuthContext";
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
-  // const { login } = useAuth();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,8 +40,7 @@ export default function AdminLoginPage() {
       }
 
       // Lưu token vào localStorage
-      localStorage.setItem("adminToken", data.token);
-      // login(res.data.token, res.data.data)
+      login(res.data.token)
 
       navigate("/admin"); 
     } catch (err: unknown) {

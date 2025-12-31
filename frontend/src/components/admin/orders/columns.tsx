@@ -5,8 +5,9 @@ import type { IOrder } from "@/types/order"
 
 import { formatVND } from "@/utils/admin/formatMoney";
 import { formatDate } from "@/utils/formatDate";
-import { formatOrderStatus } from "@/utils/admin/orderStatusUtils";
-import { getPaymentStatusLabel } from "@/utils/admin/mapPaymentStatus";
+import { getOrderStatusLabel, getPaymentStatusLabel } from "@/utils/admin/mapOrderDetail";
+import { PaymentStatusBadge } from "./payment-status-badge";
+import { OrderStatusBadge } from "./order-status-badge";
 
 export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder>[] => [
   {
@@ -40,7 +41,7 @@ export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder
        return (
             <div className="flex flex-col">
                 <span className="font-medium text-[0.78rem] md:text-sm">{customer.fullName}</span>
-                <span className="text-xs md:text-[0.78rem] text-gray-600">{customer.email}</span>
+                <span className="text-xs md:text-[0.78rem] text-blue-600">{customer.email}</span>
             </div>
        )
     }
@@ -74,9 +75,15 @@ export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder
       </span>
     ),
     cell: ({ row }) => {
-        const formatedStatus = formatOrderStatus(row.getValue("orderStatus"));
+        const orderStatus = row.getValue("orderStatus") as 
+        | "pending_confirmation"
+        | "processing"
+        | "shipping"
+        | "completed"
+        | "cancelled";
+        const label = getOrderStatusLabel(orderStatus);
         return (
-            <div className="text-sm md:text-[0.9rem]"> {formatedStatus}</div> 
+          <OrderStatusBadge status={orderStatus} label={label}/>
         )
     }
   },
@@ -91,12 +98,7 @@ export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder
       const paymentStatus = row.getValue("paymentStatus") as "paid" | "pending" | "failed";
       const label = getPaymentStatusLabel(paymentStatus)
       return (
-      <div className={
-        `w-fit px-1 py-1 rounded-xl text-[0.85rem] text-white text-center ` + 
-        (paymentStatus === "paid" ? "bg-green-500" : paymentStatus === "pending" ? "bg-yellow-500" : "bg-red-500" )
-        }>
-          {label}
-      </div> 
+        <PaymentStatusBadge status={paymentStatus} label={label}/>
       );
     }
   },

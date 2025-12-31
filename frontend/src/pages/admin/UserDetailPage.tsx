@@ -12,8 +12,9 @@ import type { IOrder } from "@/types/order";
 import orderApi from "@/services/api/admin/orderApi";
 import OrderDetailDialog from "@/components/admin/orders/OrderDetailDialog";
 import { formatDate } from "@/utils/formatDate";
-import { formatOrderStatus } from "@/utils/admin/orderStatusUtils";
 import { formatVND } from "@/utils/admin/formatMoney";
+import { getOrderStatusLabel } from "@/utils/admin/mapOrderDetail";
+import { RoleBadge } from "@/components/admin/users/role-badege";
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -94,10 +95,7 @@ export default function UserDetailPage() {
           <p className="text-gray-600 text-sm md:text-base">{user.email}</p>
 
           <div className="flex gap-2 mt-2">
-            <Badge variant="outline">Role: {role}</Badge>
-            <Badge className={user.isActive ? "bg-green-600" : "bg-red-600"}>
-              {user.isActive ? "Active" : "Inactive"}
-            </Badge>
+            <RoleBadge role={user.role} label={user.role === "admin" ? "Quản trị viên" : "Người dùng"}/>
           </div>
         </div>
       </div>
@@ -183,7 +181,7 @@ export default function UserDetailPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <p className="text-sm">{formatOrderStatus(o.orderStatus)}</p>
+                    <p className="text-sm">{getOrderStatusLabel(o.orderStatus)}</p>
                     <p className="text-red-500 font-bold">{formatVND(o.totalAmount)}</p>
                   </div>
                 </div>

@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
 import type { IBrand } from "@/types/brand"
-import { CircleCheckBig, CircleX } from "lucide-react"
+import { CircleX } from "lucide-react"
+import { toast } from "sonner"
 
 interface EditbrandDialogProps {
   open: boolean;
@@ -39,7 +40,6 @@ export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formS
     };
 
     onSave(updated);
-    // setOpen(false);
   };
 
   useEffect(() => {
@@ -56,6 +56,12 @@ export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formS
     }
   }, [brand, open]);
 
+  useEffect(() => {
+    if(formSuccess) {
+      toast.success("Thêm thương hiệu mới thành công");
+    }
+  }, [formSuccess])
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="w-full max-w-100 sm:max-w-130 md:max-w-150">
@@ -71,7 +77,10 @@ export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formS
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Tên thương hiệu</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} />
+            <Input 
+              className="rounded-xs"
+              value={name} 
+              onChange={(e) => setName(e.target.value)} />
           </div>
 
           <div className="space-y-2">
@@ -85,17 +94,10 @@ export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formS
           </div>
         </div>
 
-        {/* {response message} */}
-        {formSuccess && (
-          <div className="flex flex-row gap-2">
-          <CircleCheckBig size={25} strokeWidth={2.5} color="#42bf40" />
-          <span className="text-lg text-green-500">Thêm danh mục mới thành công</span>
-          </div>
-        )}
         {formError && (
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row gap-2 items-center">
           <CircleX color="#f00a0a" strokeWidth={2.5} />
-          <span className="text-lg text-red-500">{formError}</span>
+          <span className="text-sm md:text-base text-red-500">{formError}</span>
           </div>
         )}
 

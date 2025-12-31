@@ -10,7 +10,7 @@ interface User {
 
 interface AuthContextType {
     user: User | null,
-    login: (token: string, user: User) => void,
+    login: (token: string) => void,
     logout: () => void,
 }
 
@@ -21,29 +21,29 @@ export function AdminAuthProvider({children} : {children: React.ReactNode}) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem("adminToken");
-        const userData = localStorage.getItem("user");
+        const token = localStorage.getItem("admin _access_token");
+        // const userData = localStorage.getItem("admin");
 
-        if(!token || !userData) return;
+        if(!token) return;
 
         const payload = JSON.parse(atob(token.split(".")[1]));
         if (Date.now() >= payload.exp * 1000) {
             return logout();
         }
 
-        setUser(JSON.parse(userData));
+        // setUser(JSON.parse(userData));
     },[])
 
-    const login = (token: string, user: User) => {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
+    const login = (token: string) => {
+        localStorage.setItem("admin_access_token", token);
+        localStorage.setItem("admin", JSON.stringify(user));
         setUser(user);
         navigate("/admin");
     }
 
     const logout = () => {
-        localStorage.removeItem("tokenAdmin");
-        localStorage.removeItem("user");
+        localStorage.removeItem("admin_access_token");
+        localStorage.removeItem("admin");
         setUser(null);
         navigate("/admin/login");
     };

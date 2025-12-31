@@ -11,7 +11,7 @@ const axiosClient = axios.create({
 // Request Interceptor (Attach token)
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("adminToken");
+    const token = localStorage.getItem("admin_access_token");
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;

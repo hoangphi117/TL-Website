@@ -3,6 +3,7 @@ import type { IUser } from "@/types/user"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
+import { RoleBadge } from "./role-badege"
 
 export const columns: ColumnDef<IUser>[] = [
   {
@@ -72,14 +73,10 @@ export const columns: ColumnDef<IUser>[] = [
       </span>
     ),
     cell: ({ row }) => { 
-      const role = row.getValue("role");
+      const role = row.getValue("role") as "customer" | "admin" | string;
+      const label = role === "admin" ? "Quản trị viên" : "Người dùng";
       return (
-      <div className={
-        `w-20 px-1 py-1 rounded-md text-[0.8rem] text-white text-center ` + 
-        (role === "admin" ? "bg-red-500" : "bg-green-500" )
-        }>
-          {row.getValue("role")}
-      </div> 
+        <RoleBadge role={role} label={label}/>
       );
     }
   },

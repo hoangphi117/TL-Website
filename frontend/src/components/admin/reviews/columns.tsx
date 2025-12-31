@@ -103,7 +103,7 @@ export const columns = (
                 | "rejected";
             return (
                <span
-                    className={`text-[0.8rem] md:text[0.85rem] font-semibold px-2 py-1 rounded-md border w-fit
+                    className={`text-[0.85rem] md:text[0.9rem] px-2 py-1 rounded-sm border w-fit
                         ${
                         status === "approved"
                             ? "bg-lime-50 text-lime-600 border-lime-300"

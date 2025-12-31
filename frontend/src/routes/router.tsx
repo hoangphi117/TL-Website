@@ -53,6 +53,7 @@ import AdminLoginPage from "@/pages/admin/LoginPage";
 import OrdersPage from "@/pages/admin/OrdersPage";
 import DetailedPromotion from "@/pages/admin/DetailedPromotion";
 import AddPromotionPage from "@/pages/admin/AddPromotionPage";
+import { AdminAuthProvider } from "@/context/AdminAuthContext";
 
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
@@ -126,9 +127,11 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
+      <AdminAuthProvider>
       <ProtectedRouteAdmin>
         <AdminLayout />
       </ProtectedRouteAdmin>
+      </AdminAuthProvider>
     ),
     errorElement: <ErrorPage />,
     children: [
@@ -150,7 +153,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/login",
-    element: <AdminLoginPage />,
+    element: 
+      <AdminAuthProvider>
+        <AdminLoginPage />
+      </AdminAuthProvider>,
     errorElement: <ErrorPage />,
   },
 ]);

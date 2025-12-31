@@ -3,10 +3,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { formatDate } from "@/utils/formatDate";
@@ -14,10 +12,9 @@ import { formatVND } from "@/utils/admin/formatMoney";
 import { Badge } from "@/components/ui/badge";
 
 import type { IOrder } from "@/types/order";
-import {
-  getOrderStatusStyle,
-  formatOrderStatus,
-} from "@/utils/admin/orderStatusUtils";
+import { PaymentStatusBadge } from "./payment-status-badge";
+import { getOrderStatusLabel, getPaymentMethodLabel, getPaymentStatusLabel } from "@/utils/admin/mapOrderDetail";
+import { OrderStatusBadge } from "./order-status-badge";
 
 interface OrderDetailDialogProps {
   open: boolean;
@@ -48,11 +45,7 @@ export default function OrderDetailDialog({
           {/* --- Order status --- */}
           <div className="flex items-center gap-3 mb-4">
             <span className="font-medium text-sm">Trạng thái đơn hàng:</span>
-            <Badge
-              className={`${getOrderStatusStyle(order.orderStatus)} px-3 py-1`}
-            >
-              {formatOrderStatus(order.orderStatus)}
-            </Badge>
+            <OrderStatusBadge status={order.orderStatus} label={getOrderStatusLabel(order.orderStatus)}/>
           </div>
 
           {/* --- Customer Info --- */}
@@ -105,21 +98,13 @@ export default function OrderDetailDialog({
 
             <p>
               <span className="font-medium">Phương thức: </span>
-              {order.paymentMethod === "COD" && "Thanh toán khi nhận hàng"}
-              {order.paymentMethod === "BankTransfer" && "Chuyển khoản ngân hàng"}
-              {order.paymentMethod === "OnlineGateway" && "Cổng thanh toán online"}
+              {getPaymentMethodLabel(order.paymentMethod)}
             </p>
 
-            <p>
+            <div>
               <span className="font-medium">Trạng thái thanh toán: </span>
-              {order.paymentStatus === "paid" ? (
-                <Badge className="bg-green-100 text-green-700">Đã thanh toán</Badge>
-              ) : order.paymentStatus === "failed" ? (
-                <Badge className="bg-red-100 text-red-700">Thất bại</Badge>
-              ) : (
-                <Badge className="bg-yellow-100 text-yellow-700">Chờ thanh toán</Badge>
-              )}
-            </p>
+              <PaymentStatusBadge status={order.paymentStatus} label={getPaymentStatusLabel(order.paymentStatus)}/>
+            </div>
           </div>
 
           {/* --- Summary --- */}
