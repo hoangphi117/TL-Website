@@ -58,16 +58,6 @@ const data = {
       title: "Danh mục",
       icon: Layers,
       url: "/admin/categories",
-      items: [
-        {
-          title: "Danh sách",
-          url: "/admin/categories/list"
-        },
-        {
-          title: "Thêm danh mục",
-          url: "/admin/categories/add-new"
-        },
-      ]
     },
     {
       title: "Thương hiệu",

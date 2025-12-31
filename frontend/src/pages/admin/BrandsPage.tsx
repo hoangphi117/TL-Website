@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import brandApi from "@/services/api/admin/brandApi";
 import { Button } from "@/components/ui/button";
 import { Crown, Globe, Grid2X2, Plus } from "lucide-react";
-import { EditBrandDialog } from "@/components/admin/brands/brand-dialog";
+import { BrandDialog } from "@/components/admin/brands/brand-dialog";
 import { DeleteBrandAlert } from "@/components/admin/brands/delete-brand-alert";
 import type { AxiosError } from "axios";
 import { BRAND_ERROR_MESSAGES } from "@/utils/admin/errorMessages";
@@ -152,7 +152,7 @@ export default function BrandsPage() {
                                 />
                             ))}
                         </div>
-                        <EditBrandDialog
+                        <BrandDialog
                             open={openEdit}
                             setOpen={setOpenEdit}
                             brand={selectedBrand}   
@@ -160,7 +160,7 @@ export default function BrandsPage() {
                             formError=""
                             formSuccess=""
                         />
-                        <EditBrandDialog
+                        <BrandDialog
                             open={openAdd}
                             setOpen={setOpenAdd}
                             brand={null}   

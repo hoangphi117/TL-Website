@@ -10,31 +10,37 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
-import type { ICategory } from "@/types/category"
+import type { ICategory, IParentCategory } from "@/types/category"
+import { CategoryCombobox } from "./category-combobox"
+import { CircleX } from "lucide-react"
 
 interface EditCategoryDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   category: ICategory | null;
+  categories: ICategory[];
   onSave: (updated: ICategory) => void;
+  formError: string | undefined;
+  isEddit: boolean;
 }
 
 
-export function EditCategoryDialog({open, setOpen, category, onSave} : EditCategoryDialogProps){
-    const [name, setName] = useState(category?.name || "");
-    const [imageUrl, setImageUrl] = useState(category?.imageUrl || "");
-    const [description, setDescription] = useState(category?.description || "");
+export function EditCategoryDialog({open, setOpen, category, categories, onSave, formError, isEddit} : EditCategoryDialogProps){
+    const [name, setName] = useState("");
+    const [imageUrl, setImageUrl] = useState("");
+    const [description, setDescription] = useState("");
+    const [parentCategory, setParentCategory] = useState<IParentCategory | null>(null);
+    const [comboboxOpen, setComboboxOpen] = useState(false);
 
     const handleSave = () => {
-        if (!category) return
-
-        onSave({
-            ...category,
+        const updated: ICategory = {
+            _id: category?._id || "",
             name,
-            description,
             imageUrl,
-        })
-        setOpen(false)
+            description,
+            parentCategory
+        }
+        onSave(updated);
     }
 
     useEffect(() => {
@@ -42,6 +48,13 @@ export function EditCategoryDialog({open, setOpen, category, onSave} : EditCateg
             setName(category.name);
             setImageUrl(category.imageUrl || "");
             setDescription(category.description || "");
+            setParentCategory(category.parentCategory || null);
+        }
+        else if(open) {
+            setName("");
+            setImageUrl("");
+            setDescription("");
+            setParentCategory(null);
         }
     }, [category, open]);
 
@@ -82,7 +95,25 @@ export function EditCategoryDialog({open, setOpen, category, onSave} : EditCateg
                             onChange={(e) => setDescription(e.target.value)}
                         />
                     </div>
+
+                    <div className="space-y-1">
+                        <Label className="text-sm md:text-base">Danh mục cha</Label>
+                        <CategoryCombobox
+                            open={comboboxOpen}
+                            categories={categories}
+                            setOpen={setComboboxOpen}
+                            setParentCategory={setParentCategory}
+                            defaultParentCategory={parentCategory}
+                        />
+                    </div>
                 </div>
+
+                {formError && (
+                  <div className="flex flex-row gap-2">
+                    <CircleX color="#f00a0a" strokeWidth={2.5} />
+                    <span className="text-sm md:text-base text-red-500">{formError}</span>
+                  </div>
+                )}
 
                 <DialogFooter>
                 <Button variant="outline" onClick={() => setOpen(false)}>
@@ -92,7 +123,7 @@ export function EditCategoryDialog({open, setOpen, category, onSave} : EditCateg
                     onClick={() => handleSave()} 
                     className="bg-blue-500 hover:bg-blue-600 text-white"
                 >
-                    Cập nhật
+                    {isEddit ? "Cập nhật" : "Thêm mới"}
                 </Button>
                 </DialogFooter>
             </DialogContent>

@@ -24,7 +24,7 @@ interface EditbrandDialogProps {
 }
 
 
-export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formSuccess }: EditbrandDialogProps) {
+export function BrandDialog({ open, setOpen, brand, onSave, formError, formSuccess }: EditbrandDialogProps) {
   const [name, setName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [description, setDescription] = useState("");
@@ -77,21 +77,38 @@ export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formS
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Tên thương hiệu</Label>
-            <Input 
-              className="rounded-xs"
+            <input 
+              className="input-neo h-11"
               value={name} 
+              placeholder="Nhập tên thương hiệu..."
               onChange={(e) => setName(e.target.value)} />
+            <p className="text-[0.8rem] text-muted-foreground italic ml-1">
+              Tên này sẽ hiển thị trên tất cả hóa đơn.
+            </p>
           </div>
 
           <div className="space-y-2">
             <Label>Logo URL</Label>
-            <Input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} />
+            <input 
+              className="input-neo w-full h-10 md:text-[0.95rem]" 
+              placeholder="https://example.com/logo.png"
+              value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} 
+            />
           </div>
 
           <div className="space-y-2">
             <Label>Mô tả</Label>
-            <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+            <Input
+              className="rounded-xs h-15
+                focus-visible:ring-0
+                focus:border-2
+                focus-visible:border-[#057ff1f9]"
+              placeholder="Mô tả sản phẩm..."
+              value={description} 
+              onChange={(e) => setDescription(e.target.value)} />
           </div>
+
+          
         </div>
 
         {formError && (
@@ -106,7 +123,7 @@ export function EditBrandDialog({ open, setOpen, brand, onSave, formError, formS
             Hủy
           </Button>
           <Button 
-            className="bg-blue-500 hover:bg-blue-600 text-white"
+            className="bg-[#3385F0] hover:bg-[#1e76e8] text-white"
             onClick={handleSave}
           >
             {isEdit ? "Cập nhật" : "Thêm mới"}

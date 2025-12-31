@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import type { ICategory } from "@/types/category"
+import type { ICategory, ICategoryCreate } from "@/types/category"
 import categoryApi from "@/services/api/admin/categoryApi"
 import CategoryCard from "@/components/admin/category/category-card"
 import { EditCategoryDialog } from "@/components/admin/category/edit-category-dialog"
@@ -7,6 +7,10 @@ import { DeleteCategoryAlert } from "@/components/admin/category/delete-category
 import { LayoutGrid, Package, PackageSearch, Grid2X2 } from "lucide-react"
 import productApi from "@/services/api/admin/productApi"
 import PageTitle from "@/components/admin/common/PageTitle"
+import { Button } from "@/components/ui/button"
+import { CATEGORY_ERROR_MESSAGES } from "@/utils/admin/errorMessages"
+import type { AxiosError } from "axios"
+import { toast } from "sonner"
 
 export default function CategoriesPage() {
     const [categories, setCategories] = useState<ICategory[]>([])
@@ -18,7 +22,12 @@ export default function CategoriesPage() {
 
     const [deleteTarget, setDeleteTarget] = useState<ICategory | null>(null);
     const [openDelete, setOpenDelete] = useState(false);
+
+    const [openAdd, setOpenAdd] = useState(false); 
+
     const [products, setProducts] = useState(0);
+
+    const [addError, setAddError] = useState("");
 
     const handleEdit = (category : ICategory) => {
         setSelectedCategory(category)
@@ -28,6 +37,18 @@ export default function CategoriesPage() {
     const handleOnSave = (updated : ICategory) => {
         const updatedCategory = updated;
         updateCategory(updatedCategory._id, updatedCategory)
+        setOpenEdit(false);
+    }
+
+    const handleAdd = (data: ICategory) => {
+        const newCategory: ICategoryCreate = {
+            name: data.name,
+            imageUrl: data.imageUrl,
+            description: data.description,
+            ...(data.parentCategory && { parentCategory: data.parentCategory._id})
+        }
+
+        createCategory(newCategory);
     }
 
     const loadProductsCount = async () => {
@@ -58,6 +79,28 @@ export default function CategoriesPage() {
             loadCategories();
         }catch(err){
             console.log(err);
+        }
+    }
+
+    const createCategory = async (category: ICategoryCreate) => {
+        try {
+            const res = await categoryApi.create(category);
+            loadCategories();
+
+            if(res.data.success === true) {
+                setAddError("");
+            }
+
+            toast.success("Thêm danh mục thành công");
+
+            setOpenAdd(false);
+        }catch (err: unknown) {
+
+            const error = err as AxiosError<{ message: string }>;
+            const backendMsg = error.message ?? "";
+            const vietnameseMsg =
+            CATEGORY_ERROR_MESSAGES[backendMsg] ?? "Có lỗi xảy ra! Vui lòng thử lại.";
+            setAddError(vietnameseMsg);
         }
     }
 
@@ -115,9 +158,17 @@ export default function CategoriesPage() {
                     </div>
                 </div>
                 <div className="border border-gray-200 flex flex-col gap-4 rounded-md px-2 md:px-4 py-4">
-                    <div className="flex flex-row items-center justify-start gap-2">
-                        <Grid2X2 size={22} color="#146bdb" />
-                        <p className="text-lg font-bold">Danh sách danh mục</p>
+                    <div className="flex flex-row items-center justify-between gap-2">
+                        <span className="flex flex-row items-center gap-2">
+                            <Grid2X2 size={22} color="#146bdb" />
+                            <p className="text-lg font-bold">Danh sách danh mục</p>
+                        </span>
+                        <Button
+                            className="w-full max-w-30 bg-[#3385F0] text-white hover:bg-[#2B71CC] text-sm md:text-[0.9rem] rounded-sm"
+                            onClick={() => setOpenAdd(true)}
+                        >
+                            Thêm danh mục
+                        </Button>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2" >
                         {categories.map((c) =>(
@@ -137,7 +188,19 @@ export default function CategoriesPage() {
                         open={openEdit}
                         setOpen={setOpenEdit}
                         category={selectedCategory}
+                        categories={categories}
                         onSave={handleOnSave}
+                        formError=""
+                        isEddit={true}
+                    />
+                    <EditCategoryDialog
+                        open={openAdd}
+                        setOpen={setOpenAdd}
+                        category={null}
+                        categories={categories}
+                        onSave={handleAdd}
+                        formError={addError}
+                        isEddit={false}
                     />
                     <DeleteCategoryAlert
                         open={openDelete}

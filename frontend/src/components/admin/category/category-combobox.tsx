@@ -14,17 +14,28 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import type { ICategory } from "@/types/category"
+import type { ICategory, IParentCategory } from "@/types/category"
 
 interface CategoryComboboxProps {
     categories: ICategory[];
     open: boolean;
     setOpen: (open: boolean) => void;
-    setParentCategory: React.Dispatch<React.SetStateAction<ICategory | null>>;
+    setParentCategory: (parent: IParentCategory | null) => void;
+    defaultParentCategory?: IParentCategory | null;
 }
 
-export function CategoryCombobox({ categories, open, setOpen, setParentCategory} : CategoryComboboxProps) {
+export function CategoryCombobox({ categories, open, setOpen, setParentCategory, defaultParentCategory} : CategoryComboboxProps) {
   const [value, setValue] = React.useState("")
+
+  React.useEffect(() => {
+    if (defaultParentCategory?._id) {
+      setValue(defaultParentCategory._id)
+      setParentCategory(defaultParentCategory)
+    } else {
+      setValue("")
+      setParentCategory(null)
+    }
+  }, [defaultParentCategory]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -54,7 +65,7 @@ export function CategoryCombobox({ categories, open, setOpen, setParentCategory}
                     }}
                     className="text-sm md:text-base text-gray-500 italic"
                     >
-                        Không có
+                      Không có
                     <Check className={cn("ml-auto", value === "" ? "opacity-100" : "opacity-0")} />
                 </CommandItem>
               {categories.map((c) => (

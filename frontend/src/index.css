@@ -34,3 +34,25 @@ body {
     scrollbar-width: none;
   }
 }
+
+@layer components {
+  .input-neo {
+    @apply
+      rounded-none
+      border-2 border-slate-900
+      bg-transparent
+      px-4 py-5
+      w-full
+      text-[0.85rem] md:text-[1rem] font-medium
+      placeholder:text-muted-foreground/50
+      placeholder:text-sm
+      transition-all
+      focus-visible:outline-none
+      focus-visible:ring-0
+      focus:-translate-x-1
+      focus:-translate-y-1
+      shadow-[2px_2px_0px_0px_#020617]
+      focus:border-[#3385F0]
+      focus:shadow-[4px_4px_0px_0px_#3385F0];
+  }
+}
