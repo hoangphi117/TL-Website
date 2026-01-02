@@ -204,7 +204,7 @@ export default function UserDetailPage() {
                 className="mt-3 text-sm px-4 py-2 bg-blue-600 text-white rounded-md"
                 onClick={() =>setOpenUpdateRole(true)}
               >
-                Cập nhật role
+                Cập nhật quyền
               </button>
             </CardContent>
           </Card>

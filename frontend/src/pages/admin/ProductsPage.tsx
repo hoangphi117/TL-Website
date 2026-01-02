@@ -146,7 +146,7 @@ export default function ProductsPage() {
       <div className="bg-white">
         <PageTitle title="Quản lí sản phẩm" subTitle="Quản lí thông tin chi tiết sản phẩm"/>
         <div className="flex flex-col bg-white md:flex-row gap-4 items-center justify-center mt-4 px-2 md:px-3 py-3">
-          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
+          <div className="bg-white border border-gray-200 rounded-md md:flex-col lg:flex-row p-6 shadow-sm transition w-full h-25 md:w-1/3 flex items-center justify-between">
               <p className="text-md md:text-lg font-semibold">Sản phẩm</p>
               <div className="flex flex-row items-center gap-2">
                 <p className="text-md md:text-lg font-bold">{totalProducts}</p>
@@ -154,7 +154,7 @@ export default function ProductsPage() {
               </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
+          <div className="bg-white border border-gray-200 rounded-md md:flex-col lg:flex-row p-6 shadow-sm transition w-full h-25 md:w-1/3 flex items-center justify-between">
               <p className="text-md md:text-lg font-semibold">Thương hiệu</p>
               <div className="flex flex-row items-center gap-2">
                 <p className="text-md md:text-lg font-bold">{brands.length}</p>
@@ -162,7 +162,7 @@ export default function ProductsPage() {
               </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
+          <div className="bg-white border border-gray-200 rounded-md md:flex-col lg:flex-row p-6 shadow-sm transition w-full h-25 md:w-1/3 flex items-center justify-between">
               <p className="text-md md:text-lg font-semibold">Danh mục</p>
               <div className="flex flex-row items-center gap-2">
                 <p className="text-md md:text-lg font-bold">{categories.length}</p>
@@ -273,13 +273,11 @@ export default function ProductsPage() {
       />
 
       {/* Pagination */}
-      <div className="flex justify-center">
         <Pagination
           page={page}
           setPage={setPage}
           totalPages={totalPages}
         />
-      </div>
     </div>
   )
 }

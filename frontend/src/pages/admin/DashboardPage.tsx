@@ -10,6 +10,9 @@ import { CircleDollarSign, ShoppingCart, Tag, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
 import { formatVND } from "@/utils/admin/formatMoney";
+import { TopProducts } from "@/components/admin/dashboard/TopProducts";
+import { NewUserList } from "@/components/admin/dashboard/NewUsersList";
+import type { IUser } from "@/types/user";
 
 export default function DashboardPage() {
     const USER_COLORS = [
@@ -54,7 +57,8 @@ export default function DashboardPage() {
 
     const month = new Date().getMonth() + 1;
 
-    const [topProducts, setTopProducts] = useState<IProduct | null>(null);
+    const [topProducts, setTopProducts] = useState<IProduct[]>([]);
+    const [newUsers, setNewUsers] = useState<IUser[]>([]);
 
     const [ordersChart, setOrdersChart] = useState<LineChartItem[]>([]);
     const [usersChart, setUsersChart] = useState<BarChartItem[]>([]);
@@ -89,6 +93,8 @@ export default function DashboardPage() {
             console.log("check res: ", res.data.data);
             console.log("check res: ", res.data);
             setTotals(res.data.totals);
+            setTopProducts(res.data.topProducts.slice(0, 5));
+            setNewUsers(res.data.topNewUsers.slice(0, 5));
 
             const orderChartData = mapLineChartData(
                 res.data.ordersByDayInMonth.labels,
@@ -196,7 +202,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-3 mt-10 gap-5 justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-stretch px-3 mt-8 gap-5 justify-center">
                 <div className="md:col-span-2">
                     <ChartLineLinear
                         chartData={ordersChart}
@@ -206,7 +212,9 @@ export default function DashboardPage() {
                         subTitle="Số đơn hàng theo ngày trong tháng hiện tại"
                     />
                 </div>
-                <div className="flex col-span-1 gap-4 flex-col md:col-span-2 sm:flex-row sm:gap-5 sm:justify-center sm:w-full lg:flex-col lg:col-span-1 lg:gap-4">
+                <div className="flex col-span-1 gap-4 flex-col md:col-span-2 sm:flex-row sm:gap-5 sm:justify-center sm:w-full lg:flex-col lg:h-full lg:col-span-1 lg:gap-4">
+                    <div className="lg:flex-1">
+
                     <ChartLineDots
                         chartData={weekRevenueChart}
                         chartConfig={weekRevenueChartConfig}
@@ -214,6 +222,9 @@ export default function DashboardPage() {
                         titelChart="Doanh thu 7 ngày qua"
                         subTitle={`Tổng doanh thu: ${formatVND(totalRevenue7Day)}`}
                     />
+                    </div>
+
+                    <div className="lg:flex-1">
                     <ChartBarMixed
                         chartData={usersChart}
                         chartConfig={usersChartConfig}
@@ -221,9 +232,13 @@ export default function DashboardPage() {
                         titelChart="Khách hàng mới trong 7 ngày qua"
                         subTitle={`Tổng khách hàng mới: ${totalUser7Day}`}
                     />
+                    </div>
                 </div>
-                
             </div>
+            <div className="mt-6">
+                <TopProducts products={topProducts}/>
+            </div> 
+            <NewUserList users={newUsers}/>
         </div>
     )
 }

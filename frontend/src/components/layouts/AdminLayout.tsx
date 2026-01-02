@@ -5,6 +5,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar"
 import Header from "../admin/sidebar/header"
+import { Footer } from "../admin/common/Footer";
 
 export default function AdminLayout() {
   return (
@@ -13,6 +14,7 @@ export default function AdminLayout() {
       <SidebarInset className="bg-[#F7F9FC]">
         <Header/>
         <Outlet/>
+        <Footer/>
       </SidebarInset>
     </SidebarProvider>
   )

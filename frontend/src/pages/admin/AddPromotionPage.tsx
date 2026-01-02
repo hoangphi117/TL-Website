@@ -111,17 +111,19 @@ export default function AddPromotionPage() {
           </div>
           <div className="space-y-1">
             <Label>Mã giảm giá</Label>
-            <Input
-                className="text-sm md:text-base"
+            <input
+                placeholder="VD: SALE20"
+                className="input-pro"
                 value={form.code}
                 onChange={(e) => handleChange("code", e.target.value)}
             >   
-            </Input>
+            </input>
           </div>
           <div className="col-span-2 space-y-1">
             <Label className="text-sm md:text-base">Mô tả</Label>
             <Textarea
-              className="text-sm"
+              className="text-sm rounded-sm"
+              placeholder="Mô tả chi tiết mã giảm giá..."
               value={form.description ?? ""}
               onChange={(e) => handleChange("description", e.target.value)}
             />
@@ -129,8 +131,8 @@ export default function AddPromotionPage() {
 
           <div className="space-y-1">
             <Label className="text-sm md:text-base">Giá trị giảm</Label>
-            <Input
-              className="text-sm md:text-base"
+            <input
+              className="input-pro"
               type="number"
               value={form.discountValue ?? 0}
               onChange={(e) =>
@@ -146,7 +148,7 @@ export default function AddPromotionPage() {
               }
             >
               <SelectTrigger 
-                className="max-w-35 w-full">
+                className="max-w-50 w-full rounded-sm">
                 <SelectValue placeholder={form.discountType}/>
               </SelectTrigger>
 
@@ -159,8 +161,8 @@ export default function AddPromotionPage() {
 
           <div className="space-y-1">
             <Label className="text-sm md:text-base">Đơn tối thiểu (VNĐ)</Label>
-            <Input
-              className="text-sm md:text-base"
+            <input
+              className="input-pro"
               type="number"
               value={form.minOrderAmount ?? 0}
               onChange={(e) =>
@@ -171,8 +173,8 @@ export default function AddPromotionPage() {
 
           <div className="space-y-1">
             <Label className="text-sm md:text-base">Giảm tối đa (VNĐ)</Label>
-            <Input
-              className="text-sm md:text-base"
+            <input
+              className="input-pro"
               type="number"
               value={form.maxDiscountAmount ?? 0}
               onChange={(e) =>
@@ -204,15 +206,15 @@ export default function AddPromotionPage() {
 
           <div className="space-y-1">
             <Label className="text-sm md:text-base text-muted-foreground">Số lượng</Label>
-            <Input
-                className="max-w-20 w-full text-sm md:text-[0.9rem] rounded-lg h-8"
+            <input
+                className="input-pro max-w-30 w-full"
                 type="number"
                 value={form.usageLimit ?? 0}
                 onChange={(e) => 
                     handleChange("usageLimit", Number(e.target.value))
                 }
             >
-            </Input>
+            </input>
           </div>
         </CardContent>
       </Card>

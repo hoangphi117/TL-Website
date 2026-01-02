@@ -4,7 +4,7 @@ import categoryApi from "@/services/api/admin/categoryApi"
 import CategoryCard from "@/components/admin/category/category-card"
 import { EditCategoryDialog } from "@/components/admin/category/edit-category-dialog"
 import { DeleteCategoryAlert } from "@/components/admin/category/delete-category-alert"
-import { LayoutGrid, Package, PackageSearch, Grid2X2 } from "lucide-react"
+import { LayoutGrid, Package, PackageSearch, Grid2X2, Plus } from "lucide-react"
 import productApi from "@/services/api/admin/productApi"
 import PageTitle from "@/components/admin/common/PageTitle"
 import { Button } from "@/components/ui/button"
@@ -133,7 +133,7 @@ export default function CategoriesPage() {
             <div className="flex flex-col gap-3 p-3 shadow-sm bg-white min-h-screen">
                 <PageTitle title="Quản lí danh mục" subTitle="Tổ chức và phân loại sản phẩm theo danh mục"/>
                 <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-2 md:px-5 py-3">
-                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
+                    <div className="bg-white border border-gray-200 rounded-md md:flex-col lg:flex-row p-6 shadow-sm transition w-full h-25 md:w-1/3 flex items-center justify-between">
                         <p className="text-md md:text-lg font-semibold">Tổng danh mục</p>
                         <div className="flex flex-row items-center gap-2">
                             <p className="text-md md:text-lg font-bold">{categories.length}</p>
@@ -141,7 +141,7 @@ export default function CategoriesPage() {
                         </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
+                    <div className="bg-white border border-gray-200 rounded-md md:flex-col lg:flex-row p-6 shadow-sm transition w-full h-25 md:w-1/3 flex items-center justify-between">
                         <p className="text-md md:text-lg font-semibold">Danh mục cha</p>
                         <div className="flex flex-row items-center gap-2">
                             <p className="text-md md:text-lg font-bold">0</p>
@@ -149,7 +149,7 @@ export default function CategoriesPage() {
                         </div>
                     </div>
 
-                    <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
+                    <div className="bg-white border border-gray-200 rounded-md md:flex-col lg:flex-row p-6 shadow-sm transition w-full h-25 md:w-1/3 flex items-center justify-between">
                         <p className="text-md md:text-lg font-semibold">Tổng sản phẩm</p>
                          <div className="flex flex-row items-center gap-2">
                             <p className="text-md md:text-lg font-bold">{products}</p>
@@ -170,7 +170,7 @@ export default function CategoriesPage() {
                             Thêm danh mục
                         </Button>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2" >
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-4" >
                         {categories.map((c) =>(
                             <div key={c._id} className="aspect-square">
                                 <CategoryCard

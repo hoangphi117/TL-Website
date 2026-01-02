@@ -179,8 +179,8 @@ export default function DetailedPromotion() {
 
           <div className="space-y-1">
             <Label className="text-sm md:text-base">Giá trị giảm</Label>
-            <Input
-              className="text-sm md:text-base"
+            <input
+              className="input-pro"
               type="number"
               disabled={!isEdit}
               value={form.discountValue ?? 0}
@@ -211,8 +211,8 @@ export default function DetailedPromotion() {
 
           <div className="space-y-1">
             <Label className="text-sm md:text-base">Đơn tối thiểu (VNĐ)</Label>
-            <Input
-              className="text-sm md:text-base"
+            <input
+              className="input-pro"
               type="number"
               disabled={!isEdit}
               value={form.minOrderAmount ?? 0}
@@ -224,8 +224,8 @@ export default function DetailedPromotion() {
 
           <div className="space-y-1">
             <Label className="text-sm md:text-base">Giảm tối đa (VNĐ)</Label>
-            <Input
-              className="text-sm md:text-base"
+            <input
+              className="input-pro"
               type="number"
               disabled={!isEdit}
               value={form.maxDiscountAmount ?? 0}
@@ -267,14 +267,14 @@ export default function DetailedPromotion() {
         <CardContent className="grid grid-cols-2 sm:grid-cols-3 text-center gap-1">
           <div className="flex flex-col items-center">
             <p className="text-sm md:text-base text-muted-foreground">Đã dùng</p>
-            <p className="text-md md:text-lg font-bold bg-yellow-100 border border-yellow-400 rounded-lg w-full max-w-20">
+            <p className="text-md md:text-lg font-bold border border-gray-400 rounded-sm w-full max-w-20">
               {promotion.usedCount}
             </p>
           </div>
           <div className="gap-1 flex flex-col items-center">
             <Label className="text-sm md:text-base text-muted-foreground">Số lượng</Label>
-            <Input
-                className="max-w-20 w-full text-sm md:text-[0.9rem] rounded-lg h-8"
+            <input
+                className="input-pro max-w-20 w-full h-8"
                 type="number"
                 disabled={!isEdit}
                 value={form.usageLimit ?? 0}
@@ -282,11 +282,11 @@ export default function DetailedPromotion() {
                     handleChange("usageLimit", Number(e.target.value))
                 }
             >
-            </Input>
+            </input>
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm md:text-base text-muted-foreground">Còn lại</p>
-            <p className="text-md md:text-lg font-bold bg-green-300 border border-green-600 rounded-lg w-full max-w-20">
+            <p className="text-md md:text-lg font-bold border border-gray-400 rounded-sm w-full max-w-20">
               {(promotion.usageLimit ?? 0) - (promotion.usedCount ?? 0)}
             </p>
           </div>

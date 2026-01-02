@@ -3,7 +3,7 @@ import type{ IBrand } from "@/types/brand";
 import { useEffect, useState } from "react";
 import brandApi from "@/services/api/admin/brandApi";
 import { Button } from "@/components/ui/button";
-import { Crown, Globe, Grid2X2, Plus } from "lucide-react";
+import { Crown, Globe, Grid2X2 } from "lucide-react";
 import { BrandDialog } from "@/components/admin/brands/brand-dialog";
 import { DeleteBrandAlert } from "@/components/admin/brands/delete-brand-alert";
 import type { AxiosError } from "axios";
@@ -107,7 +107,7 @@ export default function BrandsPage() {
                 <div className="flex flex-col gap-3 p-3 bg-white">
                     <PageTitle title="Quản lí thương hiệu" subTitle="Quản lí thương hiệu và nhà cung cấp sản phẩm"/>
                     <div className="flex flex-col md:flex-row gap-5 items-center justify-center px-0 md:px-3 py-3">
-                        <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
+                        <div className="bg-white border border-gray-200 rounded-md md:flex-col lg:flex-row p-6 shadow-sm transition w-full h-25 md:w-1/3 flex items-center justify-between">
                             <p className="text-md md:text-lg font-semibold">Tổng thương hiệu</p>
                             <div className="flex flex-row items-center gap-2">
                                 <p className="text-md md:text-lg font-bold">{brands.length}</p>
@@ -115,7 +115,7 @@ export default function BrandsPage() {
                             </div>
                         </div>
 
-                        <div className="bg-white border border-gray-200 rounded-xl md:flex-col lg:flex-row p-6 shadow-sm transition w-full md:w-1/3 flex items-center justify-between">
+                        <div className="bg-white border border-gray-200 rounded-md md:flex-col lg:flex-row p-6 shadow-sm transition w-full h-25 md:w-1/3 flex items-center justify-between">
                             <p className="text-md md:text-lg font-semibold">Đang hoạt động</p>
                             <div className="flex flex-row items-center gap-2">
                                 <p className="text-md md:text-lg font-bold">{brands.length}</p>
@@ -126,20 +126,19 @@ export default function BrandsPage() {
                     </div>
                     
                     <div className=" flex flex-col border border-gray-200 p-4 mx-0 rounded-md">
-                        <div className="flex flex-row justify-between items-center px-4">
+                        <div className="flex flex-row justify-between items-center px-2">
                             <div className="flex flex-row gap-2">
                                <Grid2X2 size={22} color="#146bdb"/> 
                                <p className="font-bold text-base">Danh sách thương hiệu</p>
                             </div>
                             <Button 
-                                className="w-full max-w-25 bg-[#3385F0] text-white hover:bg-[#2B71CC] font-bold text-md md:text-lg"
+                                className="w-full max-w-33 bg-[#3385F0] rounded-sm text-white hover:bg-[#2B71CC] font-medium text-[0.8rem] md:text-[0.875rem]"
                                 onClick={() => setOpenAdd(true)}
                                 >
-                                <Plus size={32} color="#fcf7f7" strokeWidth={3} />
-                                Thêm
+                                Thêm thương hiệu
                             </Button>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 xl:px-8 gap-5 mt-4"  >
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-4"  >
                             {brands.map((b) =>(
                                 <BrandCard 
                                     key={b._id} 

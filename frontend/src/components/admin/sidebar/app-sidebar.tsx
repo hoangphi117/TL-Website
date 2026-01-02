@@ -84,16 +84,6 @@ const data = {
       url: "/admin/promotions",
       icon: Gift,
     },
-    {
-      title: "Banner & Media",
-      url: "/admin/media",
-      icon: Image,
-    },
-    {
-      title: "Cài đặt hệ thống",
-      url: "/admin/settings",
-      icon: Settings,
-    },
   ],
 }
 

@@ -78,7 +78,7 @@ export function BrandDialog({ open, setOpen, brand, onSave, formError, formSucce
           <div className="space-y-2">
             <Label>Tên thương hiệu</Label>
             <input 
-              className="input-neo h-11"
+              className="input-pro h-11"
               value={name} 
               placeholder="Nhập tên thương hiệu..."
               onChange={(e) => setName(e.target.value)} />
@@ -90,7 +90,7 @@ export function BrandDialog({ open, setOpen, brand, onSave, formError, formSucce
           <div className="space-y-2">
             <Label>Logo URL</Label>
             <input 
-              className="input-neo w-full h-10 md:text-[0.95rem]" 
+              className="input-pro w-full h-10 md:text-[0.95rem]" 
               placeholder="https://example.com/logo.png"
               value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} 
             />
@@ -108,7 +108,7 @@ export function BrandDialog({ open, setOpen, brand, onSave, formError, formSucce
               onChange={(e) => setDescription(e.target.value)} />
           </div>
 
-          
+
         </div>
 
         {formError && (

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
@@ -119,38 +118,69 @@ export default function EditProductPage() {
 
         {/* Product Name */}
         <div className="flex flex-col gap-1">
-          <label className="font-semibold">Tên sản phẩm</label>
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
+          <label className="font-semibold text-[0.95rem] text-gray-800">Tên sản phẩm <span className="text-red-500">*</span></label>
+          <input 
+            className="input-pro" 
+            placeholder="Nhập tên sản phẩm"
+            value={name} onChange={(e) => setName(e.target.value)} 
+          />
         </div>
 
         {/* SKU */}
         <div className="flex flex-col gap-1">
-          <label className="font-semibold">SKU</label>
-          <Input value={sku} onChange={(e) => setSku(e.target.value)} />
+          <label className="font-semibold text-[0.95rem] text-gray-800">SKU <span className="text-red-500">*</span></label>
+          <input 
+            className="input-pro" 
+            placeholder="VD: LAU508PR"
+            value={sku} onChange={(e) => setSku(e.target.value)} />
         </div>
 
         {/* Price */}
         <div className="flex flex-col gap-1">
-          <label className="font-semibold">Giá bán</label>
-          <Input type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
+          <label className="font-semibold text-[0.95rem] text-gray-800">Giá bán <span className="text-red-500">*</span></label>
+          <input className="input-pro" type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
         </div>
 
         {/* Original Price */}
         <div className="flex flex-col gap-1">
-          <label className="font-semibold">Giá gốc</label>
-          <Input type="number" value={originalPrice} onChange={(e) => setOriginalPrice(Number(e.target.value))} />
+          <label className="font-semibold text-[0.95rem] text-gray-800">Giá gốc</label>
+          <input className="input-pro" type="number" value={originalPrice} onChange={(e) => setOriginalPrice(Number(e.target.value))} />
+          <p className="text-[0.8rem] text-muted-foreground ml-1">
+            Giá gốc khi nhập hàng
+          </p>
         </div>
 
         {/* Stock */}
         <div className="flex flex-col gap-1">
-          <label className="font-semibold">Tồn kho</label>
-          <Input type="number" value={stockQuantity} onChange={(e) => setStockQuantity(Number(e.target.value))} />
+          <label className="font-semibold text-[0.95rem] text-gray-800">Tồn kho <span className="text-red-500">*</span></label>
+          <input className="input-pro" type="number" value={stockQuantity} onChange={(e) => setStockQuantity(Number(e.target.value))} />
+        </div>
+
+        {/* Category */}
+        <div className="flex flex-col gap-1">
+          <label className="font-semibold text-[0.95rem] text-gray-800">Danh mục <span className="text-red-500">*</span></label>
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger className="w-full rounded-sm border-gray-300">
+              <SelectValue placeholder="Chọn danh mục" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((c) => (
+                <SelectItem key={c._id} value={c._id}>
+                  {c.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* {detail infor} */}
-        <div className="flex flex-col gap-1">
-          <label className="font-semibold">Thông tin chi tiết</label>
-          <Input type="text" value={detailedInfo} onChange={(e) => setDetailedInfo(e.target.value)} />
+        <div className="flex flex-col gap-1 md:col-span-2">
+          <label className="font-semibold text-[0.95rem] text-gray-800">Thông tin chi tiết</label>
+          <Textarea 
+            className="input-pro h-17" 
+            placeholder="Thông tin chi tiết sản phẩm..."
+            value={detailedInfo} onChange={(e) => setDetailedInfo(e.target.value)} 
+          />
         </div>
 
         {/* {specifications infor} */}
@@ -159,7 +189,7 @@ export default function EditProductPage() {
         {/* Status */}
         
         <div className="flex flex-col gap-1">
-          <label className="font-semibold">Trạng thái</label>
+          <label className="font-semibold text-[0.95rem] text-gray-800">Trạng thái</label>
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger>
               <SelectValue placeholder="Chọn trạng thái" />
@@ -168,23 +198,6 @@ export default function EditProductPage() {
               <SelectItem value="active">Đang bán</SelectItem>
               <SelectItem value="inactive">Ngừng bán</SelectItem>
               <SelectItem value="out_of_stock">Hết hàng</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Category */}
-        <div className="flex flex-col gap-1">
-          <label className="font-semibold">Danh mục</label>
-          <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger>
-              <SelectValue placeholder="Danh mục" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((c) => (
-                <SelectItem key={c._id} value={c._id}>
-                  {c.name}
-                </SelectItem>
-              ))}
             </SelectContent>
           </Select>
         </div>
@@ -214,9 +227,9 @@ export default function EditProductPage() {
 
       <div className="flex flex-col bg-white p-3 gap-6 rounded-md border border-gray-300" >
         {/* Description */}
-        <div className="flex flex-col gap-1 ">
+        <div className="flex flex-col gap-1">
           <label className="font-semibold">Mô tả</label>
-          <Textarea rows={5} value={description} onChange={(e) => setDescription(e.target.value)} />
+          <Textarea placeholder="Mô tả chi tiết sản phẩm..." rows={5} value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
 
         {/* Images */}
@@ -249,9 +262,9 @@ export default function EditProductPage() {
         <Button 
           disabled={saving} 
           onClick={handleSave}
-          className="bg-[#3385F0] text-white hover:bg-[#2B71CC] font-semibold"
+          className="bg-[#3385F0] text-white hover:bg-[#2B71CC] font-medium"
         >
-          {saving ? "Đang lưu..." : "Thêm"}
+          {saving ? "Đang lưu..." : "Thêm sản phẩm"}
         </Button>
       </div>
 

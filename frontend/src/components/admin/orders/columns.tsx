@@ -41,7 +41,7 @@ export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder
        return (
             <div className="flex flex-col">
                 <span className="font-medium text-[0.78rem] md:text-sm">{customer.fullName}</span>
-                <span className="text-xs md:text-[0.78rem] text-blue-600">{customer.email}</span>
+                <span className="text-xs md:text-[0.78rem] text-slate-400 font-medium">{customer.email}</span>
             </div>
        )
     }

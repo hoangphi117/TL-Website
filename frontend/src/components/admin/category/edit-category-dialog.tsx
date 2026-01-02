@@ -7,7 +7,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useEffect, useState } from "react"
 import type { ICategory, IParentCategory } from "@/types/category"
@@ -71,8 +70,9 @@ export function EditCategoryDialog({open, setOpen, category, categories, onSave,
                 <div className="space-y-4">
                     <div className="space-y-2">
                         <Label className="text-sm md:text-base">Tên loại</Label>
-                        <Input 
-                            className="text-sm md:text-base" 
+                        <input 
+                            className="input-pro" 
+                            placeholder="Nhập tên danh mục..."
                             value={name} 
                             onChange={(e) => setName(e.target.value)} 
                         />
@@ -80,17 +80,18 @@ export function EditCategoryDialog({open, setOpen, category, categories, onSave,
 
                     <div className="space-y-2">
                         <Label className="text-sm md:text-base">Ảnh hiển thị</Label>
-                        <Input 
-                            className="text-sm md:text-base"
+                        <input 
+                            className="input-pro"
                             value={imageUrl}
+                            placeholder="https://example.com/logo.png"
                             onChange={(e) => setImageUrl(e.target.value)} 
                         />
                     </div>
 
                     <div className="space-y-2">
                         <Label className="text-sm md:text-base">Mô tả</Label>
-                        <Input 
-                            className="text-sm md:text-base"
+                        <input
+                            className="input-pro h-15"
                             value={description} 
                             onChange={(e) => setDescription(e.target.value)}
                         />
