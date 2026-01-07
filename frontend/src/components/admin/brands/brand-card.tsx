@@ -1,12 +1,11 @@
-// src/components/admin/brand/brand-card.tsx
-import { Edit, Trash } from "lucide-react"
-import type { IBrand } from "@/types/brand"
-import { Button } from "@/components/ui/button"
+import { Edit, Trash } from "lucide-react";
+import type { IBrand } from "@/types/brand";
+import { Button } from "@/components/ui/button";
 
 interface BrandCardProps {
-  brand: IBrand
-  onEdit: (brand: IBrand) => void
-  onDelete: (brand: IBrand) => void
+  brand: IBrand;
+  onEdit: (brand: IBrand) => void;
+  onDelete: (brand: IBrand) => void;
 }
 
 export default function BrandCard({ brand, onEdit, onDelete }: BrandCardProps) {
@@ -64,5 +63,5 @@ export default function BrandCard({ brand, onEdit, onDelete }: BrandCardProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

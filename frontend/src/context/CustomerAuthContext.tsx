@@ -1,4 +1,3 @@
-// src/context/CustomerAuthContext.tsx
 import {
   createContext,
   useState,
