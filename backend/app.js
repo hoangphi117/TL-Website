@@ -1,38 +1,31 @@
-require('dotenv').config()
-const cors = require('cors');
+import 'dotenv/config';
+import cors from 'cors';
+import express from 'express';
+import { connectDB } from './libs/db.js';
 
-const express = require('express');
 const app = express();
 
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json())
-const PORT = process.env.PORT
-const DB_URL = process.env.MONGODB_URI
+const PORT = process.env.PORT || 4000;
 
-
-const mongoose = require('mongoose')
-mongoose.connect(DB_URL)
-  .then(() => console.log("Connected to MongoDB!"))
-  .catch(() => console.log("Fail connect to MongoDB!"));
-
-
-const router = require('./routes/index');
-app.use("/", router)
+import router from './routes/index.js';
+app.use("/", router);
 
 app.set('query parser', 'extended');
 
-app.listen(PORT, (error) => {
-  if (!error) (
-    console.log("Server is listening on port", PORT)
-  )
-});
-
 app.get("/", (req, res) => {
   try {
-    res.send("Wellcome to Website eCommerce Team Liquid!")
+    res.send("Welcome to Website eCommerce Team Liquid!");
+  } catch (err) {
+    res.status(500).send("Error connecting to server!");
   }
-  catch {
-    res.send("Error connecting to server!")
-  }
-})
+});
+
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+});

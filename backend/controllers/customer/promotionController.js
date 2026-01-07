@@ -1,6 +1,6 @@
-const Promotion = require('../../models/promotionModel')
+import Promotion from '../../models/promotionModel.js'
 
-const getPromotionByCode = async (req, res) => {
+export const getPromotionByCode = async (req, res) => {
   const { code } = req.params
 
   try {
@@ -37,5 +37,3 @@ const getPromotionByCode = async (req, res) => {
     })
   }
 }
-
-module.exports = { getPromotionByCode }

@@ -1,6 +1,6 @@
-const Feedback = require('../../models/feedbackModel')
+import Feedback from '../../models/feedbackModel.js'
 
-const createFeedBack = async (req, res) => {
+export const createFeedBack = async (req, res) => {
   const user = req.user
   const { subject, message } = req.body
 
@@ -27,5 +27,3 @@ const createFeedBack = async (req, res) => {
   }
 
 }
-
-module.exports = { createFeedBack }

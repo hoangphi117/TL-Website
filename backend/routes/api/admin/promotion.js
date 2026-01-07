@@ -1,13 +1,12 @@
-const express = require('express');
+import express from 'express';
 
 const router = express.Router();
-const { createPromotion, getAllPromotions, getPromotionById, updatePromotion, deletePromotion } = 
-        require("../../../controllers/admin/promotionController");
-    
+import { createPromotion, getAllPromotions, getPromotionById, updatePromotion, deletePromotion } from "../../../controllers/admin/promotionController.js";
+
 router.post("/createPromotion", createPromotion);
 router.get("/getAllPromotions", getAllPromotions);
 router.get("/:id", getPromotionById);
 router.put("/:id", updatePromotion);
 router.delete("/:id", deletePromotion);
 
-module.exports = router;
+export default router;

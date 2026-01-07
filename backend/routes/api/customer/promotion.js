@@ -1,8 +1,7 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-
-const { getPromotionByCode } = require('../../../controllers/customer/promotionController')
+import { getPromotionByCode } from '../../../controllers/customer/promotionController.js'
 
 router.get('/:code', getPromotionByCode)
 
-module.exports = router
+export default router

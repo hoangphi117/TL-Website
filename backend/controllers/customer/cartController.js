@@ -1,5 +1,5 @@
-const Cart = require('../../models/cartModel');
-const Product = require('../../models/productModel')
+import Cart from '../../models/cartModel.js';
+import Product from '../../models/productModel.js'
 
 const calculateTotal = (cart) => {
   cart.totalAmount = cart.items.reduce((total, item) => {
@@ -7,7 +7,7 @@ const calculateTotal = (cart) => {
   }, 0);
 };
 
-const addToCart = async (req, res) => {
+export const addToCart = async (req, res) => {
   const { productId, quantity } = req.body;
   const userId = req.user.id;
 
@@ -64,7 +64,7 @@ const addToCart = async (req, res) => {
   }
 };
 
-const getCart = async (req, res) => {
+export const getCart = async (req, res) => {
   const userId = req.user.id;
 
   try {
@@ -86,7 +86,7 @@ const getCart = async (req, res) => {
   }
 };
 
-const updateCartItem = async (req, res) => {
+export const updateCartItem = async (req, res) => {
   const { productId, quantity } = req.body;
   const userId = req.user.id
 
@@ -127,7 +127,7 @@ const updateCartItem = async (req, res) => {
   }
 };
 
-const removeCartItem = async (req, res) => {
+export const removeCartItem = async (req, res) => {
   const { productId } = req.body;
   const userId = req.user.id
 
@@ -155,5 +155,3 @@ const removeCartItem = async (req, res) => {
     });
   }
 };
-
-module.exports = { addToCart, getCart, updateCartItem, removeCartItem }

@@ -1,8 +1,8 @@
-const Brand = require("../models/brandModel");
-const Product = require("../models/productModel")
-const mongoose = require('mongoose')
+import Brand from "../models/brandModel.js";
+import Product from "../models/productModel.js"
+import mongoose from 'mongoose'
 
-const getAllBrands = async (req, res) => {
+export const getAllBrands = async (req, res) => {
   try {
     const brands = await Brand.find().sort({ createdAt: -1 });
     res.status(200).json({
@@ -19,7 +19,7 @@ const getAllBrands = async (req, res) => {
   }
 };
 
-const getBrandsByCategory = async (req, res) => {
+export const getBrandsByCategory = async (req, res) => {
   try {
     const categoryId = new mongoose.Types.ObjectId(req.params.categoryId);
 
@@ -46,9 +46,4 @@ const getBrandsByCategory = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
-};
-
-module.exports = {
-  getAllBrands,
-  getBrandsByCategory
 };

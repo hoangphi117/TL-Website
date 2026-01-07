@@ -1,7 +1,7 @@
-const Category = require("../models/categoryModel");
+import Category from "../models/categoryModel.js";
 
 //[Get] - All Category
-const getAllCategories = async (req, res) => {
+export const getAllCategories = async (req, res) => {
   try {
     const categories = await Category.find()
       .populate("parentCategory", "name")
@@ -22,7 +22,7 @@ const getAllCategories = async (req, res) => {
 };
 
 //[Get]- By ID
-const getById = async (req, res) => {
+export const getById = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id).populate(
       "parentCategory",
@@ -48,7 +48,3 @@ const getById = async (req, res) => {
     });
   }
 };
-
-
-
-module.exports = { getAllCategories, getById };

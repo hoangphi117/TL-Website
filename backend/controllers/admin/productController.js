@@ -1,10 +1,10 @@
-const Product = require("../../models/productModel");
-const Category = require("../../models/categoryModel");
-const Brand = require("../../models/brandModel");
-const mongoose = require("mongoose");
+import Product from "../../models/productModel.js";
+import Category from "../../models/categoryModel.js";
+import Brand from "../../models/brandModel.js";
+import mongoose from "mongoose";
 
 // [Post] - admin - create product
-const createProduct = async (req, res) => {
+export const createProduct = async (req, res) => {
   try {
     const {
       name,
@@ -67,7 +67,7 @@ const createProduct = async (req, res) => {
   }
 };
 
-const getAllProducts = async (req, res) => {
+export const getAllProducts = async (req, res) => {
   try {
     const { page = 1, limit = 10, search, category, brand, status } = req.query;
 
@@ -102,7 +102,7 @@ const getAllProducts = async (req, res) => {
 };
 
 // GET PRODUCT BY ID
-const getProductById = async (req, res) => {
+export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -135,7 +135,7 @@ const getProductById = async (req, res) => {
   }
 };
 
-const updateProduct = async (req, res) => {
+export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body;
@@ -171,7 +171,7 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const deleted = await Product.findByIdAndDelete(id);
@@ -193,12 +193,4 @@ const deleteProduct = async (req, res) => {
       message: error.message,
     });
   }
-};
-
-module.exports = {
-  createProduct,
-  getAllProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
 };

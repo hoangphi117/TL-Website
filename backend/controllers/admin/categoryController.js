@@ -1,7 +1,7 @@
-const Category = require("../../models/categoryModel");
+import Category from "../../models/categoryModel.js";
 
 //[Post]-admin-create
-const createCategory = async (req, res) => {
+export const createCategory = async (req, res) => {
   try {
     const { name, description, imageUrl, parentCategory } = req.body;
     if (!name) {
@@ -52,7 +52,7 @@ const createCategory = async (req, res) => {
 };
 
 //[Get] - All Category- admin
-const getAllCategories = async (req, res) => {
+export const getAllCategories = async (req, res) => {
   try {
     const categories = await Category.find()
       .populate("parentCategory", "name")
@@ -73,7 +73,7 @@ const getAllCategories = async (req, res) => {
 };
 
 //[Get]- By ID - admin
-const getById = async (req, res) => {
+export const getById = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id).populate(
       "parentCategory",
@@ -101,7 +101,7 @@ const getById = async (req, res) => {
 };
 
 //[put]- update category - admin
-const updateCategory = async (req, res) => {
+export const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, imageUrl, parentCategory } = req.body;
@@ -159,7 +159,7 @@ const updateCategory = async (req, res) => {
 };
 
 //[Delete] delete category- admin
-const deleteCategory = async (req, res) => {
+export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -194,6 +194,3 @@ const deleteCategory = async (req, res) => {
     });
   }
 };
-
-
-module.exports = {createCategory, getAllCategories,getById,updateCategory,deleteCategory};

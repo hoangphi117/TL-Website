@@ -1,10 +1,9 @@
+import Product from "../models/productModel.js"
+import Category from '../models/categoryModel.js'
+import Brand from '../models/brandModel.js'
+import APIFeatures from '../utils/APIFeatures.js'
 
-const Product = require("../models/productModel")
-const Category = require('../models/categoryModel')
-const Brand = require('../models/brandModel')
-const APIFeatures = require('../utils/APIFeatures')
-
-const getAllProducts = async (req, res) => {
+export const getAllProducts = async (req, res) => {
   try {
     let filterObj = { ...req.query };
 
@@ -66,5 +65,3 @@ const getAllProducts = async (req, res) => {
     })
   }
 }
-
-module.exports = { getAllProducts }
