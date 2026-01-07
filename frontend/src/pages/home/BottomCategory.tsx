@@ -66,7 +66,7 @@ const BottomCategory: React.FC = () => {
                     }}
                   />
                 </div>
-                <p className="text-xs md:text-sm text-center font-medium text-gray-400 group-hover:text-red-500 transition-colors line-clamp-2 h-10 flex items-center">
+                <p className="text-xs md:text-sm text-center font-medium text-gray-400 group-hover:text-red-500 transition-colors flex items-center">
                   {category.name}
                 </p>
               </Link>
