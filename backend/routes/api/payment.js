@@ -1,10 +1,10 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { momo_return, vnpay_return } = require('../../controllers/paymentController')
+import { momo_return, vnpay_return } from '../../controllers/paymentController.js'
 
 router.get('/vnpay_return', vnpay_return)
 
 router.get('/momo_return', momo_return)
 
 
-module.exports = router;
+export default router;

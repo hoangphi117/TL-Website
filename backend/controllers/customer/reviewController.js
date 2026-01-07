@@ -1,7 +1,7 @@
-const Review = require('../../models/reviewModel')
-const Order = require('../../models/orderModel')
+import Review from '../../models/reviewModel.js'
+import Order from '../../models/orderModel.js'
 
-const createReview = async (req, res) => {
+export const createReview = async (req, res) => {
   const userId = req.user.id
   const { productId, comment, rating } = req.body
 
@@ -52,5 +52,3 @@ const createReview = async (req, res) => {
     })
   }
 }
-
-module.exports = { createReview }

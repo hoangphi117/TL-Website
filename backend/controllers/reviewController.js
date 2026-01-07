@@ -1,6 +1,6 @@
-const Review = require('../models/reviewModel')
+import Review from '../models/reviewModel.js'
 
-const getReviewsProduct = async (req, res) => {
+export const getReviewsProduct = async (req, res) => {
   const { id } = req.params
 
   try {
@@ -29,5 +29,3 @@ const getReviewsProduct = async (req, res) => {
     })
   }
 }
-
-module.exports = { getReviewsProduct }

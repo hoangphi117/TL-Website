@@ -1,7 +1,7 @@
-const Feedback = require("../../models/feedbackModel");
-const { sendEmail } = require('../../utils/sendMail')
+import Feedback from "../../models/feedbackModel.js";
+import { sendEmail } from '../../utils/sendMail.js'
 
-const getAllFeedbacks = async (req, res) => {
+export const getAllFeedbacks = async (req, res) => {
   try {
     const { status, page = 1, limit = 10, search } = req.query;
     const query = {};
@@ -42,7 +42,7 @@ const getAllFeedbacks = async (req, res) => {
   }
 };
 
-const getFeedbackById = async (req, res) => {
+export const getFeedbackById = async (req, res) => {
   try {
     const feedback = await Feedback.findById(req.params.id);
 
@@ -71,7 +71,7 @@ const getFeedbackById = async (req, res) => {
   }
 };
 
-const replyToFeedback = async (req, res) => {
+export const replyToFeedback = async (req, res) => {
   try {
     const { adminReply } = req.body;
 
@@ -194,7 +194,7 @@ const replyToFeedback = async (req, res) => {
   }
 };
 
-const updateFeedbackStatus = async (req, res) => {
+export const updateFeedbackStatus = async (req, res) => {
   try {
     const { status } = req.body;
 
@@ -231,7 +231,7 @@ const updateFeedbackStatus = async (req, res) => {
   }
 };
 
-const deleteFeedback = async (req, res) => {
+export const deleteFeedback = async (req, res) => {
   try {
     const feedback = await Feedback.findByIdAndDelete(req.params.id);
 
@@ -252,12 +252,4 @@ const deleteFeedback = async (req, res) => {
       message: error.message
     });
   }
-};
-
-module.exports = {
-  getAllFeedbacks,
-  getFeedbackById,
-  replyToFeedback,
-  updateFeedbackStatus,
-  deleteFeedback
 };

@@ -1,22 +1,21 @@
-
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const brandSchema = mongoose.Schema({
-    name: {
-      type: String,
-      unique: true,
-      required: true,
-      trim: true,
-    },
-    logoUrl: {
-      type: String,
-      default: "",
-    },
-    description: {
-      type: String,
-      default: "",
-    },
+  name: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true,
   },
+  logoUrl: {
+    type: String,
+    default: "",
+  },
+  description: {
+    type: String,
+    default: "",
+  },
+},
   {
     timestamps: true,
   }
@@ -24,4 +23,4 @@ const brandSchema = mongoose.Schema({
 
 const Brand = mongoose.model('Brand', brandSchema)
 
-module.exports = Brand;
+export default Brand;

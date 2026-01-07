@@ -1,8 +1,7 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-
-const { createReview } = require('../../../controllers/customer/reviewController')
+import { createReview } from '../../../controllers/customer/reviewController.js'
 
 router.post('/', createReview)
 
-module.exports = router
+export default router

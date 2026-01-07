@@ -1,9 +1,8 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-
-const { chatWithAI, getHistory } = require('../../../controllers/customer/chatbotController')
+import { chatWithAI, getHistory } from '../../../controllers/customer/chatbotController.js'
 
 router.post('/', chatWithAI)
 router.get('/', getHistory)
 
-module.exports = router
+export default router

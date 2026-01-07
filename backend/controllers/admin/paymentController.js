@@ -1,6 +1,6 @@
-const Payment = require("../../models/paymentModel");
+import Payment from "../../models/paymentModel.js";
 
-const getAllPayments = async (req, res) => {
+export const getAllPayments = async (req, res) => {
   try {
     const { status, method, page = 1, limit = 10, search } = req.query;
     const query = {};
@@ -37,7 +37,7 @@ const getAllPayments = async (req, res) => {
   }
 };
 
-const getPaymentById = async (req, res) => {
+export const getPaymentById = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -62,7 +62,7 @@ const getPaymentById = async (req, res) => {
 };
 
 
-const updatePaymentStatus = async (req, res) => {
+export const updatePaymentStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -76,14 +76,14 @@ const updatePaymentStatus = async (req, res) => {
 
     const payment = await Payment.findByIdAndUpdate(
       id,
-      { 
+      {
         status,
         updatedAt: Date.now(),
       },
       { new: true }
     )
-    .populate("userId", "fullName email")
-    .populate("orderId", "orderCode totalAmount");
+      .populate("userId", "fullName email")
+      .populate("orderId", "orderCode totalAmount");
 
     if (!payment) {
       return res.status(404).json({
@@ -103,7 +103,7 @@ const updatePaymentStatus = async (req, res) => {
 };
 
 
-const deletePayment = async (req, res) => {
+export const deletePayment = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -123,12 +123,4 @@ const deletePayment = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-};
-
-
-module.exports = {
-  getAllPayments,
-  getPaymentById,
-  updatePaymentStatus,
-  deletePayment,
 };
