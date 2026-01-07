@@ -8,11 +8,18 @@ const orderApi = {
       params,
     });
   },
+
   getByID(id: string) {
     return axiosClient.get<{ success: boolean; message: string; data: IOrder }>(
       `admin/order/${id}`
     );
   },
+
+  updateStatus(id: string, orderStatus: string) {
+    return axiosClient.put<{ success: boolean; message: string; data: IOrder }>(
+      `admin/order/update/${id}`, { orderStatus }
+    );
+  }
 };
 
 export default orderApi;

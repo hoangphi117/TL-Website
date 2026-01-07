@@ -1,6 +1,5 @@
 import axios from "axios";
 import type { AxiosResponse } from "axios";
-import { useAuth } from "@/context/AdminAuthContext";
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:3000",
@@ -26,8 +25,11 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error) => {
-    const {logout} = useAuth();
-    if(error.status === 401 && error.message === "Invalid token") logout();
+    if(error.status === 401 && error.message === "Invalid token") {
+      localStorage.removeItem("admin_access_token");
+      localStorage.removeItem("admin");
+      window.location.href = "/admin/login";
+    }
     console.error("API Error:", error.response?.data || error.message);
     return Promise.reject(error.response?.data || error);
   }

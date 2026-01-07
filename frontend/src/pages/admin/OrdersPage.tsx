@@ -22,12 +22,21 @@ export default function OrdersPage() {
 
   const handleDetailOpen = (order: IOrder) => {
     try {
-        setDetailedOrder(order);
-        setDetailOpen(true);
-      }catch(error){
-        console.log(error);
-      }
+      setDetailedOrder(order);
+      setDetailOpen(true);
+    }catch(error){
+      console.log(error);
     }
+  }
+
+  const onChangeOrderStatus = async (status: string, id: string) => {
+    try {
+      await orderApi.updateStatus(id, status);
+      await loadOrders();
+    } catch (error) {
+      console.log(error);
+    } 
+  };
 
   const loadOrders = async () => {
     try {
@@ -81,6 +90,7 @@ export default function OrdersPage() {
                 search={search}
                 setSearch={setSearch}
                 handleDetailOpen={handleDetailOpen}
+                onChangeOrderStatus={onChangeOrderStatus}
                 orderStatusSelected={orderStatusSelected}
                 setOrderStatusSelected={setOrderStatusSelected}
                 paymentSatusSelected={paymentStatusSelected}
