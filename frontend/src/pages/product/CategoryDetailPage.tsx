@@ -8,12 +8,12 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { categoryService } from "@/services/api/customer/category.service";
 import { productService } from "@/services/api/customer/product.service";
 import { ProductFilterBar } from "@/components/product/filter/ProductFilter";
 import { ProductSort } from "@/components/product/filter/ProductSort";
 import ProductCard from "@/components/product/ProductCard";
+import PaginationCustom from "@/components/common/Pagination";
 
 const CategoryDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,6 +57,7 @@ const CategoryDetailPage: React.FC = () => {
         });
         const res = await productService.getProducts(params);
         setProductResponse(res);
+        console.log(res);
       } catch (err) {
       } finally {
         setLoadingProducts(false);
@@ -64,14 +65,6 @@ const CategoryDetailPage: React.FC = () => {
     };
     if (categoryDetail) fetchProducts();
   }, [categoryDetail, pageFromUrl, sortOption, searchParams]);
-
-  const handlePageChange = (newPage: number) => {
-    setSearchParams((prev) => {
-      prev.set("page", newPage.toString());
-      return prev;
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   if (loadingCategory)
     return (
@@ -151,28 +144,17 @@ const CategoryDetailPage: React.FC = () => {
       )}
 
       {/* PAGINATION */}
-      {(productResponse?.pagination?.totalPage || 0) > 1 && (
-        <div className="flex justify-center mt-12 gap-2 pb-10">
-          <Button
-            variant="outline"
-            className="rounded border-zinc-800 text-gray-400"
-            onClick={() => handlePageChange(pageFromUrl - 1)}
-            disabled={pageFromUrl === 1}
-          >
-            Trước
-          </Button>
-          <Button variant="default" className="rounded bg-red-600">
-            {pageFromUrl}
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded border-zinc-800 text-gray-400"
-            onClick={() => handlePageChange(pageFromUrl + 1)}
-            disabled={pageFromUrl === productResponse?.pagination?.totalPage}
-          >
-            Sau
-          </Button>
-        </div>
+      {productResponse?.pagination?.totalPage > 1 && (
+        <PaginationCustom
+          currentPage={pageFromUrl}
+          totalPages={productResponse.pagination.totalPage}
+          onPageChange={(page) =>
+            setSearchParams((prev) => {
+              prev.set("page", page.toString());
+              return prev;
+            })
+          }
+        />
       )}
     </div>
   );
