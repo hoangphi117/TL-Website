@@ -4,9 +4,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import type { IBrand } from "@/types/brand"
 
 interface BrandCardProps {
-  brand: IBrand
-  onEdit: (brand: IBrand) => void
-  onDelete: (brand: IBrand) => void
+  brand: IBrand;
+  onEdit: (brand: IBrand) => void;
+  onDelete: (brand: IBrand) => void;
 }
 
 export default function BrandCard({ brand, onEdit, onDelete }: BrandCardProps) {
@@ -100,5 +100,5 @@ export default function BrandCard({ brand, onEdit, onDelete }: BrandCardProps) {
         </DropdownMenu>
       </div>
     </div>
-  )
+  );
 }

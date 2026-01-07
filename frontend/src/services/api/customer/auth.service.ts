@@ -1,4 +1,3 @@
-// src/services/api/customer/auth.service.ts
 import axiosClient from "@/services/api/customer/axiosClient";
 import { type AuthUser } from "@/context/CustomerAuthContext";
 import { type IUser } from "@/types/user";

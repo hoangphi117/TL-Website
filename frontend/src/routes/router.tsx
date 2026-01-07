@@ -53,7 +53,6 @@ import AdminLoginPage from "@/pages/admin/LoginPage";
 import OrdersPage from "@/pages/admin/OrdersPage";
 import DetailedPromotion from "@/pages/admin/DetailedPromotion";
 import AddPromotionPage from "@/pages/admin/AddPromotionPage";
-import { AdminAuthProvider } from "@/context/AdminAuthContext";
 
 const DashboardPage = React.lazy(() => import("@/pages/admin/DashboardPage"));
 const UsersPage = React.lazy(() => import("@/pages/admin/UsersPage"));
@@ -66,18 +65,28 @@ const PromotionPage = React.lazy(() => import("@/pages/admin/PromotionsPage"));
 
 const ErrorPage = React.lazy(() => import("@/pages/errorPage"));
 
+// LOADER
+import { homeLoader } from "@/pages/home/home.loader";
+import { categoryDetailLoader } from "@/pages/product/category.loader";
+import { searchLoader } from "@/pages/product/search.loader";
+import { myOrdersLoader } from "@/pages/customer/Profile/order.loader";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <HomePage /> },
+      { index: true, element: <HomePage />, loader: homeLoader },
       { path: "product/:category/:id", element: <ProductDetailPage /> },
       {
         element: <ProtectedRouteCustomer />,
         children: [
-          { path: "users/me", element: <CustomerProfilePage /> },
+          {
+            path: "users/me",
+            element: <CustomerProfilePage />,
+            loader: myOrdersLoader,
+          },
           { path: "cart", element: <CustomerCartPage /> },
           { path: "checkout", element: <CheckoutPage /> },
           { path: "/orders/:code", element: <OrderDetailPage /> },
@@ -89,10 +98,12 @@ const router = createBrowserRouter([
       {
         path: "/category/:id",
         element: <CategoryDetailPage />,
+        loader: categoryDetailLoader,
       },
       {
         path: "products",
         element: <SearchPage />,
+        loader: searchLoader,
       },
     ],
   },

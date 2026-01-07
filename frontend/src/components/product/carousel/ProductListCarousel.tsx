@@ -25,6 +25,8 @@ const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
 }) => {
   const navigate = useNavigate();
 
+  const displayBrands = brands?.slice(0, 5) || [];
+
   return (
     <div
       className={`w-full bg-[#151517]/80 backdrop-blur-md border border-zinc-800 rounded px-5 py-6 shadow-xl ${
@@ -32,9 +34,7 @@ const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
       }`}
     >
       <div className="mb-6 px-1">
-        {/* TOP */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          {/* LEFT */}
           <div className="flex flex-col md:flex-row md:items-center gap-3">
             <h2 className="text-xl md:text-2xl font-bold text-white uppercase border-l-4 border-red-600 pl-4 tracking-wide">
               {title}
@@ -47,12 +47,11 @@ const ProductListCarousel: React.FC<ProductListCarouselProps> = ({
             </div>
           </div>
 
-          {/* RIGHT */}
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             {/* Brands */}
-            {brands && brands.length > 0 && (
+            {displayBrands && displayBrands.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {brands.map((brand) => (
+                {displayBrands.map((brand) => (
                   <span
                     key={brand._id}
                     onClick={() => navigate(`/products?brand=${brand.name}`)}
