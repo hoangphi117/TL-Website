@@ -5,11 +5,23 @@ import type { IOrder } from "@/types/order"
 
 import { formatVND } from "@/utils/admin/formatMoney";
 import { formatDate } from "@/utils/formatDate";
-import { getOrderStatusLabel, getPaymentStatusLabel } from "@/utils/admin/mapOrderDetail";
+import { getPaymentStatusLabel, ORDER_STATUS } from "@/utils/admin/mapOrderDetail";
 import { PaymentStatusBadge } from "./payment-status-badge";
-import { OrderStatusBadge } from "./order-status-badge";
 
-export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder>[] => [
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+interface OrdersColumnProps {
+  onOpenDetail: (order: IOrder) => void;
+  onChangeOrderStatus: (status: string, id: string) => void;
+}
+
+export const columns = ({onOpenDetail, onChangeOrderStatus} : OrdersColumnProps): ColumnDef<IOrder>[] => [
   {
     accessorKey: "orderCode",
     header: () => (
@@ -20,12 +32,12 @@ export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder
     cell: ({ row }) => {
         const order = row.original;
         return (
-            <button
-                className="text-black hover:underline font-semibold text-[0.78rem] md:text-sm"
-                onClick={() => onOpenDetail(order)}
-            > 
-                {row.getValue("orderCode")}
-            </button>
+          <button
+              className="text-black hover:underline font-semibold text-[0.78rem] md:text-sm"
+              onClick={() => onOpenDetail(order)}
+          > 
+              {row.getValue("orderCode")}
+          </button>
         )
     }
   },
@@ -81,9 +93,60 @@ export const columns = (onOpenDetail: (order: IOrder) => void): ColumnDef<IOrder
         | "shipping"
         | "completed"
         | "cancelled";
-        const label = getOrderStatusLabel(orderStatus);
         return (
-          <OrderStatusBadge status={orderStatus} label={label}/>
+          <Select
+            value={orderStatus}
+            onValueChange={(value) =>
+              onChangeOrderStatus(
+                value as
+                  | "pending_confirmation"
+                  | "processing"
+                  | "shipping"
+                  | "completed"
+                  | "cancelled",
+                row.original._id
+              )
+            }
+          >
+            <SelectTrigger 
+              className="
+                h-9 w-full
+                text-xs md:text-sm
+                rounded-md
+                border border-slate-300
+                bg-white
+                hover:bg-slate-50
+                ring-offset-0
+                focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
+                data-[state=open]:ring-2 data-[state=open]:ring-blue-500
+              "
+            >
+              <SelectValue placeholder="Trạng thái đơn hàng" />
+            </SelectTrigger>
+            <SelectContent 
+              className="
+              text-sm rounded-md
+              border border-slate-200
+              bg-white
+              shadow-lg"
+            >
+              {Object.entries(ORDER_STATUS).map(([value, label]) => (
+                <SelectItem 
+                  key={value} 
+                  value={value}
+                  className="
+                    text-xs md:text-sm
+                    cursor-pointer
+                    px-3 py-2
+                    focus:bg-blue-50
+                    focus:text-blue-700
+                  "
+                >
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+        </Select>
         )
     }
   },

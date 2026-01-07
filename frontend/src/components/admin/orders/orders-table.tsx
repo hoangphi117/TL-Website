@@ -29,6 +29,7 @@ interface DataTableProps {
   setSearch: (search: string) => void;
 
   handleDetailOpen: (order: IOrder) => void;
+  onChangeOrderStatus: (status: string, id: string) => void;
 
   orderStatusSelected: string;
   paymentSatusSelected: string;
@@ -40,13 +41,17 @@ export function OrdersTable({
   orders, page, totalPages, setPage,
   search, setSearch,
   handleDetailOpen,
+  onChangeOrderStatus,
   orderStatusSelected, paymentSatusSelected,
   setOrderStatusSelected, setPaymentStatusSelected
 }: DataTableProps) {
 
   const table = useReactTable({
     data: orders,
-    columns: columns(handleDetailOpen),
+    columns: columns({
+      onOpenDetail: handleDetailOpen,
+      onChangeOrderStatus: onChangeOrderStatus,
+    }),
     getCoreRowModel: getCoreRowModel(),
   });
 
