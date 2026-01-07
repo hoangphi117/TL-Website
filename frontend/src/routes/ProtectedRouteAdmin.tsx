@@ -8,12 +8,14 @@ type Props = {
 
 export default function ProtectedRouteAdmin ({ children }: Props) {
 
-  // const {user} = useAuth();
-  const token = localStorage.getItem("admin_access_token");
+  const {user, isLoading} = useAuth();
+  if(isLoading) {
+    return <div>Loading...</div>
+  }
+  
+  if(!user){
+    return <Navigate to="/admin/login" replace />
+  }
 
-    if(!token){
-        return <Navigate to="/admin/login" replace />
-    }
-
-    return children;
+  return children;
 }

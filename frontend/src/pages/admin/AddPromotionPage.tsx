@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { IPromotion, IPromotionUpdate } from "@/types/promotion";
@@ -110,7 +109,7 @@ export default function AddPromotionPage() {
             />
           </div>
           <div className="space-y-1">
-            <Label>Mã giảm giá</Label>
+            <Label>Mã giảm giá <span className="text-red-500">*</span></Label>
             <input
                 placeholder="VD: SALE20"
                 className="input-pro"
@@ -120,7 +119,7 @@ export default function AddPromotionPage() {
             </input>
           </div>
           <div className="col-span-2 space-y-1">
-            <Label className="text-sm md:text-base">Mô tả</Label>
+            <Label className="text-sm md:text-base">Mô tả <span className="text-red-500">*</span></Label>
             <Textarea
               className="text-sm rounded-sm"
               placeholder="Mô tả chi tiết mã giảm giá..."
@@ -130,7 +129,7 @@ export default function AddPromotionPage() {
           </div>
 
           <div className="space-y-1">
-            <Label className="text-sm md:text-base">Giá trị giảm</Label>
+            <Label className="text-sm md:text-base">Giá trị giảm <span className="text-red-500">*</span></Label>
             <input
               className="input-pro"
               type="number"
@@ -142,7 +141,7 @@ export default function AddPromotionPage() {
           </div>
 
           <div className="space-y-1">
-            <Label className="text-sm md:text-base">Loại giảm giá</Label>
+            <Label className="text-sm md:text-base">Loại giảm giá <span className="text-red-500">*</span></Label>
             <Select value={form.discountType} onValueChange={(value) => 
                 handleChange("discountType", value)
               }
@@ -160,7 +159,7 @@ export default function AddPromotionPage() {
           </div>
 
           <div className="space-y-1">
-            <Label className="text-sm md:text-base">Đơn tối thiểu (VNĐ)</Label>
+            <Label className="text-sm md:text-base">Đơn tối thiểu (VNĐ) <span className="text-red-500">*</span></Label>
             <input
               className="input-pro"
               type="number"
@@ -172,7 +171,7 @@ export default function AddPromotionPage() {
           </div>
 
           <div className="space-y-1">
-            <Label className="text-sm md:text-base">Giảm tối đa (VNĐ)</Label>
+            <Label className="text-sm md:text-base">Giảm tối đa (VNĐ) <span className="text-red-500">*</span></Label>
             <input
               className="input-pro"
               type="number"
@@ -205,7 +204,7 @@ export default function AddPromotionPage() {
           </div>
 
           <div className="space-y-1">
-            <Label className="text-sm md:text-base text-muted-foreground">Số lượng</Label>
+            <Label className="text-sm md:text-base text-muted-foreground">Số lượng <span className="text-red-500">*</span></Label>
             <input
                 className="input-pro max-w-30 w-full"
                 type="number"

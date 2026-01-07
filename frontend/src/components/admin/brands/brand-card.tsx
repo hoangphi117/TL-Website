@@ -1,7 +1,7 @@
 import { Edit, Trash, MoreVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { IBrand } from "@/types/brand"
+import type { IBrand } from "@/types/brand"
 
 interface BrandCardProps {
   brand: IBrand

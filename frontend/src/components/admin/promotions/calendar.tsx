@@ -31,6 +31,9 @@ export function Calendar24({date, time, onChangeDate, onChangeTime, isEdit, isSt
       <div className="flex flex-col gap-2">
         <Label htmlFor="date-picker" className="px-1 text-sm md:text-base">
           {isStart ? "Ngày bắt đầu" : "Ngày kết thúc"}
+          {isStart && (
+            <span className="text-red-500">*</span>
+          )}
         </Label>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
@@ -64,6 +67,9 @@ export function Calendar24({date, time, onChangeDate, onChangeTime, isEdit, isSt
       <div className="flex flex-col gap-2">
         <Label htmlFor="time-picker" className="px-1 text-sm md:text-base">
           {isStart ? "Giờ bắt đầu" : "Giờ kết thúc"}
+          {isStart && (
+            <span className="text-red-500">*</span>
+          )}
         </Label>
         <Input
           type="time"

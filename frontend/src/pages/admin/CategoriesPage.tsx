@@ -4,7 +4,7 @@ import categoryApi from "@/services/api/admin/categoryApi"
 import CategoryCard from "@/components/admin/category/category-card"
 import { EditCategoryDialog } from "@/components/admin/category/edit-category-dialog"
 import { DeleteCategoryAlert } from "@/components/admin/category/delete-category-alert"
-import { LayoutGrid, Package, PackageSearch, Grid2X2, Plus } from "lucide-react"
+import { LayoutGrid, Package, PackageSearch, Grid2X2 } from "lucide-react"
 import productApi from "@/services/api/admin/productApi"
 import PageTitle from "@/components/admin/common/PageTitle"
 import { Button } from "@/components/ui/button"
@@ -170,13 +170,13 @@ export default function CategoriesPage() {
                             Thêm danh mục
                         </Button>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-4" >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-4">
                         {categories.map((c) =>(
                             <div key={c._id} className="aspect-square">
                                 <CategoryCard
                                     category={c}
-                                    handleEdit={handleEdit}
-                                    onAskDelete={(category) => {
+                                    onEdit={handleEdit}
+                                    onDelete={(category) => {
                                     setDeleteTarget(category);
                                     setOpenDelete(true);
                                     }}

@@ -267,7 +267,7 @@ export default function DetailedPromotion() {
         <CardContent className="grid grid-cols-2 sm:grid-cols-3 text-center gap-1">
           <div className="flex flex-col items-center">
             <p className="text-sm md:text-base text-muted-foreground">Đã dùng</p>
-            <p className="text-md md:text-lg font-bold border border-gray-400 rounded-sm w-full max-w-20">
+            <p className="text-md md:text-lg font-bold border border-gray-400 bg-zinc-100 rounded-sm w-full max-w-20">
               {promotion.usedCount}
             </p>
           </div>
@@ -286,7 +286,7 @@ export default function DetailedPromotion() {
           </div>
           <div className="flex flex-col items-center">
             <p className="text-sm md:text-base text-muted-foreground">Còn lại</p>
-            <p className="text-md md:text-lg font-bold border border-gray-400 rounded-sm w-full max-w-20">
+            <p className="text-md md:text-lg font-bold border border-gray-400 bg-zinc-100 rounded-sm w-full max-w-20">
               {(promotion.usageLimit ?? 0) - (promotion.usedCount ?? 0)}
             </p>
           </div>

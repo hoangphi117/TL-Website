@@ -15,6 +15,7 @@ import { formatDate } from "@/utils/formatDate";
 import { formatVND } from "@/utils/admin/formatMoney";
 import { getOrderStatusLabel } from "@/utils/admin/mapOrderDetail";
 import { RoleBadge } from "@/components/admin/users/role-badege";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -84,11 +85,20 @@ export default function UserDetailPage() {
 
       {/* Header Section */}
       <div className="flex items-center gap-6">
-        <img
-          src={user.avatarUrl}
-          alt="Avatar"
-          className="w-24 h-24 rounded-full object-cover shadow-md"
-        />
+        <Avatar className="h-24 w-24 rounded-full relative overflow-hidden border-2 border-white shadow-sm transition-transform group-hover:scale-105 duration-300 flex-shrink-0">
+            <AvatarImage 
+              className="object-cover"
+              src={user.avatarUrl || "/placeholder.svg"} 
+              alt={user.fullName} 
+            />
+            <AvatarFallback className="bg-slate-100 text-slate-500 font-bold text-xs">
+              {user.fullName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()}
+            </AvatarFallback>
+        </Avatar>
 
         <div>
           <h1 className="text-base md:text-xl font-bold">{user.fullName}</h1>
@@ -102,7 +112,7 @@ export default function UserDetailPage() {
 
       {/* Tabs Section */}
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="bg-gray-200">
+        <TabsList className="bg-gray-200 w-full max-w-100">
           <TabsTrigger value="overview">Tổng quan</TabsTrigger>
           <TabsTrigger value="addresses">Địa chỉ</TabsTrigger>
           <TabsTrigger value="orders">Đơn hàng</TabsTrigger>

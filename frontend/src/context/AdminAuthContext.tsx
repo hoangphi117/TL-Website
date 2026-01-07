@@ -1,40 +1,33 @@
+import type { IUserLoginResponse } from "@/types/user";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface User {
-    id: string,
-    email: string,
-    fullName: string,
-    role: string,
-}
-
 interface AuthContextType {
-    user: User | null,
-    login: (token: string) => void,
-    logout: () => void,
+    user: IUserLoginResponse | null;
+    login: (token: string, user: IUserLoginResponse) => void;
+    logout: () => void;
+    isLoading: boolean;
 }
 
 const AdminAuthContext = createContext<AuthContextType | null>(null);
 
 export function AdminAuthProvider({children} : {children: React.ReactNode}) {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<IUserLoginResponse | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem("admin _access_token");
-        // const userData = localStorage.getItem("admin");
+        const token = localStorage.getItem("admin_access_token");
+        const userData = localStorage.getItem("admin");
 
-        if(!token) return;
-
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        if (Date.now() >= payload.exp * 1000) {
-            return logout();
+        if(token && userData) {
+            setUser(JSON.parse(userData));
         }
 
-        // setUser(JSON.parse(userData));
+        setIsLoading(false);
     },[])
 
-    const login = (token: string) => {
+    const login = (token: string, user: IUserLoginResponse) => {
         localStorage.setItem("admin_access_token", token);
         localStorage.setItem("admin", JSON.stringify(user));
         setUser(user);
@@ -49,7 +42,7 @@ export function AdminAuthProvider({children} : {children: React.ReactNode}) {
     };
 
     return (
-        <AdminAuthContext.Provider value={{ user, login, logout }}>
+        <AdminAuthContext.Provider value={{ user, login, logout, isLoading }}>
             {children}
         </AdminAuthContext.Provider>
     );

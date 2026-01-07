@@ -4,6 +4,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
 import { RoleBadge } from "./role-badege"
+import { AvatarFallback } from "@radix-ui/react-avatar"
 
 export const columns: ColumnDef<IUser>[] = [
   {
@@ -13,11 +14,28 @@ export const columns: ColumnDef<IUser>[] = [
         Avatar
       </span>
     ),
-    cell: ({row}) => (
-        <Avatar>
-            <AvatarImage src={row.getValue("avatarUrl")}/>
+    cell: ({row}) => {
+      const avatar = row.getValue("avatarUrl") as string || null;
+      const fullName = row.getValue("fullName") as string;
+      return (
+        <Avatar className="h-10 w-10 sm:h-11 sm:w-11 border-2 border-white shadow-sm transition-transform group-hover:scale-105 duration-300 flex-shrink-0">
+            <AvatarImage 
+              src={avatar || "/placeholder.svg"} 
+              alt={fullName} 
+              // onError={(e) => {
+              //   e.currentTarget.style.display = "none";
+              // }}
+            />
+            <AvatarFallback className="bg-slate-100 text-slate-500 font-bold text-xs">
+              {fullName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()}
+            </AvatarFallback>
         </Avatar>
-    ),
+      )
+    },
   },
   {
     accessorKey: "fullName",

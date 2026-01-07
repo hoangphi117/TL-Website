@@ -40,7 +40,9 @@ export default function AdminLoginPage() {
       }
 
       // Lưu token vào localStorage
-      login(res.data.token)
+      login(res.data.token, res.data.user);
+
+      console.log("user: ", res.data.user);
 
       navigate("/admin"); 
     } catch (err: unknown) {

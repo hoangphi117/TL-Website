@@ -89,7 +89,6 @@ export default function PromotionsPage() {
               onClick={() => navigate('/admin/promotions/add')}
               className="bg-[#3385F0] text-white hover:bg-[#2B71CC] text-sm font-semibold max-w-35 w-full"
             >
-              <Plus size={20}/>
               Thêm mã giảm
             </Button>
           </div>

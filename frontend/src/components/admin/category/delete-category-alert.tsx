@@ -21,17 +21,17 @@ export function DeleteCategoryAlert({ open, setOpen, categoryName, onConfirm }: 
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="w-[90%] p-6 max-w-sm">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-lg md:text-xl">Bạn có chắc muốn xóa {categoryName}?</AlertDialogTitle>
-          <AlertDialogDescription className="text-md md:text-lg">
+          <AlertDialogTitle className="text-sm md:text-[1.2rem]">Bạn có chắc muốn xóa {categoryName}?</AlertDialogTitle>
+          <AlertDialogDescription className="text-sm">
             Hành động này không thể hoàn tác.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className="text-md md:text-xl">Hủy</AlertDialogCancel>
+          <AlertDialogCancel className="text-sm md:text-base">Hủy</AlertDialogCancel>
 
           <AlertDialogAction
-            className="bg-red-500 hover:bg-red-600 text-md md:text-xl"
+            className="bg-red-500 hover:bg-red-600 text-sm md:text-base"
             onClick={onConfirm}
           >
             Xóa

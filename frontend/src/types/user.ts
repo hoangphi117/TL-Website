@@ -32,3 +32,11 @@ export interface IUserListResponse {
   totalPages: number;
   data: IUser[];
 }
+
+export interface IUserLoginResponse {
+  _id:  string;
+  email: string;
+  fullName: string;
+  role: string;
+  createdAt: string;
+}

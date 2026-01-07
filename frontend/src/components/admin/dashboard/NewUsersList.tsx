@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardAction } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { Mail, ExternalLink } from "lucide-react"
+import { Mail } from "lucide-react"
 import type { IUser } from "@/types/user"
 import { RoleBadge } from "../users/role-badege";
 import { formatDate } from "@/utils/formatDate";
