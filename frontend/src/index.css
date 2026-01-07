@@ -34,3 +34,18 @@ body {
     scrollbar-width: none;
   }
 }
+
+#nprogress .bar {
+  background: #ef4444 !important;
+  position: fixed !important;
+  z-index: 99999 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  z-index: 99999 !important;
+  box-shadow: 0 0 10px #ef4444, 0 0 5px #ef4444 !important;
+}

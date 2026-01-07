@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Suspense, useEffect } from "react";
+import { useNavigation } from "react-router-dom";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import { Outlet } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Suspense } from "react";
 import { Toaster } from "sonner";
 import ScrollToTop from "../common/ScrollToTop";
 import ChatBot from "../chatbot/ChatBot";
@@ -11,6 +11,14 @@ import Zalo from "../common/Zalo";
 import SideBanner from "../common/SideBanner";
 
 import mainBG from "@/assets/images/main-bg.jpg";
+
+import nProgress from "nprogress";
+
+nProgress.configure({
+  showSpinner: false,
+  speed: 400,
+  minimum: 0.2,
+});
 
 const PageLoader = () => (
   <div className="p-4 space-y-4">
@@ -23,6 +31,15 @@ const PageLoader = () => (
 );
 
 const MainLayout: React.FC = () => {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (navigation.state === "loading") {
+      nProgress.start();
+    } else {
+      nProgress.done();
+    }
+  }, [navigation.state]);
   return (
     <div className="flex flex-col min-h-screen pb-16 md:pb-0 bg-[#0a0a0a]">
       <ScrollToTop />

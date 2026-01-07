@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { Outlet } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import Footer from "../common/Footer";
 import ScrollToTop from "../common/ScrollToTop";
 import authBG from "@/assets/images/auth-bg.jpg";
@@ -31,7 +32,13 @@ const AuthLayout: React.FC = () => {
           <div className="absolute inset-0 bg-black/60 z-0" />
 
           <div className="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6 md:p-10">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center">
+                  <Loader2 className="animate-spin" />
+                </div>
+              }
+            >
               <Outlet />
             </Suspense>
           </div>
