@@ -36,9 +36,7 @@ const mainBanners = [
 function Banner() {
   return (
     <section className="w-full max-w-7xl mx-auto p-2 space-y-3">
-      {/* KHỐI TRÊN: GỒM HERO VÀ 2 BANNER PHẢI */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        {/* HERO BANNER - Chiếm 2/3 chiều rộng */}
         <div className="md:col-span-2 overflow-hidden rounded-lg shadow-sm">
           <CarouselTemplate
             data={mainBanners}
@@ -51,7 +49,7 @@ function Banner() {
               <div className="h-[200px] sm:h-[300px] md:h-[400px] w-full">
                 <img
                   src={item.image}
-                  className="w-full h-full object-cover transition-transform duration-500"
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   alt="Hero Banner"
                 />
               </div>
@@ -59,16 +57,15 @@ function Banner() {
           />
         </div>
 
-        {/* 2 BANNER BÊN PHẢI */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-row md:flex-col gap-3 overflow-x-auto snap-x snap-mandatory md:overflow-visible no-scrollbar pb-2 md:pb-0">
           {mainBanners.slice(1, 3).map((item) => (
             <div
               key={item.id}
-              className="relative flex-1 overflow-hidden rounded-lg shadow-sm "
+              className="relative min-w-[85%] md:min-w-0 flex-1 overflow-hidden rounded-lg shadow-sm snap-center"
             >
               <img
                 src={item.image}
-                className="w-full h-full object-cover transition-transform duration-500 "
+                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 alt="Sub Banner"
               />
             </div>
@@ -76,16 +73,15 @@ function Banner() {
         </div>
       </div>
 
-      {/* 3 BANNER NGANG HÀNG */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="flex sm:grid sm:grid-cols-3 gap-3 overflow-x-auto snap-x snap-mandatory sm:overflow-visible no-scrollbar pb-2 sm:pb-0">
         {mainBanners.slice(3, 6).map((item) => (
           <div
             key={item.id}
-            className="h-[120px] sm:h-[160px] md:h-[180px] overflow-hidden rounded-lg shadow-sm "
+            className="h-[120px] sm:h-[160px] md:h-[180px] min-w-[70%] sm:min-w-0 overflow-hidden rounded-lg shadow-sm snap-center"
           >
             <img
               src={item.image}
-              className="w-full h-full object-cover transition-transform duration-500 "
+              className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
               alt="Bottom Banner"
             />
           </div>
