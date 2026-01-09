@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, use } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User, ShoppingBag, Loader2, Key, Heart } from "lucide-react";
@@ -73,6 +73,7 @@ export type ProfileFormValues = z.infer<typeof profileSchema>;
 export default function ProfilePage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const { user, updateUser, changePassword } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -86,7 +87,12 @@ export default function ProfilePage() {
   useEffect(() => {
     const hash = location.hash;
 
-    if (hash === "#orders-history") {
+    const isOrderPage =
+      searchParams.has("status") ||
+      searchParams.has("page") ||
+      searchParams.has("code");
+
+    if (hash === "#orders-history" || isOrderPage) {
       setActiveTab("orders");
     } else if (hash === "#password-change") {
       setActiveTab("password");
@@ -95,7 +101,7 @@ export default function ProfilePage() {
     } else {
       setActiveTab("profile");
     }
-  }, [location.hash]);
+  }, [location.hash, searchParams]);
 
   const handleTabChange = (
     tab: "profile" | "orders" | "password" | "wishlist"
@@ -127,7 +133,6 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
-      //  Nếu đang là cập nhật thủ công (vừa bấm Lưu xong), thì BỎ QUA việc reset form theo user cũ
       if (isLocalUpdate.current) {
         isLocalUpdate.current = false;
         return;
