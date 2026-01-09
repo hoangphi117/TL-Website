@@ -19,27 +19,41 @@ async function updateSearchIndex() {
         .populate("brand", "name")
         .populate("category", "name")
         .select(
-          "name price slug description brand category image sku specifications tags"
+          "name price description brand category specifications tags"
         );
 
       // Chuẩn hóa dữ liệu để search ngon hơn
       cachedProducts = products.map((p) => ({
-        _id: p._id,
-        name: p.name,
         price: p.price,
         // Tạo một trường text tổng hợp để search cho chuẩn
-        searchText: `${p.name} ${p.brand?.name || ""} ${
-          p.category?.name || ""
-        } ${p.description || ""} ${JSON.stringify(p.specifications || "")}
-        ${p.tags}`,
-        raw: p,
+        searchText: `ID:${p.id} ${p.name}
+          ${p.brand?.name || ""},
+          ${p.category?.name || ""}
+          ${p.description || ""}
+          ${JSON.stringify(p.specifications || "")}
+          ${p.tags}`,
+
+        // Giữ nguyên dữ liệu thô để trả về cho AI lọc
+        raw: {
+          id: p.id,
+          name: p.name,
+          price: p.price,
+          description: p.description,
+          brand: p.brand?.name || "",
+          category: p.category?.name || "",
+          specifications: p.specifications,
+          tags: p.tags,
+        },
       }));
 
       // Cấu hình Fuse.js
       const options = {
+        isCaseSensitive: false,
         includeScore: true,
+        shouldSort: true,
         keys: ["searchText"], // Tìm trong trường text tổng hợp
         threshold: 0.4, // Độ chấp nhận sai số
+        distance: 1000,
         ignoreLocation: true,
       };
 
@@ -68,19 +82,43 @@ JSON Output:
 {
   "intent": "search_product" | "check_order",
   "query": {
-    "keyword": string, // Important: Extract core keywords related to name, category, brand
-    "price_max": number // Only fill in when the user mentions price
+    "keyword": string, // Important: Keyword for product search just containst name, description, brands, category, specifications not price.
+    "price_max": number // Only fill in when the role user mentions price if not, leave it null
+    "price_min": number // Only fill in when the role user mentions price if not, leave it null
   },
 }
 `;
 
+const FILTER_PROMPT = `
+You are a data filter. Given a list of products in JSON format and user query, filter the products based on the query.
+Task: From the product list, return only products that match the user query.
+
+User Query Examples:
+- "Cho tôi vài mẫu laptop i5" -> Filter products with "laptop" and "i5" in name or specifications.
+- "Tôi muốn điện thoại của Apple" -> Filter products with "Smartphone" and brand "Apple".
+
+Output only the JSON object.
+  {
+    products: [
+      {
+        "id": string,
+        "name": string,
+      }, ... // Repeat for each matching product
+    ]
+  }
+Rules: 
+-- Just return products that match the query.
+-- If no products match, return an empty list.
+-- If larger than 5, return only the top 5.
+`;
+
 const RESPONDER_SYSTEM_PROMPT = `
-Role: Sales Assistant. Tone: Friendly, Vietnamese.
+Role: Sales Assistant. Tone: Friendly, Polite, Vietnamese.
 Task: Answer based on CONTEXT.
 Rules:
-- Don't list product details (name, price) repeatedly because user can see the cards.
+- Don't list product details (e.g. name, brand,...) repeatedly because user can see the cards.
 - Just give a short, catchy introduction about the products found.
-- If no products, suggest broadly.
+- If no items, suggest broadly.
 `;
 
 const chatWithAI = async (req, res) => {
@@ -108,21 +146,23 @@ const chatWithAI = async (req, res) => {
       content: msg.message,
     }));
 
-    // Gọi AI cùi để lọc dữ liệu cho nhanh
+    // Gọi AI để lọc từ khóa từ user
     const routerCompletion = await groq.chat.completions.create({
       messages: [
         { role: "system", content: ROUTER_PROMPT },
         ...historyContext,
         { role: "user", content: message },
       ],
-      model: "llama-3.1-8b-instant",
-      temperature: 0,
+      model: "qwen/qwen3-32b",
+      temperature: 0.4,
       response_format: { type: "json_object" },
     });
 
     const { intent, query } = JSON.parse(
       routerCompletion.choices[0].message.content
     );
+
+    console.log("Detected Intent:", intent, "with query:", query);
 
     // Query db dựa trên res đã lọc từ AI cùi
     let dbContext = "Không có dữ liệu database.";
@@ -139,17 +179,38 @@ const chatWithAI = async (req, res) => {
       }
 
       if (query?.price_max) {
-        results = results.filter((p) => p.price <= query.price_max);
+        results = results.filter((p) => p.price < query.price_max);
       }
 
-      const products = results.slice(0, 5);
+      if (query?.price_min) {
+        results = results.filter((p) => p.price > query.price_min);
+      }
+      console.log("Search Results Count:", results.length);
+      if (results.length > 0) {
+        results = results.slice(0, 20); // Giới hạn 20 kết quả để lọc
+        // Gọi AI cùi để lọc dữ liệu cho nhanh
+        const filterCompletion = await groq.chat.completions.create({
+          messages: [
+            { role: "system", content: FILTER_PROMPT },
+            ...historyContext,
+            { role: "system", content: `Context: ${JSON.stringify(results.map(p => p.raw))}` },
+            { role: "user", content: message },
+          ],
+          model: "moonshotai/kimi-k2-instruct-0905",
+          temperature: 0,
+          response_format: { type: "json_object" },
+        });
 
-      if (products.length > 0) {
+        const productFiltered = JSON.parse(
+          filterCompletion.choices[0].message.content
+        );
+
+        console.log("Filtered Products:", productFiltered.products);
+
         dbContext =
-          `Tìm thấy ${products.length} sản phẩm:\n` +
-          products.map((p) => `- ${p.name} (Giá: ${p.price})`).join("\n");
-
-        const ids = products.map((p) => p._id);
+          `Tìm thấy ${productFiltered.products.length} sản phẩm:\n` +
+          productFiltered.products.map((p) => `- ${p.name}`).join("\n");
+        const ids = productFiltered.products.map((p) => p.id);
         foundDataPayload = `[PRODUCT_LIST_START]${JSON.stringify(
           ids
         )}[PRODUCT_LIST_END]`;
@@ -183,7 +244,7 @@ const chatWithAI = async (req, res) => {
       model: "llama-3.3-70b-versatile",
       stream: true,
       temperature: 0.7,
-      max_tokens: 500,
+      max_tokens: 1000,
     });
 
     let fullBotResponse = "";
