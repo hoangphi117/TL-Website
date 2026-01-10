@@ -13,7 +13,7 @@ const BottomCategory: React.FC = () => {
       try {
         setLoading(true);
         const res = await categoryService.getAllCategories();
-        if (res.success && res.data) {
+        if (res.data) {
           setCategories(res.data);
         }
       } catch (error) {
@@ -43,7 +43,7 @@ const BottomCategory: React.FC = () => {
           </div>
         ) : (
           <div
-            className="grid grid-rows-2 grid-flow-col gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide
+            className="grid grid-rows-2 grid-flow-col gap-4 overflow-x-auto pb-4 snap-x 
             md:grid-cols-5 lg:grid-cols-10 md:gap-6 md:overflow-visible md:max-h-none md:grid-flow-row"
           >
             {categories.map((category) => (
