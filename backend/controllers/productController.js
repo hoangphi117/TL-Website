@@ -33,12 +33,15 @@ const getAllProducts = async (req, res) => {
     }
 
     const features = new APIFeatures(Product.find(), filterObj)
-    features.filter().search().sort().limitFields().paginate()
+    await features.filter().search()
+    features.sort().limitFields().paginate()
 
-    const products = await features.query;
+    const products = await features.query
+      .populate("category", "name")
+      .populate("brand", "name");
 
     const countFeatures = new APIFeatures(Product.find(), filterObj)
-    countFeatures.filter().search();
+    await countFeatures.filter().search();
 
     const totalProduct = await countFeatures.query.countDocuments();
 
