@@ -1,1 +1,91 @@
 @import "tailwindcss";
+@import "./styles/theme.css";
+
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "GameOfSquids";
+  src: url("./assets//fonts/GameOfSquids.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  margin: 0;
+  background: #ececec;
+}
+
+.font-logo {
+  font-family: "GameOfSquids", sans-serif;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@layer components {
+  .input-neo {
+    @apply
+      rounded-none
+      border-2 border-slate-900
+      bg-transparent
+      px-4 py-5
+      w-full
+      text-[0.85rem] md:text-[1rem] font-medium
+      placeholder:text-muted-foreground/50
+      placeholder:text-sm
+      transition-all
+      focus-visible:outline-none
+      focus-visible:ring-0
+      focus:-translate-x-1
+      focus:-translate-y-1
+      shadow-[2px_2px_0px_0px_#020617]
+      focus:border-[#3385F0]
+      focus:shadow-[4px_4px_0px_0px_#3385F0];
+  }
+  .input-pro {
+    @apply
+      w-full
+      rounded-sm
+      border border-gray-300
+      bg-white
+      px-3 py-2
+      h-10
+      text-sm text-slate-900
+      placeholder:text-zinc-400
+      placeholder:font-normal
+      transition-colors transition-shadow
+      focus:outline-none
+      focus:border-gray-400
+      focus:ring-2
+      focus:ring-gray-500/20
+      disabled:bg-zinc-50
+      disabled:cursor-not-allowed;
+  }
+#nprogress .bar {
+  background: #ef4444 !important;
+  position: fixed !important;
+  z-index: 99999 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  z-index: 99999 !important;
+  box-shadow: 0 0 10px #ef4444, 0 0 5px #ef4444 !important;
+}
+}

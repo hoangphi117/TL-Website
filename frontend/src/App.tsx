@@ -1,11 +1,7 @@
-import "./App.css";
+import React from "react";
 
-function App() {
-  return (
-    <>
-      <h1 className="text-red-500 font-bold">Installed TailwindCSS v4</h1>
-    </>
-  );
-}
+const App: React.FC = () => {
+  return <></>;
+};
 
 export default App;
