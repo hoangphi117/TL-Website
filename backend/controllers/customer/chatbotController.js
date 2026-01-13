@@ -289,7 +289,7 @@ const chatWithAI = async (req, res) => {
 
       const chatCompletion = await groq.chat.completions.create({
         messages: messagesForAI,
-        model: "qwen/qwen3-32b",
+        model: "llama-3.3-70b-versatile",
         temperature: 0.7,
         stream: true,
       });
@@ -318,7 +318,15 @@ const chatWithAI = async (req, res) => {
 
   } catch (error) {
     console.error("Chat Error:", error);
-    res.write(`data: ${JSON.stringify({ content: "Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng thử lại sau." })}\n\n`);
+    console.error("Error stack:", error.stack);
+    console.error("Error message:", error.message);
+    
+    // Send detailed error in development, generic in production
+    const errorMsg = process.env.NODE_ENV === 'production' 
+      ? "Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng thử lại sau."
+      : `Lỗi: ${error.message}`;
+    
+    res.write(`data: ${JSON.stringify({ content: errorMsg })}\n\n`);
     res.end();
   }
 };

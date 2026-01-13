@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, lazy } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useNavigation } from "react-router-dom";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
@@ -7,9 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import ScrollToTop from "../common/ScrollToTop";
 import Zalo from "../common/Zalo";
 import SideBanner from "../common/SideBanner";
-
-// Lazy load ChatBot để không block initial page load
-const ChatBot = lazy(() => import("../chatbot/ChatBot"));
+import ChatBot from "../chatbot/ChatBot";
 
 import mainBG from "@/assets/images/main-bg.jpg";
 
@@ -71,9 +69,7 @@ const MainLayout: React.FC = () => {
       </main>
 
       <Footer />
-      <Suspense fallback={null}>
-        <ChatBot />
-      </Suspense>
+      <ChatBot />
       <Zalo />
     </div>
   );
