@@ -60,7 +60,7 @@ const ChatBot: React.FC = () => {
   }, [isOpen, isLoading]);
 
   useEffect(() => {
-    if (isOpen && messages.length === 0 && user) {
+    if (isOpen && messages.length === 0) {
       const fetchHistory = async () => {
         setIsLoading(true);
         const history = await chatbotService.getHistory();
@@ -69,17 +69,9 @@ const ChatBot: React.FC = () => {
       };
       fetchHistory();
     }
-  }, [isOpen, user]);
+  }, [isOpen]);
 
   const handleToggleBot = () => {
-    if (!user) {
-      toast.error("Vui lòng đăng nhập để sử dụng trợ lý ảo!", {
-        description:
-          "Bạn cần đăng nhập để chúng tôi có thể hỗ trợ thông tin đơn hàng và tài khoản.",
-        duration: 3000,
-      });
-      return;
-    }
     setIsOpen(!isOpen);
   };
 

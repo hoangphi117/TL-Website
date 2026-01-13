@@ -66,4 +66,26 @@ const protectAdmin = async (req, res, next) => {
   }
 }
 
-module.exports = { protectCustomer, protectAdmin }
+  }
+}
+
+// Optional authentication - allows both authenticated and guest users
+const optionalAuth = async (req, res, next) => {
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    try {
+      const token = req.headers.authorization.split(' ')[1]
+      const decoded = jwt.verify(token, process.env.JWT_SECRET)
+      const user = await User.findById(decoded.id)
+      
+      if (user && user.isActive) {
+        req.user = user
+      }
+    } catch (error) {
+      // Token invalid, continue as guest
+    }
+  }
+  // Always continue, with or without authenticated user
+  next()
+}
+
+module.exports = { protectCustomer, protectAdmin, optionalAuth }

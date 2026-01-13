@@ -16,7 +16,7 @@ const reviewRoutesCustomer = require('./api/customer/review')
 const wishlistRoutes = require('./api/customer/wishlist')
 const feedbackRoutes = require('./api/customer/feedback')
 const chatbotRoutes = require('./api/customer/chatbot')
-const { protectCustomer, protectAdmin } = require('../middlewares/user')
+const { protectCustomer, protectAdmin, optionalAuth } = require('../middlewares/user')
 const brandRoutesAdmin = require('./api/admin/brand')
 const productRoutesAdmin = require('./api/admin/product')
 const adminRoutes = require('./api/admin/admin')
@@ -41,7 +41,7 @@ router.use('/review', reviewRoutes)
 router.use('/review', protectCustomer, reviewRoutesCustomer)
 router.use('/wishlist', protectCustomer, wishlistRoutes)
 router.use('/feedback', protectCustomer, feedbackRoutes)
-router.use('/chatbot', protectCustomer, chatbotRoutes)
+router.use('/chatbot', optionalAuth, chatbotRoutes)
 
 router.use('/admin/product', protectAdmin, productRoutesAdmin);
 router.use('/admin/category', protectAdmin, categoryRoutesAdmin);

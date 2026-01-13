@@ -51,7 +51,10 @@ QUY TẮC PHẢN HỒI:
 `;
 
 const chatWithAI = async (req, res) => {
-  const { message, userId } = req.body;
+  const { message } = req.body;
+  
+  // Get userId from authenticated user or generate guest ID
+  const userId = req.user?.id || req.user?._id || `guest_${req.ip || 'unknown'}`;
 
   try {
     // 1. Load Session
