@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { IPromotion, IPromotionUpdate } from "@/types/promotion";
@@ -38,27 +37,31 @@ export default function DetailedPromotion() {
           ? new Date(res.data.data.startDate)
           : undefined;
         setStartDate(created_at);
-        setStartTime(
-          created_at.toLocaleTimeString("en-GB", {
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          })
-        );
+        if (created_at) {
+          setStartTime(
+            created_at.toLocaleTimeString("en-GB", {
+              hour12: false,
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            })
+          );
+        }
 
         const expired_at = res.data.data.endDate
           ? new Date(res.data.data.endDate)
           : undefined;
         setEndDate(expired_at);
-        setEndTime(
-          expired_at.toLocaleTimeString("en-GB", {
-            hour12: false,
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          })
-        );
+        if (expired_at) {
+          setEndTime(
+            expired_at.toLocaleTimeString("en-GB", {
+              hour12: false,
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            })
+          );
+        }
     }catch(error) {
         console.log(error);
     }
@@ -103,7 +106,7 @@ export default function DetailedPromotion() {
   };
 
   const handleCancel = () => {
-    setForm(promotion);
+    setForm(promotion || {});
     setIsEdit(false);
   };
     

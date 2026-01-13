@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MessageSquare, Send, X, Loader2, Bot, User } from "lucide-react";
+import { MessageSquare, Send, X, Loader2, Bot, User, RotateCcw } from "lucide-react";
 import { chatbotService } from "@/services/api/customer/chatbot.service";
 import { type IChatMessage } from "@/types/chatbot";
 import { cn } from "@/lib/utils";
@@ -8,12 +8,24 @@ import { toast } from "sonner";
 import { useAuth } from "@/context/CustomerAuthContext";
 
 import BotMessage from "./BotMessage";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const ChatBot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<IChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -66,14 +78,15 @@ const ChatBot: React.FC = () => {
   // Tạm thời chưa render để tránh lag khi load auth
   if (isAuthLoading) return null;
 
-  const handleSendMessage = async (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent, manualText?: string) => {
     e?.preventDefault();
-    if (!inputValue.trim() || isStreaming) return;
+    const textToSend = manualText || inputValue;
+    if (!textToSend.trim() || isStreaming) return;
 
-    const userMsg: IChatMessage = { role: "user", content: inputValue };
+    const userMsg: IChatMessage = { role: "user", content: textToSend };
 
     setMessages((prev) => [...prev, userMsg]);
-    setInputValue("");
+    if (!manualText) setInputValue("");
     setIsStreaming(true);
 
     const botMsgPlaceholder: IChatMessage = { role: "bot", content: "" };
@@ -113,6 +126,48 @@ const ChatBot: React.FC = () => {
     );
   };
 
+  useEffect(() => {
+    if (isOpen && messages.length === 0 && !isLoading && !isStreaming && user) {
+      // Tự động kích hoạt lời chào khi mở chat lần đầu
+      // Tự động hiển thị lời chào (Client-side only)
+      setMessages([
+        { role: "bot", content: "Chào bạn! Tôi là Liquid AI Assistant 🤖\nTôi có thể giúp bạn tìm kiếm sản phẩm, so sánh cấu hình hoặc tư vấn lựa chọn phù hợp nhất.\n\nBạn cần hỗ trợ gì ạ?" }
+      ]);
+    }
+  }, [isOpen, messages.length, isLoading, user]);
+
+  const SUGGESTED_QUESTIONS = [
+    "Tìm laptop Gaming dưới 20 triệu",
+    "So sánh MacBook Air M1 và Pro M1",
+    "Tư vấn cấu hình cho sinh viên IT",
+    "Máy nào pin trâu làm văn phòng?",
+    "Check đơn hàng gần nhất"
+  ];
+
+  const handleChipClick = (question: string) => {
+    handleSendMessage(undefined, question);
+  };
+
+  const handleResetChat = async () => {
+    if (messages.length === 0 || isResetting || isStreaming) return;
+
+    setIsResetting(true);
+    const success = await chatbotService.resetSession();
+    if (success) {
+      setMessages([]);
+      toast.success("Cuộc trò chuyện đã được làm mới.");
+      // Tự động kích hoạt lời chào khi mở chat lần đầu
+      if (user) {
+        setMessages([
+          { role: "bot", content: "Chào bạn! Tôi là Liquid AI Assistant 🤖\nTôi có thể giúp bạn tìm kiếm sản phẩm, so sánh cấu hình hoặc tư vấn lựa chọn phù hợp nhất.\n\nBạn cần hỗ trợ gì ạ?" }
+        ]);
+      }
+    } else {
+      toast.error("Không thể làm mới cuộc trò chuyện.");
+    }
+    setIsResetting(false);
+  };
+
   return (
     <div
       className={cn(
@@ -137,19 +192,44 @@ const ChatBot: React.FC = () => {
             <div className="flex items-center gap-2">
               <Bot className="w-6 h-6 text-red-200" />
               <div>
-                <h3 className="font-bold text-sm">Trợ lý ảo AI</h3>
+                <h3 className="font-bold text-sm">Chuyên viên tư vấn công nghệ</h3>
                 <span className="text-xs text-red-200 flex items-center gap-1">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                   Online
                 </span>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="hover:bg-red-800/50 p-1 rounded transition-colors "
-            >
-              <X className="w-6 h-6 sm:w-5 sm:h-5 cursor-pointer" />
-            </button>
+            <div className="flex items-center gap-1">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button
+                    disabled={isResetting || isStreaming || messages.length === 0}
+                    className="hover:bg-red-800/50 p-1.5 rounded transition-colors disabled:opacity-50"
+                    title="Làm mới cuộc trò chuyện"
+                  >
+                    <RotateCcw className={cn("w-5 h-5 cursor-pointer", isResetting && "animate-spin")} />
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="z-[10000]">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Làm mới cuộc trò chuyện?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Hành động này sẽ xóa toàn bộ lịch sử trò chuyện hiện tại và bắt đầu một phiên tư vấn mới. Bạn có chắc chắn muốn tiếp tục?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Hủy</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleResetChat} className="bg-red-600 hover:bg-red-700">Làm mới</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="hover:bg-red-800/50 p-1 rounded transition-colors"
+              >
+                <X className="w-6 h-6 sm:w-5 sm:h-5 cursor-pointer" />
+              </button>
+            </div>
           </div>
 
           {/* Message Area */}
@@ -170,20 +250,17 @@ const ChatBot: React.FC = () => {
                 return (
                   <div
                     key={idx}
-                    className={`flex ${
-                      isUser ? "justify-end" : "justify-start"
-                    }`}
+                    className={`flex ${isUser ? "justify-end" : "justify-start"
+                      }`}
                   >
                     <div
-                      className={`flex gap-2 max-w-[85%] ${
-                        isUser ? "flex-row-reverse" : "flex-row"
-                      }`}
+                      className={`flex gap-2 max-w-[85%] ${isUser ? "flex-row-reverse" : "flex-row"
+                        }`}
                     >
                       {/* Avatar */}
                       <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                          isUser ? "bg-zinc-700" : "bg-red-900/50"
-                        }`}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isUser ? "bg-zinc-700" : "bg-red-900/50"
+                          }`}
                       >
                         {isUser ? (
                           <User className="w-5 h-5 text-zinc-200" />
@@ -194,11 +271,10 @@ const ChatBot: React.FC = () => {
 
                       {/* Bubble */}
                       <div
-                        className={`p-3 text-sm rounded-2xl ${
-                          isUser
-                            ? "bg-red-600 text-white rounded-tr-none"
-                            : "bg-zinc-900 border border-zinc-800 text-zinc-200 rounded-tl-none shadow-md"
-                        }`}
+                        className={`p-3 text-sm rounded-2xl ${isUser
+                          ? "bg-red-600 text-white rounded-tr-none"
+                          : "bg-zinc-900 border border-zinc-800 text-zinc-200 rounded-tl-none shadow-md"
+                          }`}
                       >
                         {isUser ? (
                           <span className="whitespace-pre-wrap">
@@ -219,6 +295,25 @@ const ChatBot: React.FC = () => {
                 );
               })
             )}
+
+            {/* Guided Welcome Chips */}
+            {messages.length === 1 && messages[0].role === "bot" && (
+              <div className="flex flex-wrap gap-2 mt-2 ml-10 animate-in fade-in zoom-in duration-300 pb-2">
+                {SUGGESTED_QUESTIONS.map((q, idx) => (
+                  <button
+                    key={idx}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleChipClick(q);
+                    }}
+                    className="text-xs bg-zinc-800 text-zinc-300 px-3 py-1.5 rounded-full hover:bg-red-900/50 hover:text-red-200 transition-colors border border-zinc-700"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div ref={messagesEndRef} />
           </div>
 
