@@ -70,18 +70,18 @@ const CartPage: React.FC = () => {
 
   const handleUpdateQuantity = async (
     productId: string,
-    curentQuantity: number,
+    currentQuantity: number,
     stockQuantity: number,
     adjustment: number
   ) => {
-    const newQuantity = curentQuantity + adjustment;
+    const newQuantity = currentQuantity + adjustment;
     if (newQuantity <= 0) {
       await handleRemoveItem(productId);
       return;
     }
-    if (adjustment > 0 && newQuantity > stockQuantity) {
+    if (newQuantity > stockQuantity) {
       toast.error(
-        `Số lượng trong kho không đủ. Chỉ còn ${stockQuantity} sản phẩm trong kho.`
+        "Số lượng vượt quá tồn kho. Chỉ còn " + stockQuantity + " sản phẩm."
       );
       return;
     }
@@ -192,6 +192,9 @@ const CartPage: React.FC = () => {
                           <p className="text-red-500 font-bold text-lg">
                             {formatVND(item.price)}
                           </p>
+                          <span className="text-gray-400 text-sm">
+                            Tồn kho: {item.stockQuantity}
+                          </span>
                         </div>
                         <div className="flex items-center border border-zinc-800 rounded bg-zinc-900">
                           <button
