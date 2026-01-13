@@ -30,13 +30,20 @@ JSON Output:
 `;
 
 class IntentAgent {
-    async detectIntent(message) {
+    async detectIntent(message, history = []) {
         try {
+            // Format history for Groq
+            const historyPrompt = history.map(msg =>
+                `${msg.sender === 'user' ? 'User' : 'Assistant'}: ${msg.message}`
+            ).join("\n");
+
+            const messages = [
+                { role: "system", content: ROUTER_PROMPT + `\n\nRecent History:\n${historyPrompt}` },
+                { role: "user", content: message },
+            ];
+
             const completion = await groq.chat.completions.create({
-                messages: [
-                    { role: "system", content: ROUTER_PROMPT },
-                    { role: "user", content: message },
-                ],
+                messages: messages,
                 model: "qwen/qwen3-32b",
                 temperature: 0,
                 response_format: { type: "json_object" },

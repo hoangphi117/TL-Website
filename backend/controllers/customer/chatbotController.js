@@ -19,6 +19,7 @@ Role: AI Assistant cho E-commerce.
 Task: Trả lời ngắn gọn, đúng trọng tâm.
 
 QUY TẮC PHẢN HỒI:
+0. NGÔN NGỮ: Bắt buộc trả lời bằng TIẾNG VIỆT 100%. Không dùng tiếng Anh trừ keyworks kỹ thuật.
 1. GREETING/OTHER/COMPARE: Trả lời bằng VĂN BẢN (Text).
    - Ngắn gọn, thân thiện.
    - So sánh thì dùng gạch đầu dòng ngắn.
@@ -140,7 +141,8 @@ const chatWithAI = async (req, res) => {
     }
 
     // 3. NORMAL MODE: INTENT CLASSIFICATION
-    const intentResult = await IntentAgent.detectIntent(message);
+    const recentHistory = session.messages.slice(-3); // Context 3 tin nhắn gần nhất
+    const intentResult = await IntentAgent.detectIntent(message, recentHistory);
     const { intent, query } = intentResult;
 
     // --- DECISION LAYER (Logic Rules) ---

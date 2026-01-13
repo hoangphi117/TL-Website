@@ -18,41 +18,33 @@ const BotMessage: React.FC<BotMessageProps> = ({ content }) => {
     let orderCode: string | null = null;
     let isJsonMode = false;
 
-    // 1. Thử tách JSON từ nội dung hỗn hợp (Text + JSON)
+    // 1. Cải tiến: Tách JSON từ nội dung hỗn hợp (Hỗ trợ cả Markdown Block & Raw JSON)
     try {
-      // Tìm vị trí bắt đầu của JSON object
-      const jsonStartIndex = content.indexOf('{"type":"product_list"');
+      // Sử dụng cleanContent đã loại bỏ <think> để regex không bị nhiễu
+      const jsonRegex = /({[\s\S]*"type"\s*:\s*"product_list"[\s\S]*"data"[\s\S]*})/;
+      const match = cleanContent.match(jsonRegex);
 
-      if (jsonStartIndex !== -1) {
-        const textPart = content.substring(0, jsonStartIndex).trim();
-        const jsonPart = content.substring(jsonStartIndex);
-
-        const jsonData = JSON.parse(jsonPart);
+      if (match) {
+        const rawJson = match[1]; // Capture group 1 là toàn bộ cục JSON
+        const jsonData = JSON.parse(rawJson);
 
         if (jsonData.type === "product_list" && Array.isArray(jsonData.data)) {
-          productIds = jsonData.data; // Lưu ý: ChatProductGrid cần được update để nhận object hoặc map ID
-          // Nếu ChatProductGrid chỉ nhận string[], ta map ID. 
-          // Nhưng ở đây nên pass full object để đỡ fetch lại. 
-          // Tuy nhiên để an toàn với logic cũ, ta check prop của ChatProductGrid.
-          // Giả sử ChatProductGrid nhận ID list, ta map:
           productIds = jsonData.data.map((p: any) => p.id);
 
-          cleanContent = textPart; // Giữ lại phần text giới thiệu
+          // Remove JSON part from content to get description text
+          // Clean cả markdown wrappers nếu có xung quanh nó
+          const fullMatchString = match[0];
+          let textPart = cleanContent.replace(fullMatchString, "").trim();
+
+          // Clean lingering markdown ending '```' if any
+          textPart = textPart.replace(/```json|```/g, "").trim();
+
+          cleanContent = textPart;
           isJsonMode = true;
-        }
-      } else {
-        // Fallback: Try strict JSON if separate
-        if (content.trim().startsWith("{") && content.trim().endsWith("}")) {
-          const jsonData = JSON.parse(content);
-          if (jsonData.type === "product_list" && Array.isArray(jsonData.data)) {
-            productIds = jsonData.data.map((p: any) => p.id);
-            cleanContent = "";
-            isJsonMode = true;
-          }
         }
       }
     } catch (e) {
-      // JSON parse fail, ignore
+      console.warn("JSON Parse Failed:", e);
     }
 
     if (!isJsonMode) {
