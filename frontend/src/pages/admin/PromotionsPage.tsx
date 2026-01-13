@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import promotionApi from "@/services/api/admin/promotionApi";
 import type { PromotionQuery } from "@/services/api/admin/query";
 import type { IPromotion } from "@/types/promotion";
-import { Grid2X2, Plus } from "lucide-react";
+import { Grid2X2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 

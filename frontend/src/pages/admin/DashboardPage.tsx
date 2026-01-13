@@ -108,7 +108,7 @@ export default function DashboardPage() {
             console.log("check res: ", res.data);
             setTotals(res.data.data.totals);
             setTopProducts(res.data.data.topProducts.slice(0, 5));
-            setNewUsers(res.data.data.topNewUsers.slice(0, 5));
+            setNewUsers(res.data.data.topNewUsers.slice(0, 5) as any);
 
             const revenueMonthChartData = mapBarChartActiveData(
                 res.data.data.revenue12Months.labels,
