@@ -201,14 +201,24 @@ const chatWithAI = async (req, res) => {
     if (intent === "SEARCH_PRODUCT") {
       const results = SearchAgent.search(query);
       if (results.length > 0) {
-        directJsonResponse = {
-          type: "product_list",
-          data: results.slice(0, 10).map(p => ({
+        // Phân loại theo từ đầu tiên của tên sản phẩm
+        const groupedProducts = {};
+        results.slice(0, 10).forEach(p => {
+          const firstWord = p.raw.name.split(' ')[0]; // Lấy từ đầu tiên
+          if (!groupedProducts[firstWord]) {
+            groupedProducts[firstWord] = [];
+          }
+          groupedProducts[firstWord].push({
             id: p.raw.id,
             name: p.raw.name,
             price: p.raw.price,
             image: ""
-          }))
+          });
+        });
+
+        directJsonResponse = {
+          type: "product_list_grouped",
+          data: groupedProducts
         };
       } else {
         dbContext = "Không tìm thấy sản phẩm nào khớp với từ khóa/tiêu chí.";

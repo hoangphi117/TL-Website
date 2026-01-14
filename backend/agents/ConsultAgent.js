@@ -22,11 +22,6 @@ const CONSULTATION_SCRIPT = [
         step: 4,
         question: "Cuối cùng, bạn ưu tiên yếu tố nào hơn: Pin trâu/di động cao hay Hiệu năng xử lý tối đa?",
         key: "priority"
-    },
-    {
-        step: 5,
-        question: "Vui lòng cho tôi xin số điện thoại để khi có mẫu máy cực hot hoặc giảm giá sốc phù hợp nhu cầu, tôi sẽ báo bạn ngay nhé!",
-        key: "phone"
     }
 ];
 
@@ -40,7 +35,6 @@ Fields cần tìm:
 - brand: Thương hiệu (VD: Acer, Asus, Dell, Apple...).
 - purpose: Mục đích sử dụng (Lập trình, Gaming, Văn phòng...).
 - priority: Ưu tiên (Pin, Hiệu năng, Màn hình...).
-- phone: Số điện thoại.
 
 Output JSON Format:
 {
@@ -48,8 +42,7 @@ Output JSON Format:
   "budget": number | null,
   "brand": string | null,
   "purpose": string | null,
-  "priority": string | null,
-  "phone": string | null
+  "priority": string | null
 }
 
 Quy tắc:

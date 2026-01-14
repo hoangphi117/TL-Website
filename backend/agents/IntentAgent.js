@@ -19,14 +19,23 @@ JSON Output:
   "query": {
     "keyword": string,
     "category": string | null,
+    "brand": string | null,  // Thương hiệu: "acer", "asus", "dell", "hp", "apple", "msi"...
     "products_to_compare": [string],
     "quantity": number | null,
-    "price_max": number,
-    "price_min": number,
-    "sort_by": "price_asc" | "price_desc" | "newest" | null, 
+    "price_max": number,  // Giá tối đa VNĐ: "dưới 20 triệu" -> 20000000, "không quá 15tr" -> 15000000
+    "price_min": number,  // Giá tối thiểu VNĐ: "trên 10 triệu" -> 10000000
+    "sort_by": "price_asc" | "price_desc" | "newest" | null,  // "giá cao nhất" -> "price_desc", "rẻ nhất" -> "price_asc"
     "device_model": string | null
   }
 }
+
+Rules:
+- Chuyển đổi giá tiền về số VNĐ đầy đủ (20 triệu = 20000000, 15tr = 15000000)
+- "dưới/dưới mức/không quá X" -> price_max = X
+- "trên/từ/trên mức X" -> price_min = X
+- "giá cao nhất/đắt nhất" -> sort_by = "price_desc"
+- "giá rẻ nhất/thấp nhất" -> sort_by = "price_asc"
+- Trích xuất brand từ câu hỏi: "laptop acer" -> brand = "acer", "máy asus" -> brand = "asus"
 `;
 
 class IntentAgent {
