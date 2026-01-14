@@ -154,7 +154,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-5 px-3">
                 <Card className="rounded-md shadow-xs">
                     <CardHeader className="flex flex-row items-center justify-between">
-                        <p className="text-md font-semibold text-zinc-600">Tổng doanh thu</p>
+                        <p className="text-md font-bold text-zinc-600">Tổng doanh thu</p>
                         <div className="h-9 w-9 rounded-md bg-green-100 flex items-center justify-center">
                             <CircleDollarSign className="h-5 w-5 text-green-600" />
                         </div>
@@ -175,7 +175,7 @@ export default function DashboardPage() {
                         </p>
                         <div className="flex flex-row">
                             {totals.revenueThisYear >= totals.revenueLastYear ? (
-                                <p className="text-sm text-green-500 mr-2">
+                                <p className="text-sm items-center gap-1 text-green-500">
                                     <TrendingUp color="#04eb00" /> 
                                     {(((totals.revenueThisYear - totals.revenueLastYear) / (totals.revenueLastYear || 1)) * 100).toFixed(2)}%
                                 </p>
@@ -191,7 +191,7 @@ export default function DashboardPage() {
                 </Card >
                 <Card className="rounded-md shadow-xs">
                     <CardHeader className="flex flex-row items-center justify-between pb-1">
-                        <p className="text-md font-semibold text-zinc-600">Doanh thu tháng này</p>
+                        <p className="text-md font-bold text-zinc-600">Doanh thu tháng này</p>
                         <div className="h-9 w-9 rounded-md bg-blue-100 flex items-center justify-center">
                             <CircleDollarSign className="h-5 w-5 text-blue-600" />
                         </div>
@@ -210,9 +210,9 @@ export default function DashboardPage() {
                                 formattingFn={(v) => v.toLocaleString("vi-VN") + " ₫"}
                             />
                         </p>
-                        <div className="flex flex-row">
+                        <div className="flex flex-row gap-2">
                             {totals.revenueThisMonth >= totals.revenueLastMonth ? (
-                                <p className="text-sm text-green-500 mr-2">
+                                <p className="text-sm flex flex-row gap-1 text-green-500">
                                     <TrendingUp color="#04eb00" /> 
                                     {(((totals.revenueThisMonth - totals.revenueLastMonth) / (totals.revenueLastMonth || 1)) * 100).toFixed(2)}%
                                 </p>
@@ -228,17 +228,17 @@ export default function DashboardPage() {
                 </Card>
                 <Card className="rounded-md shadow-xs">
                     <CardHeader className="flex flex-row items-center justify-between pb-1">
-                        <p className="text-md font-semibold text-zinc-600">Tổng đơn hàng</p>
+                        <p className="text-md font-bold text-zinc-600">Tổng đơn hàng</p>
                         <div className="h-9 w-9 rounded-md bg-purple-100 flex items-center justify-center">
                             <ShoppingCart className="h-5 w-5 text-purple-600" />
                         </div>
                     </CardHeader>
                     <CardContent>
                         <p className="text-2xl font-bold">{totals.ordersThisMonth}</p>
-                        <div className="flex flex-row">
+                        <div className="flex flex-row gap-2">
                         {totals.ordersThisMonth >= totals.ordersLastMonth ? (
                             <div className="flex flex-row">
-                                <p className="text-sm text-green-500 mr-2">
+                                <p className="text-sm flex flex-row gap-1 text-green-500">
                                     <TrendingUp color="#04eb00" /> 
                                     {(((totals.ordersThisMonth - totals.ordersLastMonth) / (totals.ordersLastMonth || 1)) * 100).toFixed(2)}%
                                 </p>
@@ -257,7 +257,7 @@ export default function DashboardPage() {
                 </Card>
                 <Card className="rounded-md shadow-xs">
                     <CardHeader className="flex flex-row items-center justify-between pb-1">
-                        <p className="text-md font-semibold text-zinc-600">Tổng sản phẩm</p>
+                        <p className="text-md font-bold text-zinc-600">Tổng sản phẩm</p>
                         <div className="h-9 w-9 rounded-md bg-amber-50 flex items-center justify-center">
                             <Tag size={28} color="#f1dd04" />
                         </div>
