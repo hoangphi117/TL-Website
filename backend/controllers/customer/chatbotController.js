@@ -203,7 +203,7 @@ const chatWithAI = async (req, res) => {
       if (results.length > 0) {
         // Phân loại theo từ đầu tiên của tên sản phẩm
         const groupedProducts = {};
-        results.slice(0, 10).forEach(p => {
+        results.slice(0, 6).forEach(p => {
           const firstWord = p.raw.name.split(' ')[0]; // Lấy từ đầu tiên
           if (!groupedProducts[firstWord]) {
             groupedProducts[firstWord] = [];
@@ -240,14 +240,14 @@ const chatWithAI = async (req, res) => {
           keyword: query.keyword || query.category || "",
           category: query.category,
           sort_by: query.sort_by,
-        }, query.quantity || 2);
+        }, query.quantity || 1);
       }
 
       if (productsToCompare.length > 0) {
         dbContext = `Dữ liệu so sánh:\n${JSON.stringify(productsToCompare.map(p => ({
           name: p.raw.name || p.name,
           price: p.raw.price || p.price,
-          specifications: p.raw.specifications || p.specifications
+          brand: p.raw.brand?.name || ""
         })))}`;
       } else {
         dbContext = "Không tìm thấy sản phẩm để so sánh.";
@@ -293,7 +293,7 @@ const chatWithAI = async (req, res) => {
       // Stream text response
       const messagesForAI = [
         { role: "system", content: RESPONDER_SYSTEM_PROMPT + `\nCONTEXT DATABASE:\n${dbContext}` },
-        ...session.messages.slice(-5).map(m => ({ role: m.sender === "user" ? "user" : "assistant", content: m.message })),
+        ...session.messages.slice(-3).map(m => ({ role: m.sender === "user" ? "user" : "assistant", content: m.message })),
         { role: "user", content: message }
       ];
 
